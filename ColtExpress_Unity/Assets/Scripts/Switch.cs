@@ -20,6 +20,11 @@ public class Switch : MonoBehaviour
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
   }
 
+  public void signIn()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 4);
+  }
+
   public void ruleBack()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -33,5 +38,10 @@ public class Switch : MonoBehaviour
   public void playBack()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 3);
+  }
+
+  public void signInBack()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 4);
   }
 }
