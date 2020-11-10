@@ -949,7 +949,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955317022}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0964599140cb0d32a17deaad2cf932c, type: 3}
   m_Name: 
@@ -1350,8 +1350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4748565a11e069b9def625a7986e2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  username: {fileID: 1112781387}
-  password: {fileID: 1497839435}
+  username: {fileID: 0}
+  password: {fileID: 0}
 --- !u!1 &1258193305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,12 +1434,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 955317022}
-        m_MethodName: 
+      - m_Target: {fileID: 955317023}
+        m_MethodName: debugOnline
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

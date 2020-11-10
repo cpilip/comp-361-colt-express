@@ -9,12 +9,10 @@ public class LogIn : MonoBehaviour
     public TMP_InputField password;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // submit.onClick.addListener(() => {
-        //     Main.instance.lobbyCommand.debugOnline();
-        // });
-    }
+    // // Start is called before the first frame update
+    // public void testFunction()
+    // {
+    //     Main.instance.lobbyCommand.debugOnline();
+    // }
 
 }
