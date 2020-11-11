@@ -25,6 +25,21 @@ public class Switch : MonoBehaviour
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 4);
   }
 
+  public void inviteFriend()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+  }
+
+  public void loadGame()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+  }
+
+  public void startGame()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+  }
+
   public void ruleBack()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -43,5 +58,15 @@ public class Switch : MonoBehaviour
   public void signInBack()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 4);
+  }
+
+  public void inviteBack()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+  }
+
+  public void loadBack()
+  {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
   }
 }
