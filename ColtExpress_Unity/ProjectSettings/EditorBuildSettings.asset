@@ -30,6 +30,6 @@ EditorBuildSettings:
     path: Assets/MenuPages/LoadGame.unity
     guid: 9a37ec2bd00cf44f78d97776e8240b8e
   - enabled: 1
-    path: Assets/MenuPages/StartGame.unity
-    guid: 90c753d17bf5b4b81b40e0c31a6a0137
+    path: Assets/MenuPages/MainGame.unity
+    guid: 7e210b274d7adda4a88f95e833eccbb2
   m_configObjects: {}
