@@ -24,12 +24,10 @@ public class LobbyCommandsClient : MonoBehaviour
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection("user_oauth_approval=true&_csrf=19beb2db-3807-4dd5-9f64-6c733462281b&authorize=true"));
 
-        Debug.Log(user);
-        Debug.Log(pass);
-
         string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
 
-        string url = "http://127.0.0.1:4242/oauth/token?grant_type=password&username=foobar&password=abc_123ABC123";
+        string url = string.Format("http://127.0.0.1:4242/oauth/token?grant_type=password&username={0}&password={1}", user, pass);
+        Debug.Log(url);
         using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
         {
             webRequest.SetRequestHeader("Authorization", header);
