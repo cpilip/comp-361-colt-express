@@ -909,7 +909,7 @@ GameObject:
   - component: {fileID: 955317024}
   - component: {fileID: 955317023}
   m_Layer: 0
-  m_Name: LobbyCommandsClient
+  m_Name: SignInInputs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
