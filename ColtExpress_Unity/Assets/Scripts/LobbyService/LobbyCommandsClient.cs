@@ -27,9 +27,12 @@ public class LobbyCommandsClient : MonoBehaviour
         Debug.Log(user);
         Debug.Log(pass);
 
+        string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
+
         string url = "http://127.0.0.1:4242/oauth/token?grant_type=password&username=foobar&password=abc_123ABC123";
         using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
         {
+            webRequest.SetRequestHeader("Authorization", header);
             // Request and wait for the desired page.
             yield return webRequest.SendWebRequest();
 
