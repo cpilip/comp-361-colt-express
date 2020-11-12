@@ -2,19 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
+using TMPro;
+
 
 public class LobbyCommandsClient : MonoBehaviour
 {
 
-    public void debugOnline() 
+    public TMP_InputField username;
+    public TMP_InputField password;
+
+    public void signIn() 
     {
-        StartCoroutine(OnResponse());
+        string user = username.GetComponent<TMP_InputField>().text;
+        string pass = password.GetComponent<TMP_InputField>().text;
+        StartCoroutine(signInReq(user, pass));
     }
 
-    private IEnumerator OnResponse() 
+    private IEnumerator signInReq(string user, string pass)
     {
-        //string url = "http://127.0.0.1:4242/api/online";
-        string url = "www.google.com";
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        formData.Add(new MultipartFormDataSection("user_oauth_approval=true&_csrf=19beb2db-3807-4dd5-9f64-6c733462281b&authorize=true"));
+
+        Debug.Log(user);
+        Debug.Log(pass);
+
+        string url = "http://127.0.0.1:4242/oauth/token?grant_type=password&username=foobar&password=abc_123ABC123";
+        using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
+        {
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.isNetworkError)
+            {
+                Debug.Log(": Error: " + webRequest.error);
+            }
+            else
+            {
+                Debug.Log(":Received: " + webRequest.downloadHandler.text);
+            }
+        }
+    }
+
+    public void debugOnline() 
+    {
+        StartCoroutine(debugReq());
+    }
+
+    private IEnumerator debugReq() 
+    {
+        string url = "http://127.0.0.1:4242/api/online";
+        //string url = "www.google.com";
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
             // Request and wait for the desired page.
