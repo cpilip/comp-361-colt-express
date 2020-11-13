@@ -81,4 +81,14 @@ public class Switch : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 9);
     }
+
+    public void quitMainGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 8);
+    }
+
+    public void toGoLobby()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+    }
 }

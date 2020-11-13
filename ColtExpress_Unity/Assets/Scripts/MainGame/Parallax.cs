@@ -53,17 +53,17 @@ public class Parallax : MonoBehaviour
 
         if (isLooping)
         {
-            
+
             SpriteRenderer firstChild = backgroundPart.FirstOrDefault();
 
             if (firstChild != null) {
-                Debug.Log("Made it here");
+                //Debug.Log("Made it here");
                 if (firstChild.transform.position.x < Camera.main.transform.position.x)
                 {
-                    Debug.Log("Made it here!");
+                    //Debug.Log("Made it here!");
                     if (firstChild.isVisibleFrom(Camera.main) == false)
                     {
-                        Debug.Log("Made it here2");
+                      //  Debug.Log("Made it here2");
                         SpriteRenderer lastChild = backgroundPart.LastOrDefault();
 
                         Vector3 lastPosition = lastChild.transform.position;
