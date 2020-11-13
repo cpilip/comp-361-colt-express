@@ -43,8 +43,12 @@ public class Switch : MonoBehaviour
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
   }
+    public void load()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
 
-  public void ruleBack()
+    public void ruleBack()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
   }
