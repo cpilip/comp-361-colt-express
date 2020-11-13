@@ -24,8 +24,12 @@ public class Switch : MonoBehaviour
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 4);
   }
+    public void goToSeting()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 9);
+    }
 
-  public void inviteFriend()
+    public void inviteFriend()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
   }
@@ -69,4 +73,8 @@ public class Switch : MonoBehaviour
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
   }
+    public void setingBack()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 9);
+    }
 }
