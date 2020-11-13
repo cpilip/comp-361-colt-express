@@ -7,6 +7,20 @@ using UnityEngine.Audio;
 public class setting : MonoBehaviour
 {
     public GameObject Panel;
+    public Dropdown resolutionDropdown;
+    Resolution[] resolutions;
+    void Start() {
+       resolutions= Screen.resolutions;
+        resolutionDropdown.ClearOptions();
+        List<string> options = new List<string>();
+
+        for (int i = 0; i < resolutions.Length; i++) {
+            string option = resolutions[i].width + "x" + resolutions[i].height;
+            options.Add(option);
+        }
+
+        resolutionDropdown.AddOptions(options);
+    }
     
     
     public void showhidePanel() {
@@ -23,5 +37,12 @@ public class setting : MonoBehaviour
         audioMixer.SetFloat("volume", volume);
 
 
+    }
+
+    public void setQuality(int qualityIndex) {
+        QualitySettings.SetQualityLevel(qualityIndex);
+    }
+    public void setFullscreen(bool isFull) {
+        Screen.fullScreen = isFull;
     }
 }
