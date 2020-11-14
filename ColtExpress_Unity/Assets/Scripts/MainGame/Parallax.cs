@@ -7,13 +7,13 @@ public class Parallax : MonoBehaviour
 {
     public Vector2 speed = new Vector2(2, 2);
     public Vector2 direction = new Vector2(-1, 0);
-    public bool isLinkedToCamera = false;
     public bool isLooping = false;
 
     private List<SpriteRenderer> backgroundPart;
 
     void Start()
     {
+        // Obtain all sprite renderers from the various background layers
         if(isLooping)
         {
             backgroundPart = new List<SpriteRenderer>();
@@ -29,6 +29,7 @@ public class Parallax : MonoBehaviour
                 }
             }
 
+            // Order by position
             backgroundPart = backgroundPart.OrderBy(
                 t => t.transform.position.x
                 ).ToList();
@@ -46,24 +47,15 @@ public class Parallax : MonoBehaviour
         movement *= Time.deltaTime;
         transform.Translate(movement);
 
-        if (isLinkedToCamera)
-        {
-            Camera.main.transform.Translate(movement);
-        }
-
         if (isLooping)
-        {
-
+        {           
             SpriteRenderer firstChild = backgroundPart.FirstOrDefault();
-
             if (firstChild != null) {
-                //Debug.Log("Made it here");
+                // Check if current background object is out of camera view; reset
                 if (firstChild.transform.position.x < Camera.main.transform.position.x)
                 {
-                    //Debug.Log("Made it here!");
                     if (firstChild.isVisibleFrom(Camera.main) == false)
-                    {
-                      //  Debug.Log("Made it here2");
+                    {                 
                         SpriteRenderer lastChild = backgroundPart.LastOrDefault();
 
                         Vector3 lastPosition = lastChild.transform.position;
