@@ -50,3 +50,6 @@ TagManager:
   - name: Foreground
     uniqueID: 78673759
     locked: 0
+  - name: Game
+    uniqueID: 3770844101
+    locked: 0
