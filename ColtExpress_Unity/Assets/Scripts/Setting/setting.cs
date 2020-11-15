@@ -1,23 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
-public class setting : MonoBehaviour
-{
+public class setting : MonoBehaviour{
     public GameObject Panel;
     public Dropdown resolutionDropdown;
+    public AudioMixer audioMixer;
     Resolution[] resolutions;
+
+
     void Start() {
-       resolutions= Screen.resolutions;
-        resolutionDropdown.ClearOptions();
+       resolutions = Screen.resolutions;
+       resolutionDropdown.ClearOptions();
         List<string> options = new List<string>();
         int currentResolutionIndex = 0;
         for (int i = 0; i < resolutions.Length; i++) {
-            string option = resolutions[i].width + "x" + resolutions[i].height;
+            string option = resolutions[i].width + " x " + resolutions[i].height;
             options.Add(option);
-            if (resolutions[i].width == Screen.currentResolution.width && 
+            if (resolutions[i].width == Screen.currentResolution.width &&
                 resolutions[i].height==Screen.currentResolution.height) {
                 currentResolutionIndex = i;
             }
@@ -29,22 +31,12 @@ public class setting : MonoBehaviour
     }
 
 
-    public void SetResolution(int resolutionIndex) {
+   public void SetResolution(int resolutionIndex) {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-    
-    
-    public void showhidePanel() {
-       
 
-        if (Panel != null) {
-            bool isActive = Panel.activeSelf;
-            Panel.SetActive(!isActive); }
-       
 
-    }
-    public AudioMixer audioMixer;
     public void setVolume(float volume) {
         audioMixer.SetFloat("volume", volume);
 
@@ -54,7 +46,7 @@ public class setting : MonoBehaviour
     public void setQuality(int qualityIndex) {
         QualitySettings.SetQualityLevel(qualityIndex);
     }
-    public void setFullscreen(bool isFull) {
-        Screen.fullScreen = isFull;
+   public void setFullscreen(bool isFullscreen) {
+        Screen.fullScreen = isFullscreen;
     }
 }
