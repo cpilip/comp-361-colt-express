@@ -924,11 +924,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 955317022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1929bd9a3d6baea58fde10f1301af3b, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e4748565a11e069b9def625a7986e2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  username: {fileID: 1112781387}
-  password: {fileID: 1497839435}
 --- !u!4 &955317024
 Transform:
   m_ObjectHideFlags: 0

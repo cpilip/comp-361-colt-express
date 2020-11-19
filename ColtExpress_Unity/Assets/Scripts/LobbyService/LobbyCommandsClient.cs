@@ -10,6 +10,11 @@ public class LobbyCommandsClient
 {
     private string response;
 
+    public string getResponse() 
+    {
+        return response;
+    }
+
     public void signIn(MonoBehaviour caller, string user, string pass) 
     {
         // string pass = password.GetComponent<TMP_InputField>().text;

@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Identification
 {
-    public string currToken;
-    public string refreshToken;
+    private string currToken;
+    private string refreshToken;
+
+    public void setToken(string token, string refToken)
+    {
+        this.currToken = token;
+        this.refreshToken = refToken;
+    }
+
 }
