@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Identification
+public class Identification : MonoBehaviour
 {
     private string currToken;
     private string refreshToken;
@@ -11,6 +11,11 @@ public class Identification
     {
         this.currToken = token;
         this.refreshToken = refToken;
+    }
+
+    void Start()
+    {
+        DontDestroyOnLoad(this.gameObject);
     }
 
 }
