@@ -32,4 +32,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MenuPages/MainGame.unity
     guid: 7e210b274d7adda4a88f95e833eccbb2
+  - enabled: 1
+    path: Assets/MenuPages/FindGame.unity
+    guid: b26981151341b5f30a6ce2dfac3c92ef
+  - enabled: 1
+    path: Assets/MenuPages/NewGame.unity
+    guid: 3bb6552e46e8f5ebd9540aa9d0f1192a
   m_configObjects: {}

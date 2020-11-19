@@ -17,7 +17,7 @@ public class Switch : MonoBehaviour
 
   public void playGame()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+    SceneManager.LoadScene("Play");
   }
 
   public void signIn()
@@ -30,10 +30,25 @@ public class Switch : MonoBehaviour
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
   }
 
+  public void newGame()
+  {
+    SceneManager.LoadScene ("NewGame");
+  }
+
   public void loadGame()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+    SceneManager.LoadScene ("LoadGame");
   }
+
+  public void findGame()
+  {
+    SceneManager.LoadScene ("FindGame");
+  }
+
+  // public void loadGame()
+  // {
+  //   SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+  // }
 
   public void startGame()
   {
