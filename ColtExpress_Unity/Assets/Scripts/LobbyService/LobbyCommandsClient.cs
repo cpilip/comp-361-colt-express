@@ -61,8 +61,8 @@ public class LobbyCommandsClient
 
     public void registerGameService(MonoBehaviour caller, string location, int maxPlayers, int minPlayers, string name, string webSupport, string token)
     {
-        string requestData = string.Format("{\"location\": \"{0}}\",\"maxSessionPlayers\": \"{1}\",\"minSessionPlayers\": \"{2}\",\"name\": \"{3}\",\"webSupport\": \"{4}\"}", location, maxPlayers, minPlayers, name, webSupport);
-        string url = string.Format("http://127.0.0.1:4242/api/gameservices/{0}}?access_token={1}", name, token);
+        string requestData = JsonUtility.ToJson(new RegisterGameRequest(location, maxPlayers.ToString(), minPlayers.ToString(), name, webSupport), true);
+        string url = string.Format("http://127.0.0.1:4242/api/gameservices/{0}?access_token={1}", name, token);
 
         caller.StartCoroutine(putRequest(url, requestData, true));
     }
