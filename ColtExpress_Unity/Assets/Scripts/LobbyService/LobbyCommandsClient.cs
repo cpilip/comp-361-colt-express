@@ -93,8 +93,8 @@ public class LobbyCommandsClient
             }
             else
             {
-                Debug.Log(":Received: " + webRequest.downloadHandler.text);
-                this.response = webRequest.downloadHandler.text;
+                // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+                response = webRequest.downloadHandler.text;
             }
         }
     }
@@ -120,8 +120,8 @@ public class LobbyCommandsClient
             }
             else
             {
-                Debug.Log(":Received: " + webRequest.downloadHandler.text);
-                this.response = webRequest.downloadHandler.text;
+                // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+                response = webRequest.downloadHandler.text;
             }
         }
     }
@@ -146,8 +146,8 @@ public class LobbyCommandsClient
             }
             else
             {
-                Debug.Log(":Received: " + webRequest.downloadHandler.text);
-                this.response = webRequest.downloadHandler.text;
+                // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+                response = webRequest.downloadHandler.text;
             }
         }
     }
@@ -173,8 +173,8 @@ public class LobbyCommandsClient
             }
             else
             {
-                Debug.Log(":Received: " + webRequest.downloadHandler.text);
-                this.response = webRequest.downloadHandler.text;
+                // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+                response = webRequest.downloadHandler.text;
             }
         }
     }

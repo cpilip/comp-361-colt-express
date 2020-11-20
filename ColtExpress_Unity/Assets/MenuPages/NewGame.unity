@@ -1061,6 +1061,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306dfe4458c091a1792ffaea504558d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameNameText: {fileID: 761651268}
+  MinPlayersSlider: {fileID: 541735745}
+  MaxPlayersSlider: {fileID: 1809008662}
 --- !u!4 &696719010
 Transform:
   m_ObjectHideFlags: 0
@@ -1534,8 +1537,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2062313558}
-        m_MethodName: signIn
+      - m_Target: {fileID: 696719009}
+        m_MethodName: createGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2784,6 +2787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usernameField: {fileID: 0}
   passwordField: {fileID: 0}
+  IDPrefab: {fileID: 0}
 --- !u!114 &1734543257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3121,6 +3125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usernameField: {fileID: 0}
   passwordField: {fileID: 0}
+  IDPrefab: {fileID: 0}
 --- !u!4 &2062313559
 Transform:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CreateLobby : MonoBehaviour
 {
@@ -11,8 +12,13 @@ public class CreateLobby : MonoBehaviour
 
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 
-    public void logIn() {
-        //LobbyCommands.signIn(this, GameNameText.GetComponent<TMP_InputField>().text, MinPlayersSlider.value, MaxPlayersSlider.value);
-        Debug.Log(LobbyCommands.getResponse());
+    public void createGame() {
+        string name = GameNameText.GetComponent<TMP_InputField>().text;
+        LobbyCommands.registerGameService(this, string.Format("http://127.0.0.1:4243/{0}", name), 
+            (int)MaxPlayersSlider.value, 
+            (int)MinPlayersSlider.value, 
+            name, 
+            "true", 
+            GameObject.Find("ID").GetComponent<Identification>().getToken());
     }
 }
