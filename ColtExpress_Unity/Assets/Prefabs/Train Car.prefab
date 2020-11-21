@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4061319694500597361}
   - component: {fileID: 4061319694500597326}
   m_Layer: 0
-  m_Name: Panel (1)
+  m_Name: Train Car
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 3
+  m_ChildAlignment: 6
   m_Spacing: 2
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
