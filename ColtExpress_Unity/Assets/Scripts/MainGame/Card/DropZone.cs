@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class DropZone : MonoBehaviour, IDropHandler
 {
-
-   
     public void OnDrop(PointerEventData eventData)
     {
         // Debug.Log(" dropped on " + gameObject.name);
