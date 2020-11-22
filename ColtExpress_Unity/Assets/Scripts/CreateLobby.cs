@@ -13,8 +13,13 @@ public class CreateLobby : MonoBehaviour
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 
     public void createGame() {
+        StartCoroutine(wait(1));
+    }
+
+    private IEnumerator wait(float time)
+    {
         string name = GameNameText.GetComponent<TMP_InputField>().text;
-        string address = string.Format("http://127.0.0.1:4243/{0}", name);
+        string address = "http://127.0.0.1:4243/DummyGameService";
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
         LobbyCommands.registerGameService(this, 
             address, 
@@ -23,6 +28,8 @@ public class CreateLobby : MonoBehaviour
             name, 
             "true", 
             token);
-        Debug.Log(LobbyCommands.getResponse());
+        yield return new WaitForSeconds(time);
+        string response = LobbyCommands.getResponse();
+        Debug.Log(response);
     }
 }

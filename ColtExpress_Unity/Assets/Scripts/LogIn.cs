@@ -18,10 +18,15 @@ public class LogIn : MonoBehaviour
         StartCoroutine(wait(1));
     }
 
-    IEnumerator wait(float time){
+    private IEnumerator wait(float time){
         LobbyCommands.signIn(this, usernameField.GetComponent<TMP_InputField>().text, passwordField.GetComponent<TMP_InputField>().text);
-        GameObject id = (GameObject)Instantiate(IDPrefab);
-        id.name = "ID";
+        GameObject id;
+        if (GameObject.Find("ID") == null) {
+            id = (GameObject)Instantiate(IDPrefab);
+            id.name = "ID";
+        } else {
+            id = GameObject.Find("ID");
+        }
 
         string response = LobbyCommands.getResponse();
         if (response == null) {
@@ -29,8 +34,13 @@ public class LogIn : MonoBehaviour
             response = LobbyCommands.getResponse();
         }
         SignInResponse json = JsonUtility.FromJson<SignInResponse>(response);
-        Debug.Log(json.access_token);
-        Debug.Log(json.refresh_token);
-        id.GetComponent<Identification>().setToken(json.access_token, json.refresh_token);
+        if (json.access_token == null){
+            Debug.Log("Sign In failed, try again");
+        } else {
+            Debug.Log(json.access_token);
+            Debug.Log(json.refresh_token);
+            id.GetComponent<Identification>().setToken(json.access_token, json.refresh_token);
+        }
+        
     }
 }

@@ -64,7 +64,7 @@ public class LobbyCommandsClient
         string requestData = JsonUtility.ToJson(new RegisterGameRequest(location, maxPlayers.ToString(), minPlayers.ToString(), name, webSupport), true);
         string url = string.Format("http://127.0.0.1:4242/api/gameservices/{0}?access_token={1}", name, token);
 
-        caller.StartCoroutine(putRequest(url, requestData, true));
+        caller.StartCoroutine(putRequest(url, requestData, true, true));
     }
 
     public void unregisterGameService(MonoBehaviour caller, string name, string token) 
@@ -152,7 +152,7 @@ public class LobbyCommandsClient
         }
     }
 
-    private IEnumerator putRequest(string url, string data, bool auth)
+    private IEnumerator putRequest(string url, string data, bool auth, bool gsRequest)
     {
         // Configure the data portion of the post request 
         using (UnityWebRequest webRequest = UnityWebRequest.Put(url, data))
@@ -162,6 +162,11 @@ public class LobbyCommandsClient
                 // Define the header of the request for Security purposes
                 string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
                 webRequest.SetRequestHeader("Authorization", header);
+            }
+
+            if (gsRequest)
+            {
+                webRequest.SetRequestHeader("Content-Type", "application/json");
             }
 
             // Request and wait for the desired page.
