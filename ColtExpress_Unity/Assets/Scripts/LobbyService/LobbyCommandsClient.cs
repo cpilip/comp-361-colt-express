@@ -74,6 +74,11 @@ public class LobbyCommandsClient
         caller.StartCoroutine(deleteRequest(url, true));
     }
 
+    public void getGameServices(MonoBehaviour caller)
+    {
+        string url = "http://127.0.0.1:4242/api/gameservices";
+        caller.StartCoroutine(getRequest(url, true));
+    }
 
     private IEnumerator getRequest(string url, bool auth) 
     {

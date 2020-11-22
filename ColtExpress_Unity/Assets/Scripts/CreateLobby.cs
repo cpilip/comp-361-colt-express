@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class CreateLobby : MonoBehaviour
 {
@@ -31,5 +33,9 @@ public class CreateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+        if (response == "")
+        {
+            SceneManager.LoadScene ("Lobby");
+        }
     }
 }
