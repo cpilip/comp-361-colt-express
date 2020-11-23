@@ -9,34 +9,46 @@ using UnityEngine.UI;
  */
 public class Timer : MonoBehaviour
 {
-    private float time = 180;
+    private float time = 15;
     private bool timerIsRunning = false;
 
     public TextMeshProUGUI timer;
 
     void Start()
     {
-        timerIsRunning = true;
         timer = this.transform.gameObject.GetComponent<TextMeshProUGUI>();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public IEnumerator waitForTimer(bool timedOut, System.Action<bool> result)
     {
-        if (timerIsRunning)
+        // Coroutine for the timer
+        //Debug.Log("Coroutine waitForTimer started.");
+        timerIsRunning = true;
+
+        while (timerIsRunning)
         {
             if (time > 0)
             {
                 time -= Time.deltaTime;
                 displayTimer(time);
+                yield return null;
             }
             else
             {
                 time = 0;
                 timerIsRunning = false;
+                displayTimer(time);
+                //Debug.Log("Coroutine waitForTimer terminating.");
+                result(true);
+                yield break;
             }
         }
+
+
     }
+
+
 
     public void displayTimer(float time)
     {

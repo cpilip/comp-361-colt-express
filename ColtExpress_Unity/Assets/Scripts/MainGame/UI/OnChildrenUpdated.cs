@@ -8,15 +8,27 @@ using UnityEngine.Events;
  */
 public class OnChildrenUpdated : MonoBehaviour
 {
-    public GameObject handBlocker;
+    public bool hasChanged;
+    private int previousNumChildren;
+
+    void Start()
+    {
+        hasChanged = false;
+        previousNumChildren = this.transform.childCount;
+    }
+
     public void OnTransformChildrenChanged()
     {
-        if (handBlocker != null)
+        Debug.Log("The number of children was changed.");
+        if (previousNumChildren != this.transform.childCount)
         {
-            handBlocker.SetActive(!handBlocker.activeSelf);
+            previousNumChildren = this.transform.childCount;
+            hasChanged = true;
         }
-        //TODO: Figure out how to update subdecks (see Phase1Action)
+        else
+        {
+            hasChanged = false;
+        }
 
-        //Debug.Log("A child was changed for: " + this.GetComponentInParent<Transform>().gameObject.name);
     }
 }

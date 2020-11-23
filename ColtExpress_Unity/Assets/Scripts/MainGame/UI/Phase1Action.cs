@@ -13,15 +13,19 @@ public class Phase1Action : MonoBehaviour
     public GameObject cardPrefab;
     public GameObject subdeckPrefab;
     public GameObject turnMenu;
+    public GameObject timer;
     public GameObject handBlocker;
 
     private Transform lastSubdeck;
     private int displayedSubdeckNum;
+    private GameObject playedCardsZone;
 
     void Start()
     {
         displayedSubdeckNum = 1;
         lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
+
+        playedCardsZone = deck.transform.GetChild(0).gameObject;
     }
 
     // Draw and add three cards to the deck
@@ -72,6 +76,7 @@ public class Phase1Action : MonoBehaviour
 
 
     //TODO: Figure out how to update subdecks
+
     public void playCard()
     {
         if (handBlocker != null)
@@ -79,7 +84,29 @@ public class Phase1Action : MonoBehaviour
             handBlocker.SetActive(!handBlocker.activeSelf);
         }
 
-    } 
+        StartCoroutine("startTimer");
+    }
+    private IEnumerator startTimer()
+    {
+        // Fancy lambda logic for figuring out when the timer coroutine finishes and the player has timed out their turn
+        bool timedOut = false;
+        yield return StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
+
+        if (timedOut)
+        {
+            Debug.Log("Player timed out or played a card.");
+            toggleTurnMenu();
+
+            if (handBlocker != null)
+            {
+                handBlocker.SetActive(!handBlocker.activeSelf);
+            }
+
+            StopAllCoroutines();
+        }
+        
+
+    }
 
     public void nextSubdeck()
     {
