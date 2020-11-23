@@ -36,9 +36,7 @@ public class Timer : MonoBehaviour
             }
             else
             {
-                time = 0;
-                timerIsRunning = false;
-                displayTimer(time);
+                resetTimer();
                 //Debug.Log("Coroutine waitForTimer terminating.");
                 result(true);
                 yield break;
@@ -56,5 +54,12 @@ public class Timer : MonoBehaviour
         float seconds = Mathf.FloorToInt(time % 60);
 
         timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void resetTimer()
+    {
+        time = 0;
+        timerIsRunning = false;
+        displayTimer(time);
     }
 }

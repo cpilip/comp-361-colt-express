@@ -24,8 +24,7 @@ public class Phase1Action : MonoBehaviour
     {
         displayedSubdeckNum = 1;
         lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
-
-        playedCardsZone = deck.transform.GetChild(0).gameObject;
+        playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
     }
 
     // Draw and add three cards to the deck
@@ -84,27 +83,48 @@ public class Phase1Action : MonoBehaviour
             handBlocker.SetActive(!handBlocker.activeSelf);
         }
 
-        StartCoroutine("startTimer");
+        StartCoroutine("playingCard");
     }
-    private IEnumerator startTimer()
+
+    private IEnumerator playingCard()
     {
         // Fancy lambda logic for figuring out when the timer coroutine finishes and the player has timed out their turn
         bool timedOut = false;
-        yield return StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
+        bool cardPlayed = false;
 
-        if (timedOut)
-        {
-            Debug.Log("Player timed out or played a card.");
-            toggleTurnMenu();
+        OnChildrenUpdated.wasChildChanged cardWasPlayed = delegate () { cardPlayed = true; };
+        playedCardsZone.GetComponent<OnChildrenUpdated>().notifyChildWasChanged += cardWasPlayed;
 
-            if (handBlocker != null)
-            {
-                handBlocker.SetActive(!handBlocker.activeSelf);
-            }
+        StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
 
-            StopAllCoroutines();
-        }
         
+
+        while (timedOut == false || cardPlayed == false)
+        {
+            
+            if (timedOut || cardPlayed)
+            {
+                Debug.Log("Player timed out or played a card.");
+                toggleTurnMenu();
+
+                if (handBlocker != null)
+                {
+                    handBlocker.SetActive(!handBlocker.activeSelf);
+                }
+
+                timer.GetComponent<Timer>().resetTimer();
+
+                // Do not do StopAllCoroutines(). Learned that the hard way.
+                yield break;
+            } else
+            {
+                yield return null;
+            }
+        }
+
+        Debug.LogError("Coroutine playingCard was terminated - execution was unsuccessful (The player did not play a card *and* timed out. This should not happen.).");
+
+        yield break;
 
     }
 
@@ -113,13 +133,14 @@ public class Phase1Action : MonoBehaviour
         // Correct the currently displayed subdeck for proper indexing
         displayedSubdeckNum--;
 
+
         // Display the next subdeck
         deck.transform.GetChild(displayedSubdeckNum).gameObject.SetActive(false);
         deck.transform.GetChild((displayedSubdeckNum + 1) % deck.transform.childCount).gameObject.SetActive(true);
 
+
         // Revert the index change
         displayedSubdeckNum = (displayedSubdeckNum + 1) % deck.transform.childCount + 1;
-
     }
 
     // Toggle turn menu

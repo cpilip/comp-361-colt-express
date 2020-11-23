@@ -8,27 +8,13 @@ using UnityEngine.Events;
  */
 public class OnChildrenUpdated : MonoBehaviour
 {
-    public bool hasChanged;
-    private int previousNumChildren;
-
-    void Start()
-    {
-        hasChanged = false;
-        previousNumChildren = this.transform.childCount;
-    }
+    public delegate void wasChildChanged();
+    public event wasChildChanged notifyChildWasChanged;
 
     public void OnTransformChildrenChanged()
     {
-        Debug.Log("The number of children was changed.");
-        if (previousNumChildren != this.transform.childCount)
-        {
-            previousNumChildren = this.transform.childCount;
-            hasChanged = true;
-        }
-        else
-        {
-            hasChanged = false;
-        }
-
+        notifyChildWasChanged?.Invoke();
     }
+    
+
 }
