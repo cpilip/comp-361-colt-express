@@ -610,7 +610,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -2258755098361695858, guid: 31a39cd6dcd12cf4e958387ed907d4c9,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -800,6 +801,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2759939372906629743}
     m_Modifications:
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1290855366162983238, guid: 130016cdaf9f7604dae4b43607124de1,
+        type: 3}
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name
@@ -935,6 +947,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2759939372906629743}
     m_Modifications:
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 6621252853494989987, guid: 130016cdaf9f7604dae4b43607124de1,
+        type: 3}
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name
@@ -1075,6 +1098,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2759939372906629743}
     m_Modifications:
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2978653956524333172, guid: 130016cdaf9f7604dae4b43607124de1,
+        type: 3}
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name
@@ -1225,6 +1259,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2759939372906629743}
     m_Modifications:
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2248273014285675650, guid: 130016cdaf9f7604dae4b43607124de1,
+        type: 3}
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name
@@ -1365,6 +1410,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2759939372906629743}
     m_Modifications:
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2696506250795634678, guid: 130016cdaf9f7604dae4b43607124de1,
+        type: 3}
+    - target: {fileID: 1519484300147032575, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name
