@@ -22,6 +22,7 @@ public class Timer : MonoBehaviour
 
     public IEnumerator waitForTimer(bool timedOut, System.Action<bool> result)
     {
+        time = 15;
         // Coroutine for the timer
         //Debug.Log("Coroutine waitForTimer started.");
         timerIsRunning = true;
