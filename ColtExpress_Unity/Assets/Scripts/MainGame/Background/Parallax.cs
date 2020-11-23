@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/* Author: Christina Pilip
+ * Usage: Defines parallax behavior for the background layers.
+ */
 public class Parallax : MonoBehaviour
 {
     public Vector2 speed = new Vector2(2, 2);
@@ -39,6 +42,7 @@ public class Parallax : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Translate the background layer
         Vector3 movement = new Vector3(
             speed.x * direction.x,
             speed.y * direction.y,
@@ -51,7 +55,7 @@ public class Parallax : MonoBehaviour
         {           
             SpriteRenderer firstChild = backgroundPart.FirstOrDefault();
             if (firstChild != null) {
-                // Check if current background object is out of camera view; reset
+                // Check if current background layer is out of camera view; reset
                 if (firstChild.transform.position.x < Camera.main.transform.position.x)
                 {
                     if (firstChild.isVisibleFrom(Camera.main) == false)

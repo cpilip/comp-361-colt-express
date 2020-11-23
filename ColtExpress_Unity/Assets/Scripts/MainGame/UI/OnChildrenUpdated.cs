@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/* Author: Christina Pilip
+ * Usage: Defines behaviour when a Unity object's children are changed. 
+ */
 public class OnChildrenUpdated : MonoBehaviour
 {
     public GameObject handBlocker;
@@ -12,7 +15,7 @@ public class OnChildrenUpdated : MonoBehaviour
         {
             handBlocker.SetActive(!handBlocker.activeSelf);
         }
-        //TODO: Update subdecks
+        //TODO: Figure out how to update subdecks (see Phase1Action)
 
         //Debug.Log("A child was changed for: " + this.GetComponentInParent<Transform>().gameObject.name);
     }

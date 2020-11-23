@@ -2,17 +2,16 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
 
+/* Author: Christina Pilip
+ * Usage: Defines a property "Drop Zone", allowing a "Draggable" to be parented to the Drop Zone.
+ */
 public class DropZone : MonoBehaviour, IDropHandler
 {
     public void OnDrop(PointerEventData eventData)
     {
-        // Debug.Log(" dropped on " + gameObject.name);
-        
-
         Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 
-        // Add the card to the played cards zone
-        // No further functionality currently, just that you're able to do so
+        // Add the Draggable to the Drop Zone
         if (d != null)
         {
             d.parentToReturnTo = this.transform;

@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Author: Christina Pilip
+ * Usage: Defines behaviour of the Phase 1 Turn Menu. 
+ */
+
+// TODO: Unfinished, more for an initial implementation.
 public class Phase1Action : MonoBehaviour
 {
     public GameObject deck;
@@ -10,13 +15,13 @@ public class Phase1Action : MonoBehaviour
     public GameObject turnMenu;
     public GameObject handBlocker;
 
-    private Transform currSubdeck;
-    private int currSubdeckNum;
+    private Transform lastSubdeck;
+    private int displayedSubdeckNum;
 
     void Start()
     {
-        currSubdeckNum = 1;
-        currSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
+        displayedSubdeckNum = 1;
+        lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
     }
 
     // Draw and add three cards to the deck
@@ -26,46 +31,47 @@ public class Phase1Action : MonoBehaviour
         {
             for (int i = 0; i < 3; i++)
             {
-                // Create a new subdeck if the current one is full
-                if (currSubdeck.childCount >= 6)
+                // Create a new subdeck if the last one is full
+                if (lastSubdeck.childCount >= 6)
                 {
                     GameObject newSubdeck = Instantiate(subdeckPrefab);
+                    // Set properties
                     newSubdeck.transform.SetParent(deck.transform);
-                    newSubdeck.transform.position = currSubdeck.transform.position;
+                    newSubdeck.transform.position = lastSubdeck.transform.position;
                     newSubdeck.transform.localScale = new Vector3(1, 1, 1);
 
 
-                    // Disable view of the displayed subdeck
-                    deck.transform.GetChild(currSubdeckNum - 1).gameObject.SetActive(false);
+                    // Disable view of the currently displayed subdeck
+                    deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(false);
 
-                    // Update to the current subdeck
-                    currSubdeck = newSubdeck.transform;
-                    currSubdeckNum = deck.transform.childCount;
+                    // Display and update to the new subdeck
+                    lastSubdeck = newSubdeck.transform;
+                    displayedSubdeckNum = deck.transform.childCount;
                 }
 
                 // Create a new card; no other values are changed, and the card prefab will definitely be altered at a later
                 // date when we model low-level implementation
                 GameObject newCard = Instantiate(cardPrefab);
 
-                // Put the card in the deck
-                newCard.transform.SetParent(currSubdeck.transform);
+                // Put the card in the last subdeck
+                newCard.transform.SetParent(lastSubdeck.transform);
                 newCard.transform.localScale = new Vector3(1, 1, 1);
 
             }
 
-            deck.transform.GetChild(currSubdeckNum - 1).gameObject.SetActive(false);
-            currSubdeckNum = deck.transform.childCount;
-            deck.transform.GetChild(currSubdeckNum - 1).gameObject.SetActive(true);
+            // Display and update the currently displayed subdeck
+            deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(false);
+            displayedSubdeckNum = deck.transform.childCount;
+            deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(true);
 
         }
 
-
         //Disable the turn menu
-        //toggleTurnMenu();
+        toggleTurnMenu();
     }
 
 
-
+    //TODO: Figure out how to update subdecks
     public void playCard()
     {
         if (handBlocker != null)
@@ -77,22 +83,15 @@ public class Phase1Action : MonoBehaviour
 
     public void nextSubdeck()
     {
+        // Correct the currently displayed subdeck for proper indexing
+        displayedSubdeckNum--;
 
-        // 2 subdecks
-        //we're on subdeck 2 (the first)
+        // Display the next subdeck
+        deck.transform.GetChild(displayedSubdeckNum).gameObject.SetActive(false);
+        deck.transform.GetChild((displayedSubdeckNum + 1) % deck.transform.childCount).gameObject.SetActive(true);
 
-        //Debug.Log("Display: " + currSubdeckNum);
-        //Debug.Log(deck.transform.GetChild(currSubdeckIndex).gameObject + " at index " + currSubdeckIndex + " is the current subdeck.");
-
-        currSubdeckNum--;
-
-        // now index 1
-        //Debug.Log("Display index (to disable): " + currSubdeckNum);
-        deck.transform.GetChild(currSubdeckNum).gameObject.SetActive(false);
-        //Debug.Log("Display index (to enable):" + (currSubdeckNum + 1) % deck.transform.childCount);
-        deck.transform.GetChild((currSubdeckNum + 1) % deck.transform.childCount).gameObject.SetActive(true);
-
-        currSubdeckNum = (currSubdeckNum + 1) % deck.transform.childCount + 1;
+        // Revert the index change
+        displayedSubdeckNum = (displayedSubdeckNum + 1) % deck.transform.childCount + 1;
 
     }
 

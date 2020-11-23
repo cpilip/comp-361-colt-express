@@ -2,23 +2,26 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
 
+/* Author: Christina Pilip
+ * Usage: Defines a property "Draggable", allowing a Unity object to be dragged.
+ */
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
   public Transform parentToReturnTo;
 
     public void OnBeginDrag(PointerEventData eventdata)
   {
-        // Remember the card's parent panel (the subdeck)
+        // Remember the Draggable's parent panel
         parentToReturnTo = this.transform.parent;
-        // Set the card's parent to the overall deck
+        // Set the Draggable's parent to the "master" parent
         this.transform.SetParent(this.transform.parent.parent);
 
-        // Disable raycasting on card so onDrop() will work
+        // Disable raycasting on Draggable so onDrop() will work
         GetComponent<CanvasGroup>().blocksRaycasts = false;
   }
   public void OnDrag(PointerEventData eventData)
   {
-        // Card follows mouse
+        // Draggable follows mouse
         this.transform.position = Input.mousePosition;
 
     }
@@ -26,6 +29,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnEndDrag(PointerEventData eventData)
   {
+        // If not dropped on a Drop Zone, return the Draggable to the parent panel
         this.transform.SetParent(parentToReturnTo);
 
         // Re-enable raycasting 
