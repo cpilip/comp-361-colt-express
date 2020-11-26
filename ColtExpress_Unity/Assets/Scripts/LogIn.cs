@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Networking;
+
 
 public class LogIn : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class LogIn : MonoBehaviour
 
     private IEnumerator wait(float time){
         LobbyCommands.signIn(this, usernameField.GetComponent<TMP_InputField>().text, passwordField.GetComponent<TMP_InputField>().text);
+        // LobbyCommands.debugOnline(this);
         GameObject id;
         if (GameObject.Find("ID") == null) {
             id = (GameObject)Instantiate(IDPrefab);
@@ -33,13 +36,14 @@ public class LogIn : MonoBehaviour
             yield return new WaitForSeconds(time);
             response = LobbyCommands.getResponse();
         }
+        Debug.Log("Resp : "+ response);
         SignInResponse json = JsonUtility.FromJson<SignInResponse>(response);
         if (json.access_token == null){
             Debug.Log("Sign In failed, try again");
         } else {
             Debug.Log(json.access_token);
             Debug.Log(json.refresh_token);
-            id.GetComponent<Identification>().setToken(json.access_token, json.refresh_token);
+            id.GetComponent<Identification>().setToken(UnityWebRequest.EscapeURL(json.access_token), UnityWebRequest.EscapeURL(json.refresh_token));
         }
         
     }

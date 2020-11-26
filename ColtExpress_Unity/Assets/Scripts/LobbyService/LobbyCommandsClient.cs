@@ -8,6 +8,10 @@ using TMPro;
 
 public class LobbyCommandsClient
 {
+    // default local host : 127.0.0.1:4242
+    // Azure server IP : 13.68.140.249
+    public const string connectionIP = "13.68.140.249"; // IP of Azure server
+
     private string response;
 
     public string getResponse() 
@@ -18,7 +22,7 @@ public class LobbyCommandsClient
     public void signIn(MonoBehaviour caller, string user, string pass) 
     {
         // string pass = password.GetComponent<TMP_InputField>().text;
-        string url = string.Format("http://127.0.0.1:4242/oauth/token?grant_type=password&username={0}&password={1}", user, pass);
+        string url = string.Format("http://{0}/oauth/token?grant_type=password&username={1}&password={2}", connectionIP, user, pass);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection("user_oauth_approval=true&_csrf=19beb2db-3807-4dd5-9f64-6c733462281b&authorize=true"));
@@ -28,55 +32,55 @@ public class LobbyCommandsClient
 
     public void debugOnline(MonoBehaviour caller)
     {
-        string url = "http://127.0.0.1:4242/api/online";
+        string url = string.Format("http://{0}/api/online", connectionIP);
         caller.StartCoroutine(getRequest(url, false));
     }
 
     public void signOut(MonoBehaviour caller, string token)
     {
         // TODO Get current token
-        string url = string.Format("http://127.0.0.1:4242/oauth/active?access_token={0}", token);
+        string url = string.Format("http://{0}/oauth/active?access_token={1}", connectionIP, token);
         caller.StartCoroutine(deleteRequest(url, false));
     }
 
     public void getRole(MonoBehaviour caller, string token)
     {
         // TODO get current token
-        string url = string.Format("http://127.0.0.1:4242/oauth/role?access_token={0}", token);
+        string url = string.Format("http://{0}/oauth/role?access_token={1}", connectionIP, token);
         caller.StartCoroutine(getRequest(url, false));
     }
 
     public void getAllUsers(MonoBehaviour caller, string token)
     {
         // TODO get current token
-        string url = string.Format("http://127.0.0.1:4242/api/users?access_token={0}", token);
+        string url = string.Format("http://{0}/api/users?access_token={1}", connectionIP, token);
         caller.StartCoroutine(getRequest(url, true));
     }
 
     public void getUsername(MonoBehaviour caller, string token)
     {
-        string url = string.Format("http://127.0.0.1:4242/oauth/username?access_token={0}", token);    
+        string url = string.Format("http://{0}/oauth/username?access_token={1}", connectionIP, token);    
         caller.StartCoroutine(getRequest(url, true));
     }
 
     public void registerGameService(MonoBehaviour caller, string location, int maxPlayers, int minPlayers, string name, string webSupport, string token)
     {
         string requestData = JsonUtility.ToJson(new RegisterGameRequest(location, maxPlayers.ToString(), minPlayers.ToString(), name, webSupport), true);
-        string url = string.Format("http://127.0.0.1:4242/api/gameservices/{0}?access_token={1}", name, token);
-
+        string url = string.Format("http://{0}/api/gameservices/{1}?access_token={2}", connectionIP, name, token);
         caller.StartCoroutine(putRequest(url, requestData, true, true));
     }
 
     public void unregisterGameService(MonoBehaviour caller, string name, string token) 
     {
-        string url = string.Format("http://127.0.0.1:4242/api/gameservices/{0}?access_token={1}", name, token);
+        string url = string.Format("http://{0}/api/gameservices/{1}?access_token={2}", connectionIP, name, token);
 
         caller.StartCoroutine(deleteRequest(url, true));
     }
 
     public void getGameServices(MonoBehaviour caller)
     {
-        string url = "http://127.0.0.1:4242/api/gameservices";
+        string url = string.Format("http://{0}/api/gameservices", connectionIP);
+        Debug.Log(url);
         caller.StartCoroutine(getRequest(url, true));
     }
 
@@ -105,9 +109,8 @@ public class LobbyCommandsClient
     }
 
     // Private methods that handle requests
-    private IEnumerator deleteRequest(string token, bool auth)
+    private IEnumerator deleteRequest(string url, bool auth)
     {
-        string url = string.Format("http://127.0.0.1:4242/oauth/active?access_token={0}", token);
         using (UnityWebRequest webRequest = UnityWebRequest.Delete(url))
         {
             if (auth) 

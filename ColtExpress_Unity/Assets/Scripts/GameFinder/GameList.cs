@@ -16,6 +16,8 @@ public class GameList : MonoBehaviour
 
     private void refreshAllButtons()
     {
+        // int counter = 0;
+
         GameObject contentPanel = GameObject.Find("Content");
         foreach (string st in this.Games)
         {
@@ -25,11 +27,5 @@ public class GameList : MonoBehaviour
             newButton.tag = "listButton";
         }
 
-        int counter = 0;
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("listButton"))
-        {
-            go.transform.position = new Vector3(0, -18 + 32 * counter, 0);
-            counter += 1;
-        }
     }
 }
