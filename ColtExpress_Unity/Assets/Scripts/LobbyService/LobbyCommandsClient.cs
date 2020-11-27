@@ -80,7 +80,12 @@ public class LobbyCommandsClient
     public void getGameServices(MonoBehaviour caller)
     {
         string url = string.Format("http://{0}/api/gameservices", connectionIP);
-        Debug.Log(url);
+        caller.StartCoroutine(getRequest(url, true));
+    }
+
+    public void getGameService(MonoBehaviour caller, string name)
+    {
+        string url = string.Format("http://{0}/api/gameservices/{1}", connectionIP, name);
         caller.StartCoroutine(getRequest(url, true));
     }
 
