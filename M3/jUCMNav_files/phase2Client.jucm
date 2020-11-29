@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 28, 2020 at 11:54:41 PM EST" specVersion="39" urnVersion="1.27" nextGlobalID="8867">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 12:06:43 AM EST" specVersion="40" urnVersion="1.27" nextGlobalID="9147">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -54,7 +54,7 @@
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
       <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (corresponding to currentCard)" id="5230" x="1517" y="717" pred="//@urndef/@specDiagrams.0/@connections.4">
-        <label/>
+        <label deltaX="-48" deltaY="5"/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
       <nodes xsi:type="ucm.map:RespRef" name="RespRef5245" id="5245" x="1332" y="717" succ="//@urndef/@specDiagrams.0/@connections.4" pred="//@urndef/@specDiagrams.0/@connections.3" respDef="562">
@@ -158,7 +158,7 @@
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="6106" x="2180" y="297" pred="//@urndef/@specDiagrams.0/@connections.41">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="6106" x="2180" y="297" pred="//@urndef/@specDiagrams.0/@connections.47">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -174,17 +174,20 @@
       <nodes xsi:type="ucm.map:FailurePoint" name="TimeoutOccurred" id="8749" x="1900" y="297" succ="//@urndef/@specDiagrams.0/@connections.44" pred="//@urndef/@specDiagrams.0/@connections.43">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef8767" id="8767" x="1923" y="357" succ="//@urndef/@specDiagrams.0/@connections.46" pred="//@urndef/@specDiagrams.0/@connections.45" respDef="8766">
-        <label/>
-      </nodes>
       <nodes xsi:type="ucm.map:StartPoint" name="Timeout" id="8757" x="1823" y="357" succ="//@urndef/@specDiagrams.0/@connections.45" failureKind="Abort">
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="8759" x="2060" y="357" pred="//@urndef/@specDiagrams.0/@connections.46">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef8767" id="8767" x="2040" y="357" succ="//@urndef/@specDiagrams.0/@connections.46" pred="//@urndef/@specDiagrams.0/@connections.45" respDef="8766">
         <label/>
-        <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
+      <nodes xsi:type="ucm.map:OrJoin" name="OrJoin9141" id="9141" x="2100" y="297" succ="//@urndef/@specDiagrams.0/@connections.47" pred="//@urndef/@specDiagrams.0/@connections.41 //@urndef/@specDiagrams.0/@connections.46"/>
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef8869" id="8869" x="669" y="111" width="753" height="655" contDef="8868">
+        <label/>
+      </contRefs>
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9143" id="9143" x="1605" y="254" width="511" height="139" contDef="8868">
+        <label/>
+      </contRefs>
       <connections xsi:type="ucm.map:NodeConnection" target="612"/>
       <connections xsi:type="ucm.map:NodeConnection" source="612"/>
       <connections xsi:type="ucm.map:NodeConnection" source="1134" target="8280"/>
@@ -254,7 +257,7 @@
         <condition label="" expression="true"/>
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8663" target="6133"/>
-      <connections xsi:type="ucm.map:NodeConnection" source="6173" target="6106"/>
+      <connections xsi:type="ucm.map:NodeConnection" source="6173" target="9141"/>
       <connections xsi:type="ucm.map:NodeConnection" source="6133" target="8747"/>
       <connections xsi:type="ucm.map:NodeConnection" source="8747" target="8749">
         <condition label="" expression="true"/>
@@ -263,9 +266,12 @@
         <condition label="" expression="false"/>
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8757" target="8767"/>
-      <connections xsi:type="ucm.map:NodeConnection" source="8767" target="8759"/>
-      <comments description="Server validates Move Action. Move Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1423" y="143" width="301" height="47" fillColor="255,255,200"/>
+      <connections xsi:type="ucm.map:NodeConnection" source="8767" target="9141"/>
+      <connections xsi:type="ucm.map:NodeConnection" source="9141" target="6106"/>
+      <comments description="Server validates Move Action. Move Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1603" y="184" width="301" height="47" fillColor="255,255,200"/>
     </specDiagrams>
+    <components name="GUI" id="8868" contRefs="8869 9143" kind="Other"/>
+    <components name="Component9142" id="9142" kind="Other"/>
   </urndef>
   <metadata name="_Use0to100EvaluationRange" value="false"/>
   <dynamicContexts name="DynamicContext12" id="12" groups="11"/>
