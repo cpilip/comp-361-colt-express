@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 20, 2020 at 7:22:37 PM EST" modified="November 28, 2020 at 11:35:43 PM EST" specVersion="25" urnVersion="1.27" nextGlobalID="3294">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 20, 2020 at 7:22:37 PM EST" modified="November 29, 2020 at 5:38:14 AM EST" specVersion="28" urnVersion="1.27" nextGlobalID="3306">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -20,16 +20,16 @@
     <responsibilities name="Responsibility85" id="85"/>
     <responsibilities name="Responsibility87" id="87"/>
     <responsibilities name="stateChange&lt;&lt;in>>" id="79"/>
-    <responsibilities name="chosenMoveServer &lt;&lt;in>>" id="266" respRefs="267"/>
+    <responsibilities name="validateChosenMove&lt;&lt;in>>" id="266" respRefs="267"/>
     <responsibilities name="Responsibility352" id="352"/>
-    <responsibilities name="doAction&lt;&lt;out>>" id="552" respRefs="553"/>
+    <responsibilities name="refreshGameState&lt;&lt;out>>" id="552" respRefs="553"/>
     <responsibilities name="invalidRequest_e&lt;&lt;out>>" id="628" respRefs="629"/>
-    <responsibilities name="chosenHostageServer&lt;&lt;in>>" id="2389" respRefs="2390"/>
-    <responsibilities name="chosenRideMoveServer&lt;&lt;in>>" id="2391" respRefs="2392"/>
-    <responsibilities name="chosenRobberyLootServer&lt;&lt;in>>" id="2395" respRefs="2396"/>
-    <responsibilities name="chosenBanditFireServer&lt;&lt;in>>" id="2397" respRefs="2398"/>
-    <responsibilities name="chosenBanditPunchServer&lt;&lt;in>>" id="2401" respRefs="2402"/>
-    <responsibilities name="chosenMarshalMoveServer&lt;&lt;in>>" id="2405" respRefs="2406"/>
+    <responsibilities name="validateChosenHostage&lt;&lt;in>>" id="2389" respRefs="2392"/>
+    <responsibilities name="validateChosenRideMove&lt;&lt;in>>" id="2391" respRefs="2390"/>
+    <responsibilities name="validateChosenRobberyLoot&lt;&lt;in>>" id="2395" respRefs="2396"/>
+    <responsibilities name="validateChosenBanditFire&lt;&lt;in>>" id="2397" respRefs="2398"/>
+    <responsibilities name="validateChosenCharacterPunch&lt;&lt;in>>" id="2401" respRefs="2402"/>
+    <responsibilities name="validateChosenMarshalMove&lt;&lt;in>>" id="2405" respRefs="2406"/>
     <specDiagrams xsi:type="ucm.map:UCMmap" name="UCMmap2" id="2">
       <nodes xsi:type="ucm.map:RespRef" name="RespRef267" id="267" x="302" y="104" succ="//@urndef/@specDiagrams.0/@connections.0" pred="//@urndef/@specDiagrams.0/@connections.1" respDef="266">
         <label/>
@@ -59,10 +59,10 @@
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
       <nodes xsi:type="ucm.map:OrJoin" name="OrJoin2218" id="2218" x="597" y="218" succ="//@urndef/@specDiagrams.0/@connections.15" pred="//@urndef/@specDiagrams.0/@connections.32 //@urndef/@specDiagrams.0/@connections.27 //@urndef/@specDiagrams.0/@connections.28 //@urndef/@specDiagrams.0/@connections.29 //@urndef/@specDiagrams.0/@connections.30 //@urndef/@specDiagrams.0/@connections.34 //@urndef/@specDiagrams.0/@connections.31 //@urndef/@specDiagrams.0/@connections.26"/>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef2390" id="2390" x="302" y="165" succ="//@urndef/@specDiagrams.0/@connections.16" pred="//@urndef/@specDiagrams.0/@connections.9" respDef="2389">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef2390" id="2390" x="302" y="165" succ="//@urndef/@specDiagrams.0/@connections.16" pred="//@urndef/@specDiagrams.0/@connections.9" respDef="2391">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef2392" id="2392" x="302" y="217" succ="//@urndef/@specDiagrams.0/@connections.17" pred="//@urndef/@specDiagrams.0/@connections.10" respDef="2391">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef2392" id="2392" x="302" y="217" succ="//@urndef/@specDiagrams.0/@connections.17" pred="//@urndef/@specDiagrams.0/@connections.10" respDef="2389">
         <label/>
       </nodes>
       <nodes xsi:type="ucm.map:RespRef" name="RespRef2396" id="2396" x="302" y="271" succ="//@urndef/@specDiagrams.0/@connections.18" pred="//@urndef/@specDiagrams.0/@connections.11" respDef="2395">
@@ -85,7 +85,7 @@
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:StartPoint" name="StartPhase2Server (Hostage)" id="811" x="102" y="165" succ="//@urndef/@specDiagrams.0/@connections.9">
+      <nodes xsi:type="ucm.map:StartPoint" name="StartPhase2Server (Ride)" id="811" x="102" y="165" succ="//@urndef/@specDiagrams.0/@connections.9">
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
@@ -97,11 +97,11 @@
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:StartPoint" name="StartPhase2Server (Ride)" id="835" x="102" y="217" succ="//@urndef/@specDiagrams.0/@connections.10">
+      <nodes xsi:type="ucm.map:StartPoint" name="StartPhase2Server (Hostage)" id="835" x="102" y="217" succ="//@urndef/@specDiagrams.0/@connections.10">
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:StartPoint" name="(Move) Action ends in Stagecoach" id="3152" x="699" y="391" succ="//@urndef/@specDiagrams.0/@connections.22" failureKind="Abort">
+      <nodes xsi:type="ucm.map:StartPoint" name="(Move/Ride) Action ends in Stagecoach" id="3152" x="699" y="391" succ="//@urndef/@specDiagrams.0/@connections.22" failureKind="Abort">
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
