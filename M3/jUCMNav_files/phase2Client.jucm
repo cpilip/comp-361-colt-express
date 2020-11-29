@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 6:42:35 AM EST" specVersion="46" urnVersion="1.27" nextGlobalID="9151">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 6:18:53 PM EST" specVersion="47" urnVersion="1.27" nextGlobalID="9161">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -139,7 +139,7 @@
       </nodes>
       <nodes xsi:type="ucm.map:OrJoin" name="OrJoin8280" id="8280" x="1042" y="434" succ="//@urndef/@specDiagrams.0/@connections.35" pred="//@urndef/@specDiagrams.0/@connections.14 //@urndef/@specDiagrams.0/@connections.19 //@urndef/@specDiagrams.0/@connections.23 //@urndef/@specDiagrams.0/@connections.24 //@urndef/@specDiagrams.0/@connections.9 //@urndef/@specDiagrams.0/@connections.2"/>
       <nodes xsi:type="ucm.map:FailurePoint" name="TimeoutOccurred" id="8524" x="1146" y="437" succ="//@urndef/@specDiagrams.0/@connections.36" pred="//@urndef/@specDiagrams.0/@connections.34">
-        <label/>
+        <label deltaY="23"/>
       </nodes>
       <nodes xsi:type="ucm.map:OrFork" name="OrFork8537" id="8537" x="1220" y="437" succ="//@urndef/@specDiagrams.0/@connections.37 //@urndef/@specDiagrams.0/@connections.32 //@urndef/@specDiagrams.0/@connections.28 //@urndef/@specDiagrams.0/@connections.29 //@urndef/@specDiagrams.0/@connections.30 //@urndef/@specDiagrams.0/@connections.31" pred="//@urndef/@specDiagrams.0/@connections.36"/>
       <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Move)" id="8664" x="1517" y="227" pred="//@urndef/@specDiagrams.0/@connections.5">
@@ -164,7 +164,7 @@
         <label/>
       </nodes>
       <nodes xsi:type="ucm.map:FailurePoint" name="TimeoutOccurred" id="8749" x="1900" y="297" succ="//@urndef/@specDiagrams.0/@connections.42" pred="//@urndef/@specDiagrams.0/@connections.41">
-        <label/>
+        <label deltaX="3" deltaY="18"/>
       </nodes>
       <nodes xsi:type="ucm.map:StartPoint" name="Timeout" id="8757" x="1823" y="357" succ="//@urndef/@specDiagrams.0/@connections.43" failureKind="Abort">
         <label/>
@@ -177,7 +177,7 @@
       <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef8869" id="8869" x="669" y="111" width="753" height="655" contDef="8868">
         <label/>
       </contRefs>
-      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9143" id="9143" x="1605" y="254" width="511" height="139" contDef="8868">
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9143" id="9143" x="1605" y="236" width="511" height="156" contDef="8868">
         <label/>
       </contRefs>
       <connections xsi:type="ucm.map:NodeConnection" target="612"/>
@@ -241,7 +241,7 @@
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8280" target="7402"/>
       <connections xsi:type="ucm.map:NodeConnection" source="8524" target="8537">
-        <condition label="" expression="false"/>
+        <condition deltaX="80" deltaY="35" label="timer&lt;&lt;in>>" expression="false" description=""/>
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8537" target="6143">
         <condition label="" expression="true"/>
@@ -253,12 +253,12 @@
         <condition label="" expression="true"/>
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8749" target="6173">
-        <condition label="" expression="false"/>
+        <condition deltaX="116" deltaY="31" label="timer&lt;&lt;in>>" expression="false" description=""/>
       </connections>
       <connections xsi:type="ucm.map:NodeConnection" source="8757" target="8767"/>
       <connections xsi:type="ucm.map:NodeConnection" source="8767" target="9141"/>
       <connections xsi:type="ucm.map:NodeConnection" source="9141" target="6106"/>
-      <comments description="Server validates Move/Ride Action. Move/Ride Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1603" y="184" width="330" height="47" fillColor="255,255,200"/>
+      <comments description="Server validates Move/Ride Action. Move/Ride Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1603" y="170" width="330" height="47" fillColor="255,255,200"/>
     </specDiagrams>
     <components name="GUI" id="8868" contRefs="8869 9143" kind="Other"/>
     <components name="Component9142" id="9142" kind="Other"/>
