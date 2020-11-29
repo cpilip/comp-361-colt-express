@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 28, 2020 at 11:41:20 PM EST" specVersion="36" urnVersion="1.27" nextGlobalID="8777">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 28, 2020 at 11:54:41 PM EST" specVersion="39" urnVersion="1.27" nextGlobalID="8867">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -43,7 +43,7 @@
     <responsibilities name="Responsibility7184" id="7184" respRefs="612"/>
     <responsibilities name="currentPlayer&lt;&lt;in>>" id="7231" respRefs="7232"/>
     <responsibilities name="currentGameboard&lt;&lt;in>>" id="7235" respRefs="7236"/>
-    <responsibilities name="Responsibility8766" id="8766" respRefs="8767"/>
+    <responsibilities name="randomHostage&lt;&lt;out>>" id="8766" respRefs="8767"/>
     <specDiagrams xsi:type="ucm.map:UCMmap" name="UCMmap2" id="2">
       <nodes xsi:type="ucm.map:RespRef" name="RespRef36" id="612" x="267" y="109" succ="//@urndef/@specDiagrams.0/@connections.1" pred="//@urndef/@specDiagrams.0/@connections.0" respDef="7184"/>
       <nodes xsi:type="ucm.map:RespRef" name="RespRef1134" id="1134" x="775" y="227" succ="//@urndef/@specDiagrams.0/@connections.2" pred="//@urndef/@specDiagrams.0/@connections.6" respDef="1133">
@@ -53,7 +53,7 @@
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5230" id="5230" x="1517" y="717" pred="//@urndef/@specDiagrams.0/@connections.4">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (corresponding to currentCard)" id="5230" x="1517" y="717" pred="//@urndef/@specDiagrams.0/@connections.4">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -66,7 +66,7 @@
       <nodes xsi:type="ucm.map:RespRef" name="RespRef5581" id="5581" x="525" y="227" succ="//@urndef/@specDiagrams.0/@connections.6" pred="//@urndef/@specDiagrams.0/@connections.25" respDef="5580">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5775" id="5775" x="1517" y="367" pred="//@urndef/@specDiagrams.0/@connections.10">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Ride)" id="5775" x="1517" y="367" pred="//@urndef/@specDiagrams.0/@connections.10">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -79,11 +79,11 @@
       <nodes xsi:type="ucm.map:RespRef" name="RespRef5798" id="5798" x="1332" y="367" succ="//@urndef/@specDiagrams.0/@connections.10" pred="//@urndef/@specDiagrams.0/@connections.34" respDef="5797">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5867" id="5867" x="1517" y="507" pred="//@urndef/@specDiagrams.0/@connections.20">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Fire)" id="5867" x="1517" y="507" pred="//@urndef/@specDiagrams.0/@connections.20">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5878" id="5878" x="1517" y="577" pred="//@urndef/@specDiagrams.0/@connections.21">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Punch)" id="5878" x="1517" y="577" pred="//@urndef/@specDiagrams.0/@connections.21">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -99,7 +99,7 @@
       <nodes xsi:type="ucm.map:RespRef" name="RespRef5909" id="5909" x="525" y="577" succ="//@urndef/@specDiagrams.0/@connections.16" pred="//@urndef/@specDiagrams.0/@connections.12" respDef="5908">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5930" id="5930" x="1517" y="647" pred="//@urndef/@specDiagrams.0/@connections.22">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Marshal)" id="5930" x="1517" y="647" pred="//@urndef/@specDiagrams.0/@connections.22">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -135,7 +135,7 @@
         <label/>
       </nodes>
       <nodes xsi:type="ucm.map:OrFork" name="OrFork7307" id="7307" x="332" y="437" succ="//@urndef/@specDiagrams.0/@connections.29 //@urndef/@specDiagrams.0/@connections.25 //@urndef/@specDiagrams.0/@connections.7 //@urndef/@specDiagrams.0/@connections.11 //@urndef/@specDiagrams.0/@connections.12 //@urndef/@specDiagrams.0/@connections.17" pred="//@urndef/@specDiagrams.0/@connections.27"/>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint5848" id="5848" x="1517" y="437" pred="//@urndef/@specDiagrams.0/@connections.35">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Robbery)" id="5848" x="1517" y="437" pred="//@urndef/@specDiagrams.0/@connections.35">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -150,7 +150,7 @@
         <label/>
       </nodes>
       <nodes xsi:type="ucm.map:OrFork" name="OrFork8537" id="8537" x="1220" y="437" succ="//@urndef/@specDiagrams.0/@connections.39 //@urndef/@specDiagrams.0/@connections.34 //@urndef/@specDiagrams.0/@connections.30 //@urndef/@specDiagrams.0/@connections.31 //@urndef/@specDiagrams.0/@connections.32 //@urndef/@specDiagrams.0/@connections.33" pred="//@urndef/@specDiagrams.0/@connections.38"/>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint8664" id="8664" x="1517" y="227" pred="//@urndef/@specDiagrams.0/@connections.5">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Move)" id="8664" x="1517" y="227" pred="//@urndef/@specDiagrams.0/@connections.5">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
@@ -158,32 +158,32 @@
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="6106" x="1991" y="309" pred="//@urndef/@specDiagrams.0/@connections.41">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="6106" x="2180" y="297" pred="//@urndef/@specDiagrams.0/@connections.41">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef6173" id="6173" x="1902" y="303" succ="//@urndef/@specDiagrams.0/@connections.41" pred="//@urndef/@specDiagrams.0/@connections.44" respDef="6172">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef6173" id="6173" x="2040" y="297" succ="//@urndef/@specDiagrams.0/@connections.41" pred="//@urndef/@specDiagrams.0/@connections.44" respDef="6172">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef6133" id="6133" x="1621" y="307" succ="//@urndef/@specDiagrams.0/@connections.42" pred="//@urndef/@specDiagrams.0/@connections.40" respDef="6132">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef6133" id="6133" x="1700" y="297" succ="//@urndef/@specDiagrams.0/@connections.42" pred="//@urndef/@specDiagrams.0/@connections.40" respDef="6132">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:Timer" name="Timer8747" id="8747" x="1706" y="304" succ="//@urndef/@specDiagrams.0/@connections.43" pred="//@urndef/@specDiagrams.0/@connections.42">
+      <nodes xsi:type="ucm.map:Timer" name="Timer" id="8747" x="1820" y="297" succ="//@urndef/@specDiagrams.0/@connections.43" pred="//@urndef/@specDiagrams.0/@connections.42">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:FailurePoint" name="FailurePoint8749" id="8749" x="1755" y="303" succ="//@urndef/@specDiagrams.0/@connections.44" pred="//@urndef/@specDiagrams.0/@connections.43">
+      <nodes xsi:type="ucm.map:FailurePoint" name="TimeoutOccurred" id="8749" x="1900" y="297" succ="//@urndef/@specDiagrams.0/@connections.44" pred="//@urndef/@specDiagrams.0/@connections.43">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:StartPoint" name="StartPoint8757" id="8757" x="1742" y="355" succ="//@urndef/@specDiagrams.0/@connections.45" failureKind="Abort">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef8767" id="8767" x="1923" y="357" succ="//@urndef/@specDiagrams.0/@connections.46" pred="//@urndef/@specDiagrams.0/@connections.45" respDef="8766">
+        <label/>
+      </nodes>
+      <nodes xsi:type="ucm.map:StartPoint" name="Timeout" id="8757" x="1823" y="357" succ="//@urndef/@specDiagrams.0/@connections.45" failureKind="Abort">
         <label/>
         <precondition deltaX="40" deltaY="-17" label="" expression="true"/>
       </nodes>
-      <nodes xsi:type="ucm.map:EndPoint" name="EndPoint8759" id="8759" x="1942" y="355" pred="//@urndef/@specDiagrams.0/@connections.46">
+      <nodes xsi:type="ucm.map:EndPoint" name="Phase2Server (Hostage)" id="8759" x="2060" y="357" pred="//@urndef/@specDiagrams.0/@connections.46">
         <label/>
         <postcondition deltaX="-40" deltaY="-20" label="" expression="true"/>
-      </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef8767" id="8767" x="1842" y="355" succ="//@urndef/@specDiagrams.0/@connections.46" pred="//@urndef/@specDiagrams.0/@connections.45" respDef="8766">
-        <label/>
       </nodes>
       <connections xsi:type="ucm.map:NodeConnection" target="612"/>
       <connections xsi:type="ucm.map:NodeConnection" source="612"/>
