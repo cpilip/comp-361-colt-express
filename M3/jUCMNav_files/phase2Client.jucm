@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 12:06:43 AM EST" specVersion="40" urnVersion="1.27" nextGlobalID="9147">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 5:42:06 AM EST" specVersion="44" urnVersion="1.27" nextGlobalID="9147">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -35,7 +35,7 @@
     <responsibilities name="chosenRobberyLoot&lt;&lt;out>>" id="6142" respRefs="6143"/>
     <responsibilities name="displayFireOptions&lt;&lt;in>>" id="6148" respRefs="6149"/>
     <responsibilities name="chosenBanditFire&lt;&lt;out>>" id="6158" respRefs="6159"/>
-    <responsibilities name="chosenBanditPunch&lt;&lt;out>>" id="6164" respRefs="6165"/>
+    <responsibilities name="chosenCharacterPunch&lt;&lt;out>>" id="6164" respRefs="6165"/>
     <responsibilities name="chosenMarshalMove&lt;&lt;out>>" id="6166" respRefs="6167"/>
     <responsibilities name="chosenHostage&lt;&lt;out>>" id="6172" respRefs="6173"/>
     <responsibilities name="displayPunchOptions&lt;&lt;in>>" id="6178" respRefs="6179"/>
@@ -268,7 +268,7 @@
       <connections xsi:type="ucm.map:NodeConnection" source="8757" target="8767"/>
       <connections xsi:type="ucm.map:NodeConnection" source="8767" target="9141"/>
       <connections xsi:type="ucm.map:NodeConnection" source="9141" target="6106"/>
-      <comments description="Server validates Move Action. Move Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1603" y="184" width="301" height="47" fillColor="255,255,200"/>
+      <comments description="Server validates Move/Ride Action. Move/Ride Action results in currentPlayer inside the Stagecoach.&#xD;&#xA;" x="1603" y="184" width="330" height="47" fillColor="255,255,200"/>
     </specDiagrams>
     <components name="GUI" id="8868" contRefs="8869 9143" kind="Other"/>
     <components name="Component9142" id="9142" kind="Other"/>
