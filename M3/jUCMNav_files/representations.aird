@@ -4,4 +4,8 @@
   <semanticResources>structureServer.jucm</semanticResources>
   <semanticResources>GameSetupClient.jucm</semanticResources>
   <semanticResources>GameSetupServer.jucm</semanticResources>
+  <semanticResources>phase2Client.jucm</semanticResources>
+  <semanticResources>phase2Server.jucm</semanticResources>
+  <semanticResources>phase2Server2.jucm</semanticResources>
+  <semanticResources>phaseOneClient2.jucm</semanticResources>
 </viewpoint:DAnalysis>
