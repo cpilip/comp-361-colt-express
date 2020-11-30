@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 6:18:53 PM EST" specVersion="47" urnVersion="1.27" nextGlobalID="9161">
+<urn:URNspec xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ucm.map="http:///ucm/map.ecore" xmlns:urn="http:///urn.ecore" name="URNspec" author="Lukas" created="November 19, 2020 at 11:40:15 PM EST" modified="November 29, 2020 at 10:56:53 PM EST" specVersion="48" urnVersion="1.27" nextGlobalID="9171">
   <ucmspec>
     <scenarioGroups name="ScenarioGroup5" id="5">
       <scenarios name="ScenarioDef6" id="6"/>
@@ -157,7 +157,7 @@
       <nodes xsi:type="ucm.map:RespRef" name="RespRef6173" id="6173" x="2040" y="297" succ="//@urndef/@specDiagrams.0/@connections.39" pred="//@urndef/@specDiagrams.0/@connections.42" respDef="6172">
         <label/>
       </nodes>
-      <nodes xsi:type="ucm.map:RespRef" name="RespRef6133" id="6133" x="1700" y="297" succ="//@urndef/@specDiagrams.0/@connections.40" pred="//@urndef/@specDiagrams.0/@connections.38" respDef="6132">
+      <nodes xsi:type="ucm.map:RespRef" name="RespRef6133" id="6133" x="1680" y="297" succ="//@urndef/@specDiagrams.0/@connections.40" pred="//@urndef/@specDiagrams.0/@connections.38" respDef="6132">
         <label/>
       </nodes>
       <nodes xsi:type="ucm.map:Timer" name="Timer" id="8747" x="1820" y="297" succ="//@urndef/@specDiagrams.0/@connections.41" pred="//@urndef/@specDiagrams.0/@connections.40">
@@ -177,7 +177,13 @@
       <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef8869" id="8869" x="669" y="111" width="753" height="655" contDef="8868">
         <label/>
       </contRefs>
-      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9143" id="9143" x="1605" y="236" width="511" height="156" contDef="8868">
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9143" id="9143" x="1789" y="236" width="327" height="156" contDef="8868">
+        <label/>
+      </contRefs>
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9163" id="9163" x="409" y="144" width="235" height="576" contDef="9162">
+        <label/>
+      </contRefs>
+      <contRefs xsi:type="ucm.map:ComponentRef" name="ComponentRef9169" id="9169" x="1587" y="248" width="186" height="79" contDef="9162">
         <label/>
       </contRefs>
       <connections xsi:type="ucm.map:NodeConnection" target="612"/>
@@ -262,6 +268,8 @@
     </specDiagrams>
     <components name="GUI" id="8868" contRefs="8869 9143" kind="Other"/>
     <components name="Component9142" id="9142" kind="Other"/>
+    <components name="Server" id="9162" contRefs="9163 9169"/>
+    <components name="Component9168" id="9168"/>
   </urndef>
   <metadata name="_Use0to100EvaluationRange" value="false"/>
   <dynamicContexts name="DynamicContext12" id="12" groups="11"/>
