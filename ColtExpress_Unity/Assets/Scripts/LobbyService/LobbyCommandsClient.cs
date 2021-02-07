@@ -9,8 +9,8 @@ using TMPro;
 public class LobbyCommandsClient
 {
     // default local host : 127.0.0.1:4242
-    // Azure server IP : 13.68.140.249
-    public const string connectionIP = "13.68.140.249"; // IP of Azure server
+    // Azure server IP : 168.61.46.213
+    public const string connectionIP = "168.61.46.213"; // IP of Azure server
 
     private string response;
 

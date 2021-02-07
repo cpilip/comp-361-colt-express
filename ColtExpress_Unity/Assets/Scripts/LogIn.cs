@@ -17,7 +17,7 @@ public class LogIn : MonoBehaviour
     private string responseSoFar;
 
     public void logIn() {
-        StartCoroutine(wait(1));
+        StartCoroutine(wait(2)); // Increased to 2 seconds (was 1) to account for slower server VM
     }
 
     private IEnumerator wait(float time){

@@ -21,7 +21,7 @@ public class CreateLobby : MonoBehaviour
     private IEnumerator wait(float time)
     {
         string name = GameNameText.GetComponent<TMP_InputField>().text;
-        string address = "http://13.68.140.249:4242/DummyGameService";
+        string address = "http://168.61.46.213:4242/DummyGameService";
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
         LobbyCommands.registerGameService(this, 
             address, 
