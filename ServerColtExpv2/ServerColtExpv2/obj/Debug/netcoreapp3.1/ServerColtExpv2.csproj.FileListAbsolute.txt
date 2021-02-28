@@ -1,0 +1,12 @@
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.csprojAssemblyReference.cache
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.AssemblyInfoInputs.cache
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.AssemblyInfo.cs
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.csproj.CoreCompileInputs.cache
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/bin/Debug/netcoreapp3.1/ServerColtExpv2.deps.json
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/bin/Debug/netcoreapp3.1/ServerColtExpv2.runtimeconfig.json
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/bin/Debug/netcoreapp3.1/ServerColtExpv2.runtimeconfig.dev.json
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/bin/Debug/netcoreapp3.1/ServerColtExpv2.dll
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/bin/Debug/netcoreapp3.1/ServerColtExpv2.pdb
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.dll
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.pdb
+/Users/hectorteyssier/Projects/ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.genruntimeconfig.cache

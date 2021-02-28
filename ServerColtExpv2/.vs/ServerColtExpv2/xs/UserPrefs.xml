@@ -1,0 +1,25 @@
+﻿<Properties StartupConfiguration="{516A3A0B-2572-45C4-BCF2-194FB08FE308}|Default">
+  <MonoDevelop.Ide.ItemProperties.ServerColtExpv2 PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ServerColtExpv2/Program.cs">
+    <Files>
+      <File FileName="ServerColtExpv2/Program.cs" Line="80" Column="2" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="ServerColtExpv2" expanded="True">
+            <Node name="ServerColtExpv2" expanded="True">
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
