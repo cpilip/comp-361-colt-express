@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -8,30 +9,29 @@ public class buttonManger : MonoBehaviour
     // Start is called before the first frame update
     public GameObject forward;
     public GameObject backward;
-    public lu fm;
-    public lu bm;
+    public GameObject up;
+    public GameObject down;
     public GameObject parent;
-   
+ 
  
     void Update()
     {
 
-        if ((fm.hasSet || bm.hasSet) == true)
-        {
-            return;
-
-        }
-        else
-        {
+      
            
             Transform a = parent.transform;
             try { 
              if (a.GetChild(0) != null)
             {
+                
+                Debug.Log(a.GetChild(0).name);
+
                 forward.SetActive(true);
                 backward.SetActive(true);
-                    fm.hasSet = false;
-                    bm.hasSet = false;
+                up.SetActive(true);
+                down.SetActive(true);
+
+
 
             }
         }
@@ -40,5 +40,5 @@ public class buttonManger : MonoBehaviour
             }
 
         }
-    }
+    
 }
