@@ -12,6 +12,7 @@ public class buttonManger : MonoBehaviour
     public GameObject up;
     public GameObject down;
     public GameObject punch;
+    public GameObject shoot;
     public GameObject parent;
  
  
@@ -46,9 +47,15 @@ public class buttonManger : MonoBehaviour
 
             }
             else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("punch")) {
-                Debug.Log("true");
+                
                 punch.SetActive(true);
             }
+            else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("shoot1") || (a.GetChild(0).name).Equals("shoot2")) )
+            {
+                
+                shoot.SetActive(true);
+            }
+
         }
             catch (Exception e) {
                 return;
