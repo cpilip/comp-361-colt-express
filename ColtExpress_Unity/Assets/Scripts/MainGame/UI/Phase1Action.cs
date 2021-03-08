@@ -15,6 +15,7 @@ public class Phase1Action : MonoBehaviour
     public GameObject turnMenu;
     public GameObject timer;
     public GameObject handBlocker;
+    public GameObject discard;
 
     private Transform lastSubdeck;
     private int displayedSubdeckNum;
@@ -54,11 +55,18 @@ public class Phase1Action : MonoBehaviour
 
                 // Create a new card; no other values are changed, and the card prefab will definitely be altered at a later
                 // date when we model low-level implementation
-                GameObject newCard = Instantiate(cardPrefab);
+                //GameObject newCard = Instantiate(cardPrefab);
 
                 // Put the card in the last subdeck
-                newCard.transform.SetParent(lastSubdeck.transform);
-                newCard.transform.localScale = new Vector3(1, 1, 1);
+
+                if (discard.transform.childCount == 0)
+                {
+                    break;
+                }
+                Transform newCard = discard.transform.GetChild(0);
+
+                newCard.SetParent(lastSubdeck.transform);
+                //newCard.localScale = new Vector3(1, 1, 1);
 
             }
 

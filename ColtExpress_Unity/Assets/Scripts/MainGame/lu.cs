@@ -15,7 +15,6 @@ public class lu : MonoBehaviour
     public GameObject discard;
     
     public void check() {
-      GameObject try1 = GameObject.Find("Train Car 4");
         Transform a = parent.transform;
  
         if (a.GetChild(0)!=null) {

@@ -11,6 +11,7 @@ public class buttonManger : MonoBehaviour
     public GameObject backward;
     public GameObject up;
     public GameObject down;
+    public GameObject punch;
     public GameObject parent;
  
  
@@ -20,19 +21,33 @@ public class buttonManger : MonoBehaviour
       
            
             Transform a = parent.transform;
-            try { 
-             if (a.GetChild(0) != null)
+            try {
+            if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("move1") || (a.GetChild(0).name).Equals("move2")))
             {
-                
-                Debug.Log(a.GetChild(0).name);
+
+              
 
                 forward.SetActive(true);
                 backward.SetActive(true);
+
+
+
+
+            }
+            else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("changeFloor1") || (a.GetChild(0).name).Equals("changeFloor2")))
+            {
+
+
+
                 up.SetActive(true);
                 down.SetActive(true);
 
 
 
+            }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("punch")) {
+                Debug.Log("true");
+                punch.SetActive(true);
             }
         }
             catch (Exception e) {
