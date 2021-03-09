@@ -6,24 +6,29 @@ namespace Position {
         Roof
     }
     class Position {
-        private Floor floor;
-        private TrainCar trainCar;
+        private readonly Floor floor; // **Did not implement "setFloor"; Floor passed in constructor
+        private readonly TrainCar trainCar;
 
-        public HashSet<GameUnit> units = new HashSet<GameUnit>();
+        private HashSet<GameUnit> units = new HashSet<GameUnit>();
 
         public Position(TrainCar trainCar, Floor floor) {
             this.trainCar = trainCar;
             this.floor = floor;
         }
 
-        public Floor isFloor() {
-            return this.floor;
+        // Returns true if the position is a floor; false if roof
+        public bool isInside() {
+            return this.floor == Floor.Inside;
         }
 
-        public void setFloor(Floor floor) {
-            this.floor = floor;
+        // Add a unit to the Position's GameUnit HashSet
+        public void addUnit(GameUnit unit) {
+            this.units.Add(unit);
         }
 
-
+        // Remove a unit from the Position's GameUnit HashSet
+        public void removeUnit(GameUnit unit) {
+            this.units.Remove(unit);
+        }
     }
 }
