@@ -25,21 +25,40 @@ namespace Player {
         public ArrayList<GameItem> possessions;
 
         /// Constructor for the Player class, initializes a Player object.
-        public Player(Character c) {
+        public Player(Character c, Position p) {
+
+            // Initialize the character
             this.bandit = c;
+
+            // Initialize the cards
             this.initializeCards();
+
+            // Initialize the position of the Player.
+            this.position = p;
+
+            // Initialize the possessions
+            possessions = new ArrayList<GameItem>();
         }
 
         /**
         * Public utility methods
         */
 
-        public Position getPossibleMoves() {
-            // TODO
+        public ArrayList<Position> getPossibleMoves() {
+            ArrayList<Position> possPos = new ArrayList<Position>();
+
+            // Check if on a roof or not
+            if (this.position.floor == Roof) { 
+                // Add 1-3 distance forward or backwards
+                possPos.add();
+            } else { 
+                // Add adjacent positions
+                possPos.add();
+            }
         }
 
-        public Player getPossibleShootTarget() {
-            // TODO
+        public ArrayList<Player> getPossibleShootTarget() {
+            
         }
 
         /**
