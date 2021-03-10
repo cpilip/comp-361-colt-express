@@ -20,7 +20,7 @@ namespace Player {
 
         public ArrayList<Card> hand;
         public ArrayList<Card> discardPile;
-        public ArrayList<Bulletcard> bullets;
+        public ArrayList<BulletCard> bullets;
 
         public ArrayList<GameItem> possessions;
 
@@ -30,11 +30,39 @@ namespace Player {
             this.initializeCards();
         }
 
+        /**
+        * Public utility methods
+        */
+
         public Position getPossibleMoves() {
             // TODO
         }
 
         public Player getPossibleShootTarget() {
+            // TODO
+        }
+
+        /**
+        * Private helper methods
+        */
+
+        private void initializeCards() {
+            // Create and add 6 bullet cards
+            for (int i = 0 ; i < 6 ;i++) {
+                bullets.add(new BulletCard(this));
+            }
+
+            // Create and add all necessary action cards
+            discardPile.add(new ActionCard(Move));
+            discardPile.add(new ActionCard(Move));
+            discardPile.add(new ActionCard(ChangeFloor));
+            discardPile.add(new ActionCard(ChangeFloor));
+            discardPile.add(new ActionCard(Shoot));
+            discardPile.add(new ActionCard(Shoot));
+            discardPile.add(new ActionCard(Punch));
+            discardPile.add(new ActionCard(Loot));
+            discardPile.add(new ActionCard(Loot));
+            discardPile.add(new ActionCard(Marshall));
 
         }
 
