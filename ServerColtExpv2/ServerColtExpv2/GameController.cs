@@ -192,12 +192,32 @@ class GameController {
         //TO DO
     }
 
+    // Milo TODO
     public void readyForNextMove(){
         //TO DO
     }
  
     private Player getBandits(){
         //TO DO
+    }
+
+    // Milo TODO
+    private ArrayList<Position> getPossibleMoves(Player p) {
+        ArrayList<Position> possPos = new ArrayList<Position>();
+
+        // Check if on a roof or not
+        if (this.position.floor == Roof) { 
+            // Add 1-3 distance forward or backwards
+            possPos.add();
+        } else { 
+            // Add adjacent positions
+            possPos.add();
+        }
+    }
+
+    // Milo TODO
+    private ArrayList<Player> getPossibleShootTarget() {
+        
     }
 
     // need calculateGameScore() method 

@@ -41,28 +41,7 @@ namespace Player {
         }
 
         /**
-        * Public utility methods
-        */
-
-        public ArrayList<Position> getPossibleMoves() {
-            ArrayList<Position> possPos = new ArrayList<Position>();
-
-            // Check if on a roof or not
-            if (this.position.floor == Roof) { 
-                // Add 1-3 distance forward or backwards
-                possPos.add();
-            } else { 
-                // Add adjacent positions
-                possPos.add();
-            }
-        }
-
-        public ArrayList<Player> getPossibleShootTarget() {
-            
-        }
-
-        /**
-        * Private helper methods
+        * Private helper method
         */
 
         private void initializeCards() {
