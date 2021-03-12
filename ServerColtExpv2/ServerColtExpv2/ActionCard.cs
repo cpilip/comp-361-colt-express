@@ -7,7 +7,7 @@ namespace Card{
         ChangeFloor,
         Shoot,
         Rob,
-        Marshall,
+        Marshal,
         Punch
     }
 

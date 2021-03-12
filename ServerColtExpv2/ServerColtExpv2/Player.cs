@@ -93,6 +93,9 @@ namespace Player {
             this.getsAnotherAction = getAnotherAction;
         }
 
+        public void addToDiscardPile(Card c) { 
+            this.discardPile.add(c);
+        }
 
     }
 

@@ -5,7 +5,7 @@ enum GameStatus {
     ChoosingBandits,
     Schemin,
     Stealin,
-    FinilizingCard,
+    FinalizingCard,
     Completed
 }
 
@@ -23,8 +23,6 @@ class GameController {
     //added this for Switching turn
     private List <TrainCar> myTrain;
     private Marshal aMarshal;
-
-
 
     private GameController(){
         this.players = new List <Player> ();
@@ -194,7 +192,91 @@ class GameController {
 
     // Milo TODO
     public void readyForNextMove(){
-        //TO DO
+        this,currentPlayer.setWaitingForInput(false);
+        boolean waiting = true;
+
+        for (Player p in this.players) {
+            if (p.getWaitingForInput()) {
+                waiting = false;
+            }
+        }
+
+        if (waiting) {
+            // Get the top of the played cards from the schemin phase
+            card top = this.currentRound.PlayedCards.Pop();
+
+            switch(top.getType()) {
+                case ActionKind.Move : 
+                {
+                    List<Position> moves = this.getPossibleMoves(this.currentPlayer);
+
+                    // SENDMESSAGE with moves
+                    if (moves.Count > 1) {
+                        this.GameStatus= FinalizingCard;
+                    } else {
+                        this.chosenPosition(this.currentPlayer, moves[0]);
+                    }
+                    break;
+                }
+                case ActionKind.ChangeFloor :
+                {
+                    if (this.currentPlayer.position.isInside()) {
+                        this.currentPlayer.position.getTrainCar().moveRoofCar(this.currentPlayer);
+                    } else {
+                        this.currentPlayer.position.getTrainCar().moveInsideCar(this.currentPlayer);
+                        
+                        if (this.currentPlayer.position.hasMarshal(this.marshal)){
+                            this.currentPlayer.addToDiscardPile(new BulletCard());
+                            this.currentPlayer.position.getTrainCar().moveRoofCar(this.currentPlayer);
+                        }
+                    }
+                    break;
+                }
+                case ActionKind.Shoot :
+                {
+                    List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
+                    if (possTargets.Count == 1) {
+                        this.chosenShootTarget(possTargets[0]);
+                    } else {
+                        // SENDMESSAGE with possTargets
+                        this.GameStatus = FinalizingCard;
+                        this.currentPlayer.SetWaitingForInput(true);
+                    }
+                    break;
+                }
+                case ActionKind.Rob :
+                {
+                    List<Player> atLocation = this.currentPlayer.position.getItems();
+                    // Send message with atLocation
+                    this.GameStatus = FinalizingCard;
+                    this.currentPlayer.SetWaitingForInput(true);
+                    break;
+                }
+                case ActionKind.Marshal :
+                {
+                    List<Position> possPosition = this.marshal.getPossiblePositions();
+                    if (possPosition.Count == 1) {
+                        this.chosenPosition(null, possPosition[0]);
+                    } else {
+                        // SENDMESSAGE with possPosition
+                        this.GameStatus = FinalizingCard;
+                        this.currentPlayer.SetWaitingForInput(true);
+                    }
+                    break;
+                }
+                case ActionKind.Punch :
+                {
+                    List<Player> atLocation = this.currentPlayer.position.getPlayers();
+                    // Send message with atLocation
+                    this.GameStatus = FinalizingCard;
+                    this.currentPlayer.SetWaitingForInput(true);
+                    break;
+                }
+                default : {
+                    this.endOfCards();
+                }  
+            }
+        }
     }
  
     private Player getBandits(){

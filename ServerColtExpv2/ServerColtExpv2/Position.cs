@@ -44,5 +44,19 @@ namespace Position {
             }
             return players;
         }
+
+        public List<Player> getItems() {
+            List<Player> players = new List<Player>();
+            for (GameUnit unit in units) { 
+                if (unit.getType().Equals(typeof(GameItem))) {
+                    players.Add(unit);
+                }
+            }
+            return players;
+        }
+
+        public boolean hasMarshal(Marshal m) {
+            return units.Contains(m);
+        }
     }
 }
