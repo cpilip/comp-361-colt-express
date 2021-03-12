@@ -34,5 +34,15 @@ namespace Position {
         public void removeUnit(GameUnit unit) {
             this.units.Remove(unit);
         }
+
+        public List<Player> getPlayers() {
+            List<Player> players = new List<Player>();
+            for (GameUnit unit in units) { 
+                if (unit.getType().Equals(typeof(Player))) {
+                    players.Add(unit);
+                }
+            }
+            return players;
+        }
     }
 }

@@ -211,7 +211,7 @@ class GameController {
             for (int i = 1 ; i < 4 ; i++) {
                 try {
                     // Add adjacent positions
-                    possPos.add(this.train[train.IndexOf(playerCar) - i].getInside());
+                    possPos.add(this.train[train.IndexOf(playerCar) - i].getRoof());
                 } catch (System.IndexOutOfRangeException e) {
                     continue;
                 }
@@ -220,7 +220,7 @@ class GameController {
             for (int i = 1 ; i < 4 ; i++) {
                 try {
                     // Add adjacent positions
-                    possPos.add(this.train[train.IndexOf(playerCar) + i].getInside());
+                    possPos.add(this.train[train.IndexOf(playerCar) + i].getRoof());
                 } catch (System.IndexOutOfRangeException e) {
                     continue;
                 }
@@ -243,8 +243,55 @@ class GameController {
         return possPos;
     }
 
-    // Milo TODO
-    private ArrayList<Player> getPossibleShootTarget() {
+    
+    private ArrayList<Player> getPossibleShootTarget(Player p) {
+        ArrayList<Player> possPlayers = new ArrayList<Player>();
+        trainCar playerCar = p.position.getTrainCar();
+
+        if (p.position.floor == roof) {
+            // Look for the players in line of sight forward on roof
+            for (int i = train.IndexOf(playerCar) + 1; i < train.Count ; i++) {
+                playersOnWagon = this.train[i].getInside().getPlayers()
+                if (playersOnWagon.Count != 0) {
+                    possPlayers.addRange(playersOnWagon);
+                    break;
+                }
+            }
+
+            // Look for the players in line of sight backwards on roof
+            for (int i = train.IndexOf(playerCar) - 1; i >= 0 ; i--) {
+                playersOnWagon = this.train[i].getInside().getPlayers()
+                if (playersOnWagon.Count != 0) {
+                    possPlayers.addRange(playersOnWagon);
+                    break;
+                }
+            }
+        } else {
+            // Look for the players in the next wagon backwards
+            try {
+                // Add adjacent positions
+                possPlayers.addRange(this.train[train.IndexOf(playerCar) - 1].getInside().getPlayers());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+
+            // Loof for the players in the next wagon forward
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) + 1].getInside().getPlayers());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+        }
+
+        // If there is more than one possible player, we remove Belle.
+        if (possPlayers.Count > 1) {
+            for (Player p in possPlayers) { 
+                if (p.getBandit() == Belle) {
+                    possPlayers.Remove(p);
+                }
+        }
+        }
         
     }
 
