@@ -16,6 +16,10 @@ namespace Position {
             this.floor = floor;
         }
 
+        public TrainCar getTrainCar() { 
+            return this.trainCar;
+        }
+
         // Returns true if the position is a floor; false if roof
         public bool isInside() {
             return this.floor == Floor.Inside;
@@ -29,6 +33,30 @@ namespace Position {
         // Remove a unit from the Position's GameUnit HashSet
         public void removeUnit(GameUnit unit) {
             this.units.Remove(unit);
+        }
+
+        public List<Player> getPlayers() {
+            List<Player> players = new List<Player>();
+            for (GameUnit unit in units) { 
+                if (unit.getType().Equals(typeof(Player))) {
+                    players.Add(unit);
+                }
+            }
+            return players;
+        }
+
+        public List<Player> getItems() {
+            List<Player> players = new List<Player>();
+            for (GameUnit unit in units) { 
+                if (unit.getType().Equals(typeof(GameItem))) {
+                    players.Add(unit);
+                }
+            }
+            return players;
+        }
+
+        public boolean hasMarshal(Marshal m) {
+            return units.Contains(m);
         }
     }
 }

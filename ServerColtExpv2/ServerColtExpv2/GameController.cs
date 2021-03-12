@@ -5,7 +5,7 @@ enum GameStatus {
     ChoosingBandits,
     Schemin,
     Stealin,
-    FinilizingCard,
+    FinalizingCard,
     Completed
 }
 
@@ -23,8 +23,6 @@ class GameController {
     //added this for Switching turn
     private List <TrainCar> myTrain;
     private Marshal aMarshal;
-
-
 
     private GameController(){
         this.players = new List <Player> ();
@@ -136,7 +134,7 @@ class GameController {
         }
     }
     
-    private void endOfCars(){
+    private void endOfCards(){
         
         this.currentPlayer.discardPile.Add(this.currentRound.playedCards.pop());
 
@@ -192,12 +190,191 @@ class GameController {
         //TO DO
     }
 
+    // Milo TODO
     public void readyForNextMove(){
-        //TO DO
+        this,currentPlayer.setWaitingForInput(false);
+        boolean waiting = true;
+
+        for (Player p in this.players) {
+            if (p.getWaitingForInput()) {
+                waiting = false;
+            }
+        }
+
+        if (waiting) {
+            // Get the top of the played cards from the schemin phase
+            card top = this.currentRound.PlayedCards.Pop();
+
+            switch(top.getType()) {
+                case ActionKind.Move : 
+                {
+                    List<Position> moves = this.getPossibleMoves(this.currentPlayer);
+
+                    // SENDMESSAGE with moves
+                    if (moves.Count > 1) {
+                        this.GameStatus= FinalizingCard;
+                    } else {
+                        this.chosenPosition(this.currentPlayer, moves[0]);
+                    }
+                    break;
+                }
+                case ActionKind.ChangeFloor :
+                {
+                    if (this.currentPlayer.position.isInside()) {
+                        this.currentPlayer.position.getTrainCar().moveRoofCar(this.currentPlayer);
+                    } else {
+                        this.currentPlayer.position.getTrainCar().moveInsideCar(this.currentPlayer);
+                        
+                        if (this.currentPlayer.position.hasMarshal(this.marshal)){
+                            this.currentPlayer.addToDiscardPile(new BulletCard());
+                            this.currentPlayer.position.getTrainCar().moveRoofCar(this.currentPlayer);
+                        }
+                    }
+                    break;
+                }
+                case ActionKind.Shoot :
+                {
+                    List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
+                    if (possTargets.Count == 1) {
+                        this.chosenShootTarget(possTargets[0]);
+                    } else {
+                        // SENDMESSAGE with possTargets
+                        this.GameStatus = FinalizingCard;
+                        this.currentPlayer.SetWaitingForInput(true);
+                    }
+                    break;
+                }
+                case ActionKind.Rob :
+                {
+                    List<Player> atLocation = this.currentPlayer.position.getItems();
+                    // Send message with atLocation
+                    this.GameStatus = FinalizingCard;
+                    this.currentPlayer.SetWaitingForInput(true);
+                    break;
+                }
+                case ActionKind.Marshal :
+                {
+                    List<Position> possPosition = this.marshal.getPossiblePositions();
+                    if (possPosition.Count == 1) {
+                        this.chosenPosition(null, possPosition[0]);
+                    } else {
+                        // SENDMESSAGE with possPosition
+                        this.GameStatus = FinalizingCard;
+                        this.currentPlayer.SetWaitingForInput(true);
+                    }
+                    break;
+                }
+                case ActionKind.Punch :
+                {
+                    List<Player> atLocation = this.currentPlayer.position.getPlayers();
+                    // Send message with atLocation
+                    this.GameStatus = FinalizingCard;
+                    this.currentPlayer.SetWaitingForInput(true);
+                    break;
+                }
+                default : {
+                    this.endOfCards();
+                }  
+            }
+        }
     }
  
     private Player getBandits(){
         //TO DO
+    }
+
+    // Get a list of all possible wagons where a player p can move from its current position
+    private ArrayList<Position> getPossibleMoves(Player p) {
+        ArrayList<Position> possPos = new ArrayList<Position>();
+        trainCar playerCar = p.position.getTrainCar();
+        // Check if on a roof or not
+        if (p.position.floor == Roof) { 
+            // Add 1-3 distance forward or backwards
+            for (int i = 1 ; i < 4 ; i++) {
+                try {
+                    // Add adjacent positions
+                    possPos.add(this.train[train.IndexOf(playerCar) - i].getRoof());
+                } catch (System.IndexOutOfRangeException e) {
+                    continue;
+                }
+            }
+
+            for (int i = 1 ; i < 4 ; i++) {
+                try {
+                    // Add adjacent positions
+                    possPos.add(this.train[train.IndexOf(playerCar) + i].getRoof());
+                } catch (System.IndexOutOfRangeException e) {
+                    continue;
+                }
+            }
+        } else { 
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) - 1].getInside());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) + 1].getInside());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+            
+        }
+        return possPos;
+    }
+
+    
+    private ArrayList<Player> getPossibleShootTarget(Player p) {
+        ArrayList<Player> possPlayers = new ArrayList<Player>();
+        trainCar playerCar = p.position.getTrainCar();
+
+        if (p.position.floor == roof) {
+            // Look for the players in line of sight forward on roof
+            for (int i = train.IndexOf(playerCar) + 1; i < train.Count ; i++) {
+                playersOnWagon = this.train[i].getInside().getPlayers()
+                if (playersOnWagon.Count != 0) {
+                    possPlayers.addRange(playersOnWagon);
+                    break;
+                }
+            }
+
+            // Look for the players in line of sight backwards on roof
+            for (int i = train.IndexOf(playerCar) - 1; i >= 0 ; i--) {
+                playersOnWagon = this.train[i].getInside().getPlayers()
+                if (playersOnWagon.Count != 0) {
+                    possPlayers.addRange(playersOnWagon);
+                    break;
+                }
+            }
+        } else {
+            // Look for the players in the next wagon backwards
+            try {
+                // Add adjacent positions
+                possPlayers.addRange(this.train[train.IndexOf(playerCar) - 1].getInside().getPlayers());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+
+            // Loof for the players in the next wagon forward
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) + 1].getInside().getPlayers());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+        }
+
+        // If there is more than one possible player, we remove Belle.
+        if (possPlayers.Count > 1) {
+            for (Player p in possPlayers) { 
+                if (p.getBandit() == Belle) {
+                    possPlayers.Remove(p);
+                }
+        }
+        }
+        
     }
 
     // need calculateGameScore() method 
