@@ -24,6 +24,8 @@ class GameController {
     private List <TrainCar> myTrain;
     private Marshal aMarshal;
 
+
+
     private GameController(){
         this.players = new List <Player> ();
         this.myTrain = new List <TrainCar> ();
@@ -62,11 +64,12 @@ class GameController {
 
             this.currentRound =rounds[0];
 
+            //get method for turns
             this.currentTurn = currentRound.turns[0];
 
             players[0].setWaitingForInput(true);
 
-            //maybe init currentPlayer and currentPlayerIndex
+            //this.currentPlayer = players[0];
         }
     }
 
@@ -81,7 +84,7 @@ class GameController {
         }
 
         // initializing the marshall and init his position
-        this.aMarshal = Marshall.getInstance();
+        this.aMarshal = Marshal.getInstance();
         myTrain[0].moveInsideCar(aMarshal);
 
     }
@@ -96,9 +99,9 @@ class GameController {
 
     private void endOfTurn(){
 
-        if (this.currentPlayer.getsAnotherAction()){
+        if (this.currentPlayer.isGetsAnotherAction()){
 
-            this.currentPlayer.setAnotherAction(false);
+            this.currentPlayer.setsGetAnotherAction(false);
         }
         else {
 
