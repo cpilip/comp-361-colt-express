@@ -10,6 +10,14 @@ class TrainCar {
         this.isLocomotive = isLocomotive;
     }
 
+    public Position.Position getInside() {
+        return this.inside;
+    }
+
+    public Position.Position getRoof() { 
+        return this.roof;
+    }
+
     // Move input GameUnit inside the car 
     public void moveInsideCar(GameUnit fig) {
         fig.setPosition(inside);

@@ -16,6 +16,10 @@ namespace Position {
             this.floor = floor;
         }
 
+        public TrainCar getTrainCar() { 
+            return this.trainCar;
+        }
+
         // Returns true if the position is a floor; false if roof
         public bool isInside() {
             return this.floor == Floor.Inside;

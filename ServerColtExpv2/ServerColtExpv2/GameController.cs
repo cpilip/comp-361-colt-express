@@ -136,7 +136,7 @@ class GameController {
         }
     }
     
-    private void endOfCars(){
+    private void endOfCards(){
         
         this.currentPlayer.discardPile.Add(this.currentRound.playedCards.pop());
 
@@ -201,18 +201,46 @@ class GameController {
         //TO DO
     }
 
-    // Milo TODO
+    // Get a list of all possible wagons where a player p can move from its current position
     private ArrayList<Position> getPossibleMoves(Player p) {
         ArrayList<Position> possPos = new ArrayList<Position>();
-
+        trainCar playerCar = p.position.getTrainCar();
         // Check if on a roof or not
-        if (this.position.floor == Roof) { 
+        if (p.position.floor == Roof) { 
             // Add 1-3 distance forward or backwards
-            possPos.add();
+            for (int i = 1 ; i < 4 ; i++) {
+                try {
+                    // Add adjacent positions
+                    possPos.add(this.train[train.IndexOf(playerCar) - i].getInside());
+                } catch (System.IndexOutOfRangeException e) {
+                    continue;
+                }
+            }
+
+            for (int i = 1 ; i < 4 ; i++) {
+                try {
+                    // Add adjacent positions
+                    possPos.add(this.train[train.IndexOf(playerCar) + i].getInside());
+                } catch (System.IndexOutOfRangeException e) {
+                    continue;
+                }
+            }
         } else { 
-            // Add adjacent positions
-            possPos.add();
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) - 1].getInside());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+            try {
+                // Add adjacent positions
+                possPos.add(this.train[train.IndexOf(playerCar) + 1].getInside());
+            } catch (System.IndexOutOfRangeException e) {
+                continue;
+            }
+            
         }
+        return possPos;
     }
 
     // Milo TODO
