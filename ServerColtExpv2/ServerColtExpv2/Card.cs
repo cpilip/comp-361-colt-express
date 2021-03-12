@@ -4,7 +4,11 @@ namespace Card {
 
     abstract class  Card {
 
-        public Player myPlayer;
+        public readonly Player myPlayer;
+
+        public Card(Player p) {
+            this.myPlayer = p;
+        }
 
         public Player belongsTo() {
             return this.myPlayer;
