@@ -115,30 +115,26 @@ class GameController {
         ActionCard topOfPile = this.currentRound.topOfPlayedCards();
         
         //if the action card is a Move Marshall action
-        if (topOfPile.getKind == Card.ActionKind.Marshall){ 
+        if (topOfPile.getKind().Equals(ActionKind.Marshal)){ 
             this.aMarshal.setPosition(p);
 
-            //check for all game units at position p 
-            foreach (GameUnit g in p.getUnits()){
-         
-                //if it is a player, bullet card in deck + sent to the roof 
-                if (g.getType() == typeof(Player)){
-                    Bulletcard b = new Bulletcard();
-                    g.discardPile.Add(b);
-                    g.setPosition(p.TrainCar.roof);
-                }
+            //check for all players at position p 
+            foreach (Player aPlayer in p.getPlayers()){
+                    BulletCard b = new BulletCard();
+                    aPlayer.addToDiscardPile(b);
+                    p.getTrainCar().moveRoofCar(aPlayer);
+                
             }
         }
         //if the action card is a Move action
-        if (topOfPile.getKind == Card.ActionKind.Move){
+        if (topOfPile.getKind() == ActionKind.Move){
             currentPlayer.setPosition(p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
-            if(p.units.contains(this.aMarshal)){
-                    
-                    Bulletcard b = new Bulletcard();
-                    currentPlayer.discardPile.Add(b);
-                    currentPlayer.setPosition(p.TrainCar.roof);
+            if(p.hasMarshal(aMarshal)){
+                    BulletCard b = new BulletCard();
+                    currentPlayer.addToDiscardPile(b);
+                    p.getTrainCar().moveRoofCar(currentPlayer);
             }
         }
 
@@ -152,41 +148,32 @@ class GameController {
         loot.setPosition(victim.getPosition());
         victim.setPosition(dest);
 
-        //TODO use get method
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
 
-        //if the marshal is at position dest, bullet card in deck + sent to the roof 
-        if (dest.units.contains(this.aMarshal)){
-                Bulletcard b = new Bulletcard();
+        //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
+        if (dest.hasMarshal(aMarshal)){
+                BulletCard b = new BulletCard();
                 victim.discardPile.Add(b);
-                victim.setPosition(dest.TrainCar.roof);
+                dest.getTrainCar().moveRoofCar(victim);
         }
        
         endOfCards();
     }
 
     public void chosenShootTarget(Player target){
-        //TOCHECK name of get, add methods 
-        //A BulletCard is transfered from bullets of currentPlayer to target's discsrdPile
-        BulletCard aBullet = currentPlayer.getBullets()[0];
-        currentPlayer.getBullets().Remove(aBullet);
-        target.getDiscardPile().Add(aBullet);
+        //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
+        BulletCard aBullet = currentPlayer.getABullet();
+        target.addToDiscardPile(aBullet);
         endOfCards();
     }
 
     public void chosenLoot(GameItem loot){
         //the loot is transfered from the position to the currentPlayer possensions
         loot.setPosition(null);
-        currentPlayer.getPossessions().Add(loot);
+        currentPlayer.addToPossessions(loot);
         endOfCards();
     }
-
-    public void readyForNextMove(){
-        //TO DO
-    }
- 
-
 
     /**
         Private helper methods
@@ -240,25 +227,23 @@ class GameController {
         }
     }
     
+    
     private void endOfCards(){
         
-        //TODO use get method for playedCards 
-        //TODO is played Card a stack ?
-        this.currentPlayer.discardPile.Add(this.currentRound.playedCards.pop());
+        this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
 
         //if all cards in the pile have been played 
         //TODO use get method for playedCards 
-        if(this.currentRound.playedCards.isEmpty()){
+        if(this.currentRound.getPlayedCards().Count == 0){
 
             //if this is the last round 
-            if(this.currentRound.equals(this.rounds[-1])){
+            if(this.currentRound.Equals(this.rounds[this.rounds.Count - 1])){
                 calculateGameScore();
             }
             else {
                 //setting the next round, setting the first turn of the round 
-                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound + 1)];
-                //TODO get method for turns
-                this.currentTurn = this.currentRound.turns[0];
+                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound)+1];
+                this.currentTurn = this.currentRound.getTurns()[0];
 
                 //setting the next player and game status of the game 
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
@@ -269,10 +254,9 @@ class GameController {
                 foreach (Player p in this.players){
                     Random rnd = new Random();
                     for (int i=0; i<6; i++){
-                        //TODO use get method for discardPile and hand
                         int rand = rnd.Next(0, p.discardPile.Count);
                         p.hand.Add(p.discardPile[rand]);
-                        p.discardPile.Remove(rand);
+                        p.discardPile.RemoveAt(rand);
                     }
                 }
             }
@@ -292,7 +276,7 @@ class GameController {
         }
 
         // initializing the marshall and init his position
-        this.aMarshal = Marshall.getInstance();
+        this.aMarshal = Marshal.getInstance();
         myTrain[0].moveInsideCar(aMarshal);
 
     }
@@ -306,7 +290,7 @@ class GameController {
     }
 
     public void readyForNextMove(){
-        this,currentPlayer.setWaitingForInput(false);
+        this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
 
         foreach (Player p in this.players) {
@@ -493,5 +477,5 @@ class GameController {
     }
 
 
-    }
 }
+

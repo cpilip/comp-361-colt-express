@@ -101,6 +101,15 @@ namespace GameUnitSpace {
             this.hand.Add(c);
         }
 
+        public BulletCard getABullet(){
+            BulletCard tmp = this.bullets[0];
+            this.bullets.RemoveAt(0);
+            return tmp;
+        }
+
+        public void addToPossessions(GameItem anItem){
+            this.possessions.Add(anItem);
+        }
     }
 
 }

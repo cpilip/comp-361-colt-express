@@ -14,7 +14,6 @@ namespace RoundSpace {
     class Round {
         private readonly EndOfRoundEvent anEvent;
         private Queue <ActionCard> playedCards;
-
         private List<Turn> turns;
 
         public Round(EndOfRoundEvent e) {
@@ -25,7 +24,7 @@ namespace RoundSpace {
         /*
             Get methods
         */
-        
+
         public List<Turn> getTurns(){
             return turns;
         }

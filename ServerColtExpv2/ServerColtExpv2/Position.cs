@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GameUnitSpace;
 
@@ -9,7 +10,6 @@ namespace PositionSpace {
     class Position {
         private readonly Floor floor; // **Did not implement "setFloor"; Floor passed in constructor
         private readonly TrainCar trainCar;
-
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
 
         public Position(TrainCar trainCar, Floor floor) {
@@ -22,7 +22,7 @@ namespace PositionSpace {
         }
 
         // Returns true if the position is a floor; false if roof
-        public bool isInside() {
+        public Boolean isInside() {
             return this.floor == Floor.Inside;
         }
 
@@ -38,25 +38,25 @@ namespace PositionSpace {
 
         public List<Player> getPlayers() {
             List<Player> players = new List<Player>();
-            for (GameUnit unit in units) { 
-                if (unit.getType().Equals(typeof(Player))) {
-                    players.Add(unit);
+            foreach (GameUnit unit in units) { 
+                if (unit.GetType().Equals(typeof(Player))) {
+                    players.Add((Player) unit);
                 }
             }
             return players;
         }
 
-        public List<Player> getItems() {
-            List<Player> players = new List<Player>();
-            for (GameUnit unit in units) { 
-                if (unit.getType().Equals(typeof(GameItem))) {
-                    players.Add(unit);
+        public List<GameItem> getItems() {
+            List<GameItem> items = new List<GameItem>();
+            foreach (GameUnit unit in units) { 
+                if (unit.GetType().Equals(typeof(GameItem))) {
+                    items.Add((GameItem) unit);
                 }
             }
-            return players;
+            return items;
         }
 
-        public boolean hasMarshal(Marshal m) {
+        public Boolean hasMarshal(Marshal m) {
             return units.Contains(m);
         }
     }
