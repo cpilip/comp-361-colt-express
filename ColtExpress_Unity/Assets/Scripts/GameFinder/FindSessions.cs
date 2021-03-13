@@ -17,7 +17,7 @@ public class FindGames : MonoBehaviour
     }
 
     private IEnumerator findGamesWait(float time){
-        LobbyCommands.getGameServices(this);
+        LobbyCommands.getSessions(this);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);

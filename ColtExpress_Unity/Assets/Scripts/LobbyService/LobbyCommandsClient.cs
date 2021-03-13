@@ -24,8 +24,10 @@ public class LobbyCommandsClient
         // string pass = password.GetComponent<TMP_InputField>().text;
         string url = string.Format("http://{0}/oauth/token?grant_type=password&username={1}&password={2}", connectionIP, user, pass);
 
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection("user_oauth_approval=true&_csrf=19beb2db-3807-4dd5-9f64-6c733462281b&authorize=true"));
+        WWWForm formData = new WWWForm();
+        formData.AddField("user_oauth_approval", "true");
+        formData.AddField("_csrf", "19beb2db-3807-4dd5-9f64-6c733462281b");
+        formData.AddField("authorize", "true");
 
         caller.StartCoroutine(postRequest(url, formData, true));
     }
@@ -84,6 +86,57 @@ public class LobbyCommandsClient
         caller.StartCoroutine(getRequest(url, true));
     }
 
+    public void createSession(MonoBehaviour caller, string token, string creator, string game, string savegame)
+    {
+        // string pass = password.GetComponent<TMP_InputField>().text;
+        string url = string.Format("http://{0}/api/sessions?access_token={1}", connectionIP, token);
+
+        WWWForm formData = new WWWForm();
+        formData.AddField("creator", creator);
+        formData.AddField("game", game);
+        formData.AddField("savegame", savegame);
+
+        caller.StartCoroutine(postRequest(url, formData, true));
+    }
+
+    public void deleteSession(MonoBehaviour caller, string sessionID, string token)
+    {
+        string url = string.Format("http://{0}/api/sessions/{1}?access_token={2}", connectionIP, sessionID, token);
+        caller.StartCoroutine(deleteRequest(url, true));
+    }
+
+    public void getSessionDetails(MonoBehaviour caller, string sessionID)
+    {
+        string url = string.Format("http://{0}/api/sessions/{1}", connectionIP, sessionID);
+        caller.StartCoroutine(getRequest(url, true));
+    }
+
+    public void getSessions(MonoBehaviour caller)
+    {
+        string url = string.Format("http://{0}/api/sessions", connectionIP);
+        caller.StartCoroutine(getRequest(url, true));
+    }
+
+    public void joinSession(MonoBehaviour caller, string sessionID, string name, string token)
+    {
+        string data = "";
+        string url = string.Format("http://{0}/api/sessions/{1}/players/{2}?access_token={3}", connectionIP, sessionID, name, token);
+        caller.StartCoroutine(putRequest(url, data, true, false));
+    }
+
+    public void launchSession(MonoBehaviour caller, string sessionID, string token)
+    {
+        WWWForm form = new WWWForm();
+        string url = string.Format("http://{0}/api/sessions/{1}?access_token={2}", connectionIP, sessionID, token);
+        caller.StartCoroutine(postRequest(url, form, true));
+    }
+
+    public void leaveSession(MonoBehaviour caller, string sessionID, string name, string token)
+    {
+        string url = string.Format("http://{0}/api/sessions/{1}/players/{2}?access_token={3}", connectionIP, sessionID, name, token);
+        caller.StartCoroutine(deleteRequest(url, true));
+    }
+
     private IEnumerator getRequest(string url, bool auth) 
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
@@ -134,7 +187,7 @@ public class LobbyCommandsClient
         }
     }
 
-    private IEnumerator postRequest(string url, List<IMultipartFormSection> formData, bool auth)
+    private IEnumerator postRequest(string url, WWWForm formData, bool auth)
     {
         // Configure the data portion of the post request 
         using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
