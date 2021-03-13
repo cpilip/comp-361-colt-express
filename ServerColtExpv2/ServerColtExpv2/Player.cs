@@ -27,16 +27,13 @@ namespace GameUnitSpace {
         public List<GameItem> possessions;
 
         /// Constructor for the Player class, initializes a Player object.
-        public Player(Character c, Position p) {
+        public Player(Character c) {
 
             // Initialize the character
             this.bandit = c;
 
             // Initialize the cards
             this.initializeCards();
-
-            // Initialize the position of the Player.
-            this.setPosition(p);
 
             // Initialize the possessions
             possessions = new List <GameItem>();
@@ -97,6 +94,11 @@ namespace GameUnitSpace {
 
         public void addToDiscardPile(Card c) { 
             this.discardPile.Add(c);
+        }
+
+        public void moveFromDiscardToHand(Card c) {
+            this.discardPile.Remove(c);
+            this.hand.Add(c);
         }
 
     }

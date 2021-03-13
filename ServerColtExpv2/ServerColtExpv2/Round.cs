@@ -38,5 +38,13 @@ namespace RoundSpace {
             return this.anEvent;
         }
 
+        public void addToPlayedCards(ActionCard c){
+            this.playedCards.Enqueue(c);
+        }
+
+        public ActionCard topOfPlayedCards() {
+            return this.playedCards.Dequeue();
+        }
+
     }
 }

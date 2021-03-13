@@ -58,7 +58,7 @@ class GameController {
             //setting players' positions
             for(int i=0; i<myTrain.Count; i++){
                 
-                if (i%2==0){
+                if (i % 2 == 0) {
                     myTrain[myTrain.Count - 2].moveInsideCar(players[i]);
                 }
                 else {
@@ -76,7 +76,7 @@ class GameController {
             this.currentRound =rounds[0];
 
             //TODO get method for turns
-            this.currentTurn = currentRound.turns[0];
+            this.currentTurn = currentRound.getTurns()[0];
 
             players[0].setWaitingForInput(true);
 
@@ -88,7 +88,7 @@ class GameController {
         
         //adding the action card to the playedCard pile and removind it from player's hand
         //TODO use get method 
-        this.currentRound.playedCards.Add(c);
+        this.currentRound.addToPlayedCards(c);
         //TODO use get method 
         this.currentPlayer.hand.Remove(c);
 
@@ -103,8 +103,8 @@ class GameController {
         
             //TODO use get methods for discardPile and hand 
             int rand = rnd.Next(0,this.currentPlayer.discardPile.Count);
-            this.currentPlayer.hand.Add(p.discardPile[rand]);
-            this.currentPlayer.discardPile.Remove(rand);
+            Card c = this.currentPlayer.discardPile[rand];
+            this.currentPlayer.moveFromDiscardToHand(c);
         }
         //in TouchCore was EndOfMove()
         endOfTurn();
@@ -112,7 +112,7 @@ class GameController {
 
     public void chosenPosition(Position p){
         //TODO is played card a Stack or a List ?
-        Card topOfPile = this.currentRound.playedCards.pop();
+        ActionCard topOfPile = this.currentRound.topOfPlayedCards();
         
         //if the action card is a Move Marshall action
         if (topOfPile.getKind == Card.ActionKind.Marshall){ 
