@@ -15,5 +15,10 @@ namespace RoundSpace {
         public Turn(TurnType t) {
             this.type = t;
         }
+
+        public TurnType getType() { 
+            return this.type;
+        }
     }
+
 }

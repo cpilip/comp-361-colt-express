@@ -16,7 +16,8 @@ namespace GameUnitSpace
 
         public List<Position> getPossiblePositions()
         {
-            // where can he go
+            List<Position> possPos = new List<Position>();
+            return possPos;
         }
 
     }

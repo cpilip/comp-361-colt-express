@@ -88,7 +88,7 @@ namespace GameUnitSpace {
         }
 
         /// Update the state of the get another action flag.
-        public void setGetsanotherAction(Boolean getAnotherAction) {
+        public void setGetsAnotherAction(Boolean getAnotherAction) {
             this.getsAnotherAction = getAnotherAction;
         }
 
@@ -99,6 +99,17 @@ namespace GameUnitSpace {
         public void moveFromDiscardToHand(Card c) {
             this.discardPile.Remove(c);
             this.hand.Add(c);
+        }
+
+        public void moveFromHandToDiscard(Card c) { 
+            this.hand.Remove(c);
+            this.discardPile.Add(c);
+        }
+
+        public void moveCardsToDiscard() {
+            foreach (Card c in this.hand) { 
+                moveFromHandToDiscard(c);
+            }
         }
 
     }
