@@ -166,11 +166,12 @@ class GameController
         victim.possessions.Remove(loot);
 
         //if the marshal is at position dest, bullet card in deck + sent to the roof 
-        if (dest.units.contains(this.aMarshal))
+        if (dest.hasMarshal(aMarshal))
         {
-            Bulletcard b = new Bulletcard();
+            BulletCard b = new BulletCard();
             victim.discardPile.Add(b);
-            victim.setPosition(dest.TrainCar.roof);
+            dest.getTrainCar().moveRoofCar(victim);
+        }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal)){
                 BulletCard b = new BulletCard();
@@ -215,7 +216,6 @@ class GameController
             this.currentPlayer.setWaitingForInput(false);
 
             //if this is not the last turn of the round
-            //TODO use get method for turns 
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
             {
 
@@ -263,7 +263,6 @@ class GameController
         this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
 
         //if all cards in the pile have been played 
-        //TODO use get method for playedCards 
         if(this.currentRound.getPlayedCards().Count == 0){
 
             //if this is the last round 
