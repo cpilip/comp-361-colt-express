@@ -16,9 +16,11 @@ public class GameList : MonoBehaviour
 
     private void refreshAllButtons()
     {
-        // int counter = 0;
-
+       
         GameObject contentPanel = GameObject.Find("Content");
+        foreach (Transform child in contentPanel.transform) {
+            GameObject.Destroy(child.gameObject);
+        }
         foreach (string st in this.Games)
         {
             GameObject newButton = Instantiate(ButtonPrefab) as GameObject;
