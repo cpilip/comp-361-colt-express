@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+
+using PositionSpace;
 
 namespace GameUnitSpace
 {
@@ -11,7 +14,7 @@ namespace GameUnitSpace
         }
 
 
-        public Position getPossiblePositions()
+        public List<Position> getPossiblePositions()
         {
             // where can he go
         }

@@ -1,5 +1,8 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
+
+using PositionSpace;
+using CardSpace;
 
 
 namespace GameUnitSpace {
@@ -13,16 +16,15 @@ namespace GameUnitSpace {
         Django
     }
 
-    public class Player : GameUnit{
+    class Player : GameUnit{
         private readonly Character bandit;
         private bool waitingForInput;
         private bool getsAnotherAction;
 
-        public ArrayList<Card> hand;
-        public ArrayList<Card> discardPile;
-        public ArrayList<BulletCard> bullets;
-
-        public ArrayList<GameItem> possessions;
+        public List <Card> hand;
+        public List <Card> discardPile;
+        public List <BulletCard> bullets;
+        public List<GameItem> possessions;
 
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c, Position p) {
@@ -34,10 +36,10 @@ namespace GameUnitSpace {
             this.initializeCards();
 
             // Initialize the position of the Player.
-            this.position = p;
+            this.setPosition(p);
 
             // Initialize the possessions
-            possessions = new ArrayList<GameItem>();
+            possessions = new List <GameItem>();
         }
 
         /**
@@ -47,20 +49,20 @@ namespace GameUnitSpace {
         private void initializeCards() {
             // Create and add 6 bullet cards
             for (int i = 0 ; i < 6 ;i++) {
-                bullets.add(new BulletCard(this));
+                bullets.Add(new BulletCard());
             }
 
             // Create and add all necessary action cards
-            discardPile.add(new ActionCard(Move));
-            discardPile.add(new ActionCard(Move));
-            discardPile.add(new ActionCard(ChangeFloor));
-            discardPile.add(new ActionCard(ChangeFloor));
-            discardPile.add(new ActionCard(Shoot));
-            discardPile.add(new ActionCard(Shoot));
-            discardPile.add(new ActionCard(Punch));
-            discardPile.add(new ActionCard(Loot));
-            discardPile.add(new ActionCard(Loot));
-            discardPile.add(new ActionCard(Marshall));
+            discardPile.Add(new ActionCard(ActionKind.Move));
+            discardPile.Add(new ActionCard(ActionKind.Move));
+            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
+            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
+            discardPile.Add(new ActionCard(ActionKind.Shoot));
+            discardPile.Add(new ActionCard(ActionKind.Shoot));
+            discardPile.Add(new ActionCard(ActionKind.Punch));
+            discardPile.Add(new ActionCard(ActionKind.Rob));
+            discardPile.Add(new ActionCard(ActionKind.Rob));
+            discardPile.Add(new ActionCard(ActionKind.Marshal));
 
         }
 
@@ -69,7 +71,7 @@ namespace GameUnitSpace {
         */
 
         /// Returns the type of the selected bandit
-        public void getBandit() {
+        public Character getBandit() {
             return this.bandit;
         }
 
@@ -79,22 +81,22 @@ namespace GameUnitSpace {
         }
 
         /// Returns the current state of the waiting for input flag.
-        public boolean getWaitingForInput() {
+        public Boolean getWaitingForInput() {
             return this.waitingForInput;
         }
 
         /// Returns the current state of the gets another action flag.
-        public boolean isGetsAnotherAction() {
+        public Boolean isGetsAnotherAction() {
             return this.getsAnotherAction;
         }
 
         /// Update the state of the get another action flag.
-        public void setGetsanotherAction(boolean getAnotherAction) {
+        public void setGetsanotherAction(Boolean getAnotherAction) {
             this.getsAnotherAction = getAnotherAction;
         }
 
         public void addToDiscardPile(Card c) { 
-            this.discardPile.add(c);
+            this.discardPile.Add(c);
         }
 
     }

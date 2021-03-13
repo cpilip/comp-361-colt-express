@@ -1,3 +1,5 @@
+using PositionSpace;
+
 namespace GameUnitSpace
 {
     abstract class GameUnit

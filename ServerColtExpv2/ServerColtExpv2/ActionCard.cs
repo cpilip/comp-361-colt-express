@@ -1,4 +1,5 @@
 using System;
+using GameUnitSpace;
 
 namespace CardSpace {
     
@@ -11,10 +12,10 @@ namespace CardSpace {
         Punch
     }
 
-    class ActionCard: Card {
+    class ActionCard:Card {
         private readonly ActionKind kind;
 
-        public ActionCard(Player p, ActionKind k) {
+        public ActionCard(ActionKind k) {
             this.kind = k;
         }
 
