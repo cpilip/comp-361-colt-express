@@ -1,6 +1,6 @@
 using System;
 
-namespace Card{
+namespace CardSpace {
     
     public enum ActionKind {
         Move,
@@ -14,7 +14,7 @@ namespace Card{
     class ActionCard: Card {
         private readonly ActionKind kind;
 
-        public ActionCard(ActionKind k) {
+        public ActionCard(Player p, ActionKind k) {
             this.kind = k;
         }
 

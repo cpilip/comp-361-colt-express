@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Position {
+namespace PositionSpace {
     public enum Floor {
         Inside,
         Roof

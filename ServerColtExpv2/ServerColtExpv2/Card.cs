@@ -1,14 +1,10 @@
 using System;
 
-namespace Card {
+namespace CardSpace {
 
     abstract class  Card {
 
         public readonly Player myPlayer;
-
-        public Card(Player p) {
-            this.myPlayer = p;
-        }
 
         public Player belongsTo() {
             return this.myPlayer;

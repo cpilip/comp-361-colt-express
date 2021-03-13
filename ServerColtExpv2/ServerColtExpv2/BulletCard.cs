@@ -1,5 +1,8 @@
 using System;
+namespace CardSpace
+{
+    public class Bulletcard : Card
+    {
 
-public class Bulletcard : Card {
-    
+    }
 }

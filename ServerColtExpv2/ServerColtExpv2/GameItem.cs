@@ -1,5 +1,12 @@
-namespace Server_Hector
+namespace GameUnitSpace
 {
+     enum ItemType
+    {
+        Purse,
+        Strongbox,
+        Ruby
+    }
+    
     class GameItem : GameUnit 
     {
 

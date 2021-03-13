@@ -1,4 +1,4 @@
-namespace Server_Hector
+namespace GameUnitSpace
 {
     abstract class GameUnit
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 
 
-namespace Player {
+namespace GameUnitSpace {
 
     public enum Character {
         Ghost, 
