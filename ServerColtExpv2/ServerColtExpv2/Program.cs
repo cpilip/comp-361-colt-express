@@ -37,7 +37,7 @@ class MyTcpListener
                 Console.WriteLine("Connected!");
 
                 IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                Console.WriteLine("From: " + remoteIpEndPoint.Address)
+                Console.WriteLine("From: " + remoteIpEndPoint.Address);
 
                 data = null;
 
