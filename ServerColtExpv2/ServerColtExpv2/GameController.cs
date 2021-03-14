@@ -64,8 +64,7 @@ class GameController
             //setting players' positions
             for (int i = 0; i < myTrain.Count; i++)
             {
-
-                if (i % 2 == 0)
+                if (i%2 == 0)
                 {
                     myTrain[myTrain.Count - 2].moveInsideCar(players[i]);
                 }
@@ -84,7 +83,6 @@ class GameController
 
             this.currentRound = rounds[0];
 
-            //TODO get method for turns
             this.currentTurn = currentRound.getTurns()[0];
 
             players[0].setWaitingForInput(true);
@@ -322,12 +320,12 @@ class GameController
         this.myTrain.Add(new TrainCar(true));
 
         //initializing train cars
-        for (int i = 0; i < myTrain.Count; i++)
+        for (int i = 0; i < players.Count; i++)
         {
             this.myTrain.Add(new TrainCar(false));
         }
 
-        // initializing the marshall and init his position
+        // initializing the marshall and init his position to inside locomotive
         this.aMarshal = Marshal.getInstance();
         myTrain[0].moveInsideCar(aMarshal);
 
@@ -335,12 +333,83 @@ class GameController
 
     private void initializeLoot()
     {
-        
+        //initializaing a Strongbox in the locomotive 
+        GameItem locomotiveStongBox = new GameItem(ItemType.Strongbox, 1000);
+        locomotiveStongBox.setPosition(myTrain[0].getInside());
+
+        // depending on the number of player, 
+        // we'll initialize loots for totalPlayer number of wagon
+        for (int i=0; i<totalPlayer; i++){
+            
+            switch (i) {
+                //intializing loots in first wagon
+                case 0 :{
+                    GameItem anItem = new GameItem(ItemType.Purse, 500);
+                    anItem.setPosition(myTrain[1].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[1].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem2.setPosition(myTrain[1].getInside());
+                    break;
+                }
+                //intializing loots in second wagon
+                case 1 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[2].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Ruby, 500);
+                    anItem1.setPosition(myTrain[2].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Ruby, 500);
+                    anItem2.setPosition(myTrain[2].getInside());
+                    break;
+                }
+                //intializing loots in third wagon
+                case 2 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[3].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[3].getInside());
+                    break;
+                }
+                //intializing loots in 4th wagon
+                case 3 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[4].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    GameItem anItem3 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    break;
+                }
+                //intializing loots in 5th wagon
+                case 4 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[5].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem3 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem4 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    break;
+                }
+                //intializing loots in 6th wagon
+                case 5:{
+                    GameItem anItem = new GameItem(ItemType.Purse, 500);
+                    anItem.setPosition(myTrain[6].getInside());
+                    break;
+                }
+            }
+        }
     }
 
     private void intializeRounds()
     {
-        for (int i=0; i<4; i++){
+        for (int i=0; i<4; i++)
+        {
             Round aRound = new Round(false, totalPlayer);
             this.rounds.Add(aRound);
         }
