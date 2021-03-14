@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FindGames : MonoBehaviour
+public class FindSessions : MonoBehaviour
 {
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 

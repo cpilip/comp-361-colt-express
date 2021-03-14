@@ -7,7 +7,7 @@ public class FindGameServices : MonoBehaviour
 {
     public Dropdown dropdown;
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
-    private List<string> options;
+    private List<string> options = new List<string>();
     private bool updated;
 
     // Start is called before the first frame update
@@ -15,8 +15,19 @@ public class FindGameServices : MonoBehaviour
     {
         StartCoroutine(findGamesWait(1));
         dropdown.ClearOptions();
+        if (options.Count == 0) {
+            options.Add("None found");
+        }
         dropdown.AddOptions(options);
+    }
 
+    public void refresh() {
+        StartCoroutine(findGamesWait(1));
+        dropdown.ClearOptions();
+        if (options.Count == 0) {
+            options.Add("None found");
+        }
+        dropdown.AddOptions(options);
     }
 
     private IEnumerator findGamesWait(float time)

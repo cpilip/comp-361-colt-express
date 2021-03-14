@@ -8,34 +8,42 @@ using UnityEngine.SceneManagement;
 
 public class CreateLobby : MonoBehaviour
 {
-    public GameObject GameNameText; 
-    public Slider MinPlayersSlider;
-    public Slider MaxPlayersSlider;
+    public GameObject GameSessionNameText; 
+    public GameObject GameUserNameText;
+    public Dropdown gameDropDown;
+
+    public Object SessionPrefab;
 
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 
-    public void createGame() {
+    public void createLobby() {
         StartCoroutine(wait(1));
     }
 
     private IEnumerator wait(float time)
     {
-        string name = GameNameText.GetComponent<TMP_InputField>().text;
-        string address = "http://13.68.140.249:4242/DummyGameService";
+        string name = GameSessionNameText.GetComponent<TMP_InputField>().text;
+        string urName = GameUserNameText.GetComponent<TMP_InputField>().text;
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
-        LobbyCommands.registerGameService(this, 
-            address, 
-            (int)MaxPlayersSlider.value, 
-            (int)MinPlayersSlider.value, 
-            name, 
-            "true", 
-            token);
+        LobbyCommands.createSession(this, token, urName, gameDropDown.options[gameDropDown.value].text, "");
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
         if (response == "")
         {
-            SceneManager.LoadScene ("Lobby");
+            SceneManager.LoadScene ("NewSession");
         }
+        GameObject sessionId;
+        if (GameObject.Find("sessionId") == null) {
+            sessionId = (GameObject)Instantiate(SessionPrefab);
+            sessionId.name = "sessionId";
+        } else {
+            sessionId = GameObject.Find("SessionId");
+        }
+
+        string id = "1234";
+
+        sessionId.GetComponent<SessionPrefabScript>().setSessionId(id);
+
     }
 }

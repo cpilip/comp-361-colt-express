@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using TMPro;
+using System.Text;
 
 
 public class LobbyCommandsClient
 {
     // default local host : 127.0.0.1:4242
     // Azure server IP : 13.68.140.249
-    public const string connectionIP = "13.68.140.249"; // IP of Azure server
+    public const string connectionIP = "168.61.46.213:443"; // IP of Azure server
 
     private string response;
 
@@ -24,10 +25,12 @@ public class LobbyCommandsClient
         // string pass = password.GetComponent<TMP_InputField>().text;
         string url = string.Format("http://{0}/oauth/token?grant_type=password&username={1}&password={2}", connectionIP, user, pass);
 
-        WWWForm formData = new WWWForm();
-        formData.AddField("user_oauth_approval", "true");
-        formData.AddField("_csrf", "19beb2db-3807-4dd5-9f64-6c733462281b");
-        formData.AddField("authorize", "true");
+        // WWWForm formData = new WWWForm();
+        // formData.AddField("user_oauth_approval", "true");
+        // formData.AddField("_csrf", "19beb2db-3807-4dd5-9f64-6c733462281b");
+        // formData.AddField("authorize", "true");
+
+        string formData = "nothing";
 
         caller.StartCoroutine(postRequest(url, formData, true));
     }
@@ -94,13 +97,16 @@ public class LobbyCommandsClient
     public void createSession(MonoBehaviour caller, string token, string creator, string game, string savegame)
     {
         // string pass = password.GetComponent<TMP_InputField>().text;
-        string url = string.Format("http://{0}/api/sessions?access_token={1}", connectionIP, token);
+        string url = string.Format("http://{0}/api/sessions?access_token={1}", connectionIP, UnityWebRequest.UnEscapeURL(token));
+        Debug.Log(url);
 
-        WWWForm formData = new WWWForm();
-        formData.AddField("creator", creator);
-        formData.AddField("game", game);
-        formData.AddField("savegame", savegame);
+        // WWWForm formData = new WWWForm();
+        // formData.AddField("game", game);
+        // formData.AddField("creator", creator);
+        // formData.AddField("savegame", savegame);
 
+        string formData = "{\"creator\":\"" + creator + "\", \"game\":\"" + game + "\", \"savegame\":\"" + savegame + "\"}";
+        Debug.Log(formData);
         caller.StartCoroutine(postRequest(url, formData, true));
     }
 
@@ -131,7 +137,8 @@ public class LobbyCommandsClient
 
     public void launchSession(MonoBehaviour caller, string sessionID, string token)
     {
-        WWWForm form = new WWWForm();
+        // WWWForm form = new WWWForm();
+        string form = "";
         string url = string.Format("http://{0}/api/sessions/{1}?access_token={2}", connectionIP, sessionID, token);
         caller.StartCoroutine(postRequest(url, form, true));
     }
@@ -192,29 +199,57 @@ public class LobbyCommandsClient
         }
     }
 
-    private IEnumerator postRequest(string url, WWWForm formData, bool auth)
+    private IEnumerator postRequest(string url, string formData, bool auth)
     {
+        
         // Configure the data portion of the post request 
-        using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
-        {
-            if (auth) 
-            {
-                // Define the header of the request for Security purposes
-                string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
-                webRequest.SetRequestHeader("Authorization", header);
-            }
-            // Request and wait for the desired page.
-            yield return webRequest.SendWebRequest();
+        // using (UnityWebRequest webRequest = UnityWebRequest.Post(url, formData))
+        // {
+        //     if (auth) 
+        //     {
+        //         // Define the header of the request for Security purposes
+        //         string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
+        //         webRequest.SetRequestHeader("Authorization", header);
+        //     }
+        //     webRequest.SetRequestHeader("Content-Type", "application/json");
+            
+        //     // Request and wait for the desired page.
+        //     yield return webRequest.SendWebRequest();
 
-            if (webRequest.isNetworkError)
-            {
-                Debug.Log(": Error: " + webRequest.error);
-            }
-            else
-            {
-                // Debug.Log(":Received: " + webRequest.downloadHandler.text);
-                response = webRequest.downloadHandler.text;
-            }
+        //     if (webRequest.isNetworkError)
+        //     {
+        //         Debug.Log(": Error: " + webRequest.error);
+        //     }
+        //     else
+        //     {
+        //         // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+        //         response = webRequest.downloadHandler.text;
+        //     }
+        // }
+
+        var webRequest = new UnityWebRequest (url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(formData);
+        webRequest.uploadHandler = (UploadHandler) new UploadHandlerRaw(bodyRaw);
+        webRequest.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer();
+        webRequest.SetRequestHeader("Content-Type", "application/json");
+
+        if (auth) 
+        {
+            // Define the header of the request for Security purposes
+            string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
+            webRequest.SetRequestHeader("Authorization", header);
+        }
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError)
+        {
+            Debug.Log(": Error: " + webRequest.error);
+        }
+        else
+        {
+            // Debug.Log(":Received: " + webRequest.downloadHandler.text);
+            response = webRequest.downloadHandler.text;
         }
     }
 

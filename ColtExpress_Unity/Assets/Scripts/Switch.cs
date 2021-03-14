@@ -45,6 +45,11 @@ public class Switch : MonoBehaviour
     SceneManager.LoadScene ("FindGame");
   }
 
+  public void newSession()
+  {
+    SceneManager.LoadScene("NewSession");
+  }
+
   // public void loadGame()
   // {
   //   SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
@@ -84,4 +89,5 @@ public class Switch : MonoBehaviour
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
   }
+
 }
