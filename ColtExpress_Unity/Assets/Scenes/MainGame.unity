@@ -14658,6 +14658,8 @@ MonoBehaviour:
   shoot: {fileID: 314669458}
   robMan: {fileID: 522000921}
   parent: {fileID: 1685617367}
+  turnMenu: {fileID: 1094513322}
+  checkPhase: 0
 --- !u!4 &1905656831
 Transform:
   m_ObjectHideFlags: 0

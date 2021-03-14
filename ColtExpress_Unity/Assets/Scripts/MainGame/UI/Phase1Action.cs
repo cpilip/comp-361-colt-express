@@ -24,6 +24,7 @@ public class Phase1Action : MonoBehaviour
     void Start()
     {
         displayedSubdeckNum = 1;
+        PlayerPrefs.SetInt("clickTimes", 0);
         lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
         playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
     }
@@ -31,6 +32,8 @@ public class Phase1Action : MonoBehaviour
     // Draw and add three cards to the deck
     public void drawCard()
     {
+        int temp = PlayerPrefs.GetInt("clickTimes") + 1;
+        PlayerPrefs.SetInt("clickTimes", temp);
         if (deck != null)
         {
             for (int i = 0; i < 3; i++)
@@ -86,6 +89,8 @@ public class Phase1Action : MonoBehaviour
 
     public void playCard()
     {
+        int temp = PlayerPrefs.GetInt("clickTimes") + 1;
+        PlayerPrefs.SetInt("clickTimes", temp);
         if (handBlocker != null)
         {
             handBlocker.SetActive(!handBlocker.activeSelf);
