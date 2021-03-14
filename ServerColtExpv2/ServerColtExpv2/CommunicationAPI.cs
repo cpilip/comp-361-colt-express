@@ -44,17 +44,14 @@ public class CommunicationAPI
 
     //action is the action you wish to execute on the client (list will be provided)
     //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
-    public static string sendMessageToClient(string action, params object[] args)
+    public static void sendMessageToClient(string action, params object[] args)
     {
         List<Object> objectsToSerialize = new List<Object>();
         objectsToSerialize.Add(action);
         objectsToSerialize.AddRange(args);
 
         //Serialize parameters as list, with first parameter being the action
-        return JsonConvert.SerializeObject(objectsToSerialize, settings);
-
-        //TODO: Transmit to client
-        //msg in Program.cs should be set to this value
+        MyTcpListener.sendToClient(JsonConvert.SerializeObject(objectsToSerialize, settings));
     }
 }
 

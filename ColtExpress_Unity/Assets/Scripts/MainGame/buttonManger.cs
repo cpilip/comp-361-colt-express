@@ -99,7 +99,7 @@ public class buttonManger : MonoBehaviour
                 }
 
 
-                Debug.Log(PlayerPrefs.GetInt("clickTimes"));
+               // Debug.Log(PlayerPrefs.GetInt("clickTimes"));
             }
             catch (Exception e)
             {
@@ -107,7 +107,7 @@ public class buttonManger : MonoBehaviour
             }
 
         }
-        Debug.Log(PlayerPrefs.GetInt("clickTimes"));
+        //Debug.Log(PlayerPrefs.GetInt("clickTimes"));
     }
     
 }
