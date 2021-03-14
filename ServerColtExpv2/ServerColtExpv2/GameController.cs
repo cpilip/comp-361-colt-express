@@ -186,6 +186,7 @@ class GameController
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
+        this.currentPlayer.shootBullet();
         endOfCards();
     }
 
@@ -297,8 +298,19 @@ class GameController
     }
 
     private Dictionary<Player, int> calculateGameScore() {
-        
-    } 
+        Dictionary<Player, int> scores = new Dictionary<Player, int>();
+        int max = -1;
+        Player maxPlayer = null;
+        foreach (Player pl in this.players) {
+            scores.Add(pl, pl.getPossesionsValue());
+            if (pl.getNumOfBulletsShot() > max) {
+                max = pl.getNumOfBulletsShot();
+                maxPlayer = pl;
+            }
+        }
+        scores[maxPlayer] = scores[maxPlayer] + 1000;
+        return scores;
+    }
 
     private void initializeGameBoard()
     {

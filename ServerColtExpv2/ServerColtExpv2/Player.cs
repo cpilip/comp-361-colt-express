@@ -20,6 +20,7 @@ namespace GameUnitSpace {
         private readonly Character bandit;
         private bool waitingForInput;
         private bool getsAnotherAction;
+        private int numOfBulletsShot;
 
         public List <Card> hand;
         public List <Card> discardPile;
@@ -37,6 +38,7 @@ namespace GameUnitSpace {
 
             // Initialize the possessions
             possessions = new List <GameItem>();
+            numOfBulletsShot = 0;
         }
 
         /**
@@ -119,6 +121,22 @@ namespace GameUnitSpace {
             foreach (Card c in this.hand) { 
                 moveFromHandToDiscard(c);
             }
+        }
+
+        public int getPossesionsValue() {
+            int total = 0;
+            foreach (GameItem it in this.possessions) {
+                total =  total + it.getValue();
+            }
+            return total;
+        }
+
+        public void shootBullet() {
+            this.numOfBulletsShot = this.numOfBulletsShot + 1;
+        }
+
+        public int getNumOfBulletsShot() {
+            return this.numOfBulletsShot;
         }
 
     }
