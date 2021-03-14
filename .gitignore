@@ -9,6 +9,8 @@ ServerColtExpv2/ServerColtExpv2/obj/
 
 ServerColtExpv2/.vscode/
 
+ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/ServerColtExpv2.csprojAssemblyReference.cache
+
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
