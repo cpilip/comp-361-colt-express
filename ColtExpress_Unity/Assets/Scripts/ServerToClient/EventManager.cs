@@ -2,17 +2,19 @@
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 /* Author: Christina Pilip
  * Usage: An Event manager singleton for allowing UI items to subscribe to events (messages transmitted from the server).
  */
-
+[System.Serializable]
+public class Event : UnityEvent<String> { }
 public class EventManager : MonoBehaviour
 {
     //Object that the EventManager script is on
     public GameObject eventManagerLocation;
 
-    private Dictionary<string, UnityEvent> eventMap;
+    private Dictionary<string, Event> eventMap;
 
     //EventManager instance
     private static EventManager eventManager;
@@ -49,16 +51,16 @@ public class EventManager : MonoBehaviour
     {
         if (eventMap == null)
         {
-            eventMap = new Dictionary<string, UnityEvent>();
+            eventMap = new Dictionary<string, Event>();
         }
     }
 
     //Add a listener for an event with name eventName
-    public static void StartListening(string eventName, UnityAction listener)
+    public static void StartListening(string eventName, UnityAction<String> listener)
     {
         if (eventManager == null) { return; }
 
-        UnityEvent thisEvent = null;
+        Event thisEvent = null;
         //Add the listener to the event if it exists
         if (EventManagerInstance.eventMap.TryGetValue(eventName, out thisEvent))
         {
@@ -68,18 +70,18 @@ public class EventManager : MonoBehaviour
         //Make the event if it does not exist
         else
         {
-            thisEvent = new UnityEvent();
+            thisEvent = new Event();
             thisEvent.AddListener(listener);
             EventManagerInstance.eventMap.Add(eventName, thisEvent);
         }
     }
 
     //Remove a listener for an event with name eventName
-    public static void StopListening(string eventName, UnityAction listener)
+    public static void StopListening(string eventName, UnityAction<String> listener)
     {
         if (eventManager == null) { return; }
 
-        UnityEvent thisEvent = null;
+        Event thisEvent = null;
         //Remove the listern from the event if it exists
         if (EventManagerInstance.eventMap.TryGetValue(eventName, out thisEvent))
         {
@@ -88,12 +90,12 @@ public class EventManager : MonoBehaviour
     }
 
     //Invoke the corresponding event's function
-    public static void TriggerEvent(string eventName)
+    public static void TriggerEvent(string eventName, string data = null)
     {
-        UnityEvent thisEvent = null;
+        Event thisEvent = null;
         if (EventManagerInstance.eventMap.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent.Invoke();
+            thisEvent.Invoke(data);
         }
     }
 }

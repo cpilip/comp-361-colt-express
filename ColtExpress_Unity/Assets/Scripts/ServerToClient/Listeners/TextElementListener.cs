@@ -9,9 +9,9 @@ using System;
 public class TextElementListener : UIEventListenable
 {
     
-    public override void updateElement()
+    public override void updateElement(String currentRound)
     {
-        this.GetComponent<TextMeshProUGUI>().text = 3.ToString();
+        this.GetComponent<TextMeshProUGUI>().text = currentRound;
         Debug.Log("Updated text element of listener " + this);
     }
 }

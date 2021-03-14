@@ -22,7 +22,7 @@ public class TurnsElementListener : UIEventListenable
         } 
     }
 
-    public override void updateElement()
+    public override void updateElement(String data)
     {
         foreach (Transform child in this.transform)
         {
