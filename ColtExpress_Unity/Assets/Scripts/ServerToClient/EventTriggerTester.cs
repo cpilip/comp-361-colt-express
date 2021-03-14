@@ -53,6 +53,12 @@ public class EventTriggerTester : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.B))
+        { 
+           string data = JsonConvert.SerializeObject(TurnType.Tunnel, new Newtonsoft.Json.Converters.StringEnumConverter());
+           EventManager.TriggerEvent("testTurn", data);
+        }
+
         if (Input.GetKeyDown(KeyCode.T))
         {
             JSONTestObject myTestObject = new JSONTestObject(3, "hello!");
