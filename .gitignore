@@ -1,2 +1,10 @@
-.DS_Store
-.collabignore
+
+ServerColtExpv2/ServerColtExpv2/obj/Debug/netcoreapp3.1/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs
+
+ServerColtExpv2/ServerColtExpv2/bin/
+
+ServerColtExpv2/ServerColtExpv2/obj/Debug/
+
+ServerColtExpv2/ServerColtExpv2/obj/
+
+ServerColtExpv2/.vscode/
