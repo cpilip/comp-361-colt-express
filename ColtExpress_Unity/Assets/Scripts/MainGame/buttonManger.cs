@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +8,15 @@ public class buttonManger : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject forward;
+    public GameObject forwardM;
     public GameObject backward;
+    public GameObject backwardM;
+
     public GameObject up;
     public GameObject down;
     public GameObject punch;
     public GameObject shoot;
+    public GameObject robMan;
     public GameObject parent;
  
  
@@ -55,6 +59,19 @@ public class buttonManger : MonoBehaviour
                 
                 shoot.SetActive(true);
             }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("Marshal"))
+            {
+
+                forwardM.SetActive(true);
+                backwardM.SetActive(true);
+            }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("rob1"))
+            {
+
+                robMan.SetActive(true);
+            }
+
+
 
         }
             catch (Exception e) {
