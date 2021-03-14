@@ -97,9 +97,7 @@ class GameController
     {
 
         //adding the action card to the playedCard pile and removind it from player's hand
-        //TODO use get method 
         this.currentRound.addToPlayedCards(c);
-        //TODO use get method 
         this.currentPlayer.hand.Remove(c);
 
         endOfTurn();
@@ -112,42 +110,42 @@ class GameController
         //taking three random cards from player's discardPile and adding them to the player's hand
         for (int i = 0; i < 3; i++)
         {
-
-            //TODO use get methods for discardPile and hand 
             int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
             Card c = this.currentPlayer.discardPile[rand];
             this.currentPlayer.moveFromDiscardToHand(c);
         }
-        //in TouchCore was EndOfMove()
         endOfTurn();
     }
 
     public void chosenPosition(Position p)
     {
-        //TODO is played card a Stack or a List ?
         ActionCard topOfPile = this.currentRound.topOfPlayedCards();
 
         //if the action card is a Move Marshall action
-        if (topOfPile.getKind().Equals(ActionKind.Marshal)){ 
+        if (topOfPile.getKind().Equals(ActionKind.Marshal))
+        {
             this.aMarshal.setPosition(p);
 
             //check for all players at position p 
-            foreach (Player aPlayer in p.getPlayers()){
-                    BulletCard b = new BulletCard();
-                    aPlayer.addToDiscardPile(b);
-                    p.getTrainCar().moveRoofCar(aPlayer);
-                
+            foreach (Player aPlayer in p.getPlayers())
+            {
+                BulletCard b = new BulletCard();
+                aPlayer.addToDiscardPile(b);
+                p.getTrainCar().moveRoofCar(aPlayer);
+
             }
         }
         //if the action card is a Move action
-        if (topOfPile.getKind() == ActionKind.Move){
+        if (topOfPile.getKind() == ActionKind.Move)
+        {
             currentPlayer.setPosition(p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
-            if(p.hasMarshal(aMarshal)){
-                    BulletCard b = new BulletCard();
-                    currentPlayer.addToDiscardPile(b);
-                    p.getTrainCar().moveRoofCar(currentPlayer);
+            if (p.hasMarshal(aMarshal))
+            {
+                BulletCard b = new BulletCard();
+                currentPlayer.addToDiscardPile(b);
+                p.getTrainCar().moveRoofCar(currentPlayer);
             }
         }
 
@@ -173,16 +171,18 @@ class GameController
             dest.getTrainCar().moveRoofCar(victim);
         }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
-        if (dest.hasMarshal(aMarshal)){
-                BulletCard b = new BulletCard();
-                victim.discardPile.Add(b);
-                dest.getTrainCar().moveRoofCar(victim);
+        if (dest.hasMarshal(aMarshal))
+        {
+            BulletCard b = new BulletCard();
+            victim.discardPile.Add(b);
+            dest.getTrainCar().moveRoofCar(victim);
         }
 
         endOfCards();
     }
 
-    public void chosenShootTarget(Player target){
+    public void chosenShootTarget(Player target)
+    {
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
@@ -257,22 +257,24 @@ class GameController
         }
     }
     
-    
-    private void endOfCards(){
-        
+    private void endOfCards()
+    {
+
         this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
 
         //if all cards in the pile have been played 
-        if(this.currentRound.getPlayedCards().Count == 0){
+        if (this.currentRound.getPlayedCards().Count == 0)
+        {
 
             //if this is the last round 
-            if(this.currentRound.Equals(this.rounds[this.rounds.Count - 1])){
+            if (this.currentRound.Equals(this.rounds[this.rounds.Count - 1]))
+            {
                 calculateGameScore();
             }
             else
             {
                 //setting the next round, setting the first turn of the round 
-                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound)+1];
+                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
 
                 //setting the next player and game status of the game 
@@ -284,7 +286,8 @@ class GameController
                 foreach (Player p in this.players)
                 {
                     Random rnd = new Random();
-                    for (int i=0; i<6; i++){
+                    for (int i = 0; i < 6; i++)
+                    {
                         int rand = rnd.Next(0, p.discardPile.Count);
                         p.hand.Add(p.discardPile[rand]);
                         p.discardPile.RemoveAt(rand);
@@ -296,9 +299,10 @@ class GameController
 
     }
 
-    private Dictionary<Player, int> calculateGameScore() {
-        
-    } 
+    private Dictionary<Player, int> calculateGameScore()
+    {
+
+    }
 
     private void initializeGameBoard()
     {
@@ -320,12 +324,19 @@ class GameController
 
     private void initializeLoot()
     {
-        //TO DO
+        
     }
 
     private void intializeRounds()
     {
-        //TO DO
+        for (int i=0; i<4; i++){
+            Round aRound = new Round(false);
+            this.rounds.Add(aRound);
+        }
+
+        Round aFinalRound = new Round(true);
+        this.rounds.Add(aFinalRound);
+
     }
 
     public void readyForNextMove()
@@ -474,7 +485,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
             try
@@ -484,13 +495,12 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
         }
         return possPos;
     }
-
 
     private List<Player> getPossibleShootTarget(Player p)
     {
@@ -531,7 +541,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
             // Loof for the players in the next wagon forward
@@ -542,7 +552,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
         }
 
