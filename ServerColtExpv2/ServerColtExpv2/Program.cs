@@ -3,12 +3,16 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json;
+using RoundSpace;
 
 class MyTcpListener
 {
     public static void Main()
     {
-        TcpListener server = null;
+        
+
+            TcpListener server = null;
         try
         {
             // Set the TcpListener on port 13000.
@@ -54,6 +58,8 @@ class MyTcpListener
 
                     // Process the data sent by the client.
                     data = data.ToUpper();
+
+                    data = CommunicationAPI.sendMessageToClient("testJSON", new Turn(TurnType.Standard));
 
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 

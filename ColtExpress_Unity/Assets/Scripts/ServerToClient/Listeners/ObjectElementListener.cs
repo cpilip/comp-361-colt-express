@@ -12,8 +12,10 @@ public class ObjectElementListener : UIEventListenable
 
     public override void updateElement(String data)
     {
-        JSONTestObject deserializedProduct = JsonConvert.DeserializeObject<JSONTestObject>(data);
+        System.Object[] deserializedProduct = JsonConvert.DeserializeObject<System.Object[]>(data, CommunicationAPIHandler.settings);
 
-        Debug.Log("Testing JSON " + deserializedProduct.Name + " " + deserializedProduct.Value);
+        Debug.Log(deserializedProduct.Length);
+
+        Debug.Log(deserializedProduct[0].GetType());
     }
 }

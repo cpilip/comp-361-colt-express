@@ -44,6 +44,8 @@ public class EventManager : MonoBehaviour
                 eventManager.Init();
             }
         }
+
+        DontDestroyOnLoad(eventManagerLocation);
     }
 
     //Initialize the Event Manager map

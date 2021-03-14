@@ -65,7 +65,7 @@ public class NamedClient : MonoBehaviour
     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
     Console.WriteLine("Received: {0}", responseData);
             Debug.Log(responseData);
-
+            CommunicationAPIHandler.getMessageFromServer(responseData);
 
             // Close everything.
             stream.Close();

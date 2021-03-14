@@ -6826,10 +6826,7 @@ GameObject:
   - component: {fileID: 718402311}
   - component: {fileID: 718402310}
   - component: {fileID: 718402309}
-  - component: {fileID: 718402312}
   - component: {fileID: 718402313}
-  - component: {fileID: 718402314}
-  - component: {fileID: 718402315}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6902,19 +6899,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &718402312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718402308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66ae9b29458251d49aa5976c24edecba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventManagerLocation: {fileID: 718402308}
 --- !u!114 &718402313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6927,32 +6911,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f14dc3a33029754f8bc304d2cdb7890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &718402314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718402308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e484bcdc379b5d44ad52dcec8cd1a14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventName: testJSON
---- !u!114 &718402315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718402308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c41d5243ced50354b8e15d99dae98aa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventName: testTurn
 --- !u!1 &727441901
 GameObject:
   m_ObjectHideFlags: 0
