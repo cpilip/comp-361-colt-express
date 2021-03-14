@@ -24,7 +24,9 @@ public class NamedClient : MonoBehaviour
 
     public void SendMessageToServer(string message)
     {
+        Debug.Log("Message sent");
       Connect(server, port, message);
+        Debug.Log("Received");
     }
 
     void Connect(string server, int port, string message)
@@ -62,9 +64,11 @@ public class NamedClient : MonoBehaviour
     Int32 bytes = stream.Read(data, 0, data.Length);
     responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
     Console.WriteLine("Received: {0}", responseData);
+            Debug.Log(responseData);
 
-    // Close everything.
-    stream.Close();
+
+            // Close everything.
+            stream.Close();
     client.Close();
   }
   catch (ArgumentNullException e)

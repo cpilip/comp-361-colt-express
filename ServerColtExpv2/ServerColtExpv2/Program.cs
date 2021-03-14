@@ -35,11 +35,13 @@ class MyTcpListener
                 // You could also use server.AcceptSocket() here.
                 TcpClient client = server.AcceptTcpClient();
                 Console.WriteLine("Connected!");
+                
 
                 data = null;
 
                 // Get a stream object for reading and writing
                 NetworkStream stream = client.GetStream();
+                
 
                 int i;
 
@@ -48,7 +50,7 @@ class MyTcpListener
                 {
                     // Translate data bytes to a ASCII string.
                     data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("Received: {0}", data);
+                    Console.WriteLine("Received: {0} from {1}", data, IPAddress.Parse(((IPEndPoint) client.Client.RemoteEndPoint).Address.ToString()));
 
                     // Process the data sent by the client.
                     data = data.ToUpper();

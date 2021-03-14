@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8395442369692641727
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 243349796407374888, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_text
+      value: Switching Turn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177321, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670096930462177323, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -7797993451984021626, guid: fb0ec286e2aa6164581f23940d3eb718,
+        type: 3}
+    - target: {fileID: 1670096930462177326, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_Name
+      value: Switching
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715618553873705172, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_text
+      value: Players take their turns in counter-clockwise order, starting with the
+        First Player.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896944168908213446, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8774239619838289855, guid: f13bb621753d5e34bacd16980d61a9aa,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -20.21
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f13bb621753d5e34bacd16980d61a9aa, type: 3}
