@@ -18,88 +18,66 @@ public class buttonManger : MonoBehaviour
     public GameObject shoot;
     public GameObject robMan;
     public GameObject parent;
-    public GameObject turnMenu;
-    public bool checkPhase = false;
-
+ 
+ 
     void Update()
     {
 
-
-
-        Transform a = parent.transform;
-
-        int numClick = PlayerPrefs.GetInt("clickTimes");
-        if (numClick == 3)
-        {
-            checkPhase = true;
-            turnMenu.SetActive(false);
-
-
-        }
-        if (checkPhase == true)
-        {
-            try
+      
+           
+            Transform a = parent.transform;
+            try {
+            if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("move1") || (a.GetChild(0).name).Equals("move2")))
             {
-                if (a.childCount == 0)
-                {
-                    PlayerPrefs.SetInt("clickTimes", 0);
-                    checkPhase = false;
-                    return;
-                }
-                if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("move1") || (a.GetChild(0).name).Equals("move2")))
-                {
 
+              
 
+                forward.SetActive(true);
+                backward.SetActive(true);
 
-                    forward.SetActive(true);
-                    backward.SetActive(true);
-
-
-
-
-                }
-                else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("changeFloor1") || (a.GetChild(0).name).Equals("changeFloor2")))
-                {
-
-
-
-                    up.SetActive(true);
-                    down.SetActive(true);
-
-
-
-                }
-                else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("punch"))
-                {
-
-                    punch.SetActive(true);
-                }
-                else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("shoot1") || (a.GetChild(0).name).Equals("shoot2")))
-                {
-
-                    shoot.SetActive(true);
-                }
-                else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("Marshal"))
-                {
-
-                    forwardM.SetActive(true);
-                    backwardM.SetActive(true);
-                }
-                else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("rob1"))
-                {
-
-                    robMan.SetActive(true);
-                }
 
 
 
             }
-            catch (Exception e)
+            else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("changeFloor1") || (a.GetChild(0).name).Equals("changeFloor2")))
             {
+
+
+
+                up.SetActive(true);
+                down.SetActive(true);
+
+
+
+            }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("punch")) {
+                
+                punch.SetActive(true);
+            }
+            else if (a.GetChild(0) != null && ((a.GetChild(0).name).Equals("shoot1") || (a.GetChild(0).name).Equals("shoot2")) )
+            {
+                
+                shoot.SetActive(true);
+            }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("Marshal"))
+            {
+
+                forwardM.SetActive(true);
+                backwardM.SetActive(true);
+            }
+            else if (a.GetChild(0) != null && (a.GetChild(0).name).Equals("rob1"))
+            {
+
+                robMan.SetActive(true);
+            }
+
+
+
+        }
+            catch (Exception e) {
                 return;
             }
 
         }
-    }
     
 }
