@@ -36,6 +36,9 @@ class MyTcpListener
                 TcpClient client = server.AcceptTcpClient();
                 Console.WriteLine("Connected!");
 
+                IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
+                Console.WriteLine("From: " + remoteIpEndPoint.Address)
+
                 data = null;
 
                 // Get a stream object for reading and writing
