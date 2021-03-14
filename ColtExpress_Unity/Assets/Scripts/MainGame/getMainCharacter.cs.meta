@@ -3,7 +3,14 @@ guid: 1a8a218aa77a04a0d8af5e28f1a27467
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - Tuco: {instanceID: 0}
+  - Django: {instanceID: 0}
+  - Ghost: {instanceID: 0}
+  - Doc: {instanceID: 0}
+  - Che: {instanceID: 0}
+  - Bella: {instanceID: 0}
+  - player: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

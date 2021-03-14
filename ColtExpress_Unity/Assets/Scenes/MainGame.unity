@@ -373,7 +373,7 @@ RectTransform:
   - {fileID: 153222829}
   - {fileID: 3671637}
   m_Father: {fileID: 644892954}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -648,7 +648,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 979bf4863a4294d1b9b3e644148c59b0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a8574e1a69984504afb16e0f5449538, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -723,13 +723,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8a218aa77a04a0d8af5e28f1a27467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bella: {fileID: 8398490870791652998, guid: 1ed0aba094c25404f90debb7c9b8349e, type: 3}
-  Django: {fileID: 3655016697340241036, guid: 55fd5dd769cdb4b3496fb911809db667, type: 3}
-  Tuco: {fileID: 4216769123869467919, guid: e912821ab360c43a9a113ccaa9151b5a, type: 3}
-  Ghost: {fileID: 729865758880010727, guid: b30bf0b328ef2461ba0540b8055d65d3, type: 3}
-  Doc: {fileID: 2791041059957460697, guid: a74050b8572c04fbebfd220fac65712f, type: 3}
-  Cheyenne: {fileID: 3266914566423866908, guid: 0405d71e7625d40f287db013ffeefc01,
-    type: 3}
+  Tuco: {fileID: 21300000, guid: 740886442a49647788fcb0540497d956, type: 3}
+  Django: {fileID: 21300000, guid: 4a8574e1a69984504afb16e0f5449538, type: 3}
+  Ghost: {fileID: 21300000, guid: b143b1d61e0e645fb8fbf9469c41c8c1, type: 3}
+  Doc: {fileID: 21300000, guid: ea855139664ab4d929b296b538580a25, type: 3}
+  Che: {fileID: 21300000, guid: 999f071812427445f887b24e8704400b, type: 3}
+  Bella: {fileID: 21300000, guid: 979bf4863a4294d1b9b3e644148c59b0, type: 3}
+  player: {fileID: 73067337}
 --- !u!1 &98892707
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,7 +2469,7 @@ RectTransform:
   - {fileID: 545019573}
   - {fileID: 522000922}
   m_Father: {fileID: 644892954}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5858,7 +5858,6 @@ RectTransform:
   - {fileID: 541694653}
   - {fileID: 6600991086092993942}
   - {fileID: 1797818465}
-  - {fileID: 1735582078}
   - {fileID: 26790801}
   - {fileID: 308077562}
   m_Father: {fileID: 0}
@@ -9004,7 +9003,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1219200456
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9031,7 +9030,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219200455}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -12640,61 +12639,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 453109503}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1735582077
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1735582078}
-  - component: {fileID: 1735582079}
-  m_Layer: 5
-  m_Name: Bandit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1735582078
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735582077}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 644892954}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -177, y: 87}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1735582079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735582077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a8a218aa77a04a0d8af5e28f1a27467, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bella: {fileID: 8398490870791652998, guid: 1ed0aba094c25404f90debb7c9b8349e, type: 3}
-  Django: {fileID: 3655016697340241036, guid: 55fd5dd769cdb4b3496fb911809db667, type: 3}
-  Tuco: {fileID: 4216769123869467919, guid: e912821ab360c43a9a113ccaa9151b5a, type: 3}
-  Ghost: {fileID: 729865758880010727, guid: b30bf0b328ef2461ba0540b8055d65d3, type: 3}
-  Doc: {fileID: 2791041059957460697, guid: a74050b8572c04fbebfd220fac65712f, type: 3}
-  Cheyenne: {fileID: 3266914566423866908, guid: 0405d71e7625d40f287db013ffeefc01,
-    type: 3}
 --- !u!1001 &1742157991
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14658,6 +14602,10 @@ MonoBehaviour:
   shoot: {fileID: 314669458}
   robMan: {fileID: 522000921}
   parent: {fileID: 1685617367}
+  phase1: {fileID: 710172120}
+  phase2: {fileID: 1219200455}
+  turnMenu: {fileID: 1094513322}
+  checkPhase: 0
 --- !u!4 &1905656831
 Transform:
   m_ObjectHideFlags: 0
