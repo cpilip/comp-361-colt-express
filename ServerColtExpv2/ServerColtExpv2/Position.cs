@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using GameUnitSpace;
 using Newtonsoft.Json;
 
@@ -31,7 +32,8 @@ namespace PositionSpace
         }
 
         // Returns true if the position is a floor; false if roof
-        public Boolean isInside() {
+        public Boolean isInside()
+        {
             return this.floor == Floor.Inside;
         }
 
@@ -50,25 +52,31 @@ namespace PositionSpace
         public List<Player> getPlayers()
         {
             List<Player> players = new List<Player>();
-            foreach (GameUnit unit in units) { 
-                if (unit.GetType().Equals(typeof(Player))) {
-                    players.Add((Player) unit);
+            foreach (GameUnit unit in units)
+            {
+                if (unit.GetType().Equals(typeof(Player)))
+                {
+                    players.Add((Player)unit);
                 }
             }
             return players;
         }
 
-        public List<GameItem> getItems() {
+        public List<GameItem> getItems()
+        {
             List<GameItem> items = new List<GameItem>();
-            foreach (GameUnit unit in units) { 
-                if (unit.GetType().Equals(typeof(GameItem))) {
-                    items.Add((GameItem) unit);
+            foreach (GameUnit unit in units)
+            {
+                if (unit.GetType().Equals(typeof(GameItem)))
+                {
+                    items.Add((GameItem)unit);
                 }
             }
             return items;
         }
 
-        public Boolean hasMarshal(Marshal m) {
+        public Boolean hasMarshal(Marshal m)
+        {
             return units.Contains(m);
         }
     }

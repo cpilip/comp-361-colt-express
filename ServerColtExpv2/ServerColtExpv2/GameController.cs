@@ -64,8 +64,7 @@ class GameController
             //setting players' positions
             for (int i = 0; i < myTrain.Count; i++)
             {
-
-                if (i % 2 == 0)
+                if (i%2 == 0)
                 {
                     myTrain[myTrain.Count - 2].moveInsideCar(players[i]);
                 }
@@ -84,7 +83,6 @@ class GameController
 
             this.currentRound = rounds[0];
 
-            //TODO get method for turns
             this.currentTurn = currentRound.getTurns()[0];
 
             players[0].setWaitingForInput(true);
@@ -97,9 +95,7 @@ class GameController
     {
 
         //adding the action card to the playedCard pile and removind it from player's hand
-        //TODO use get method 
         this.currentRound.addToPlayedCards(c);
-        //TODO use get method 
         this.currentPlayer.hand.Remove(c);
 
         endOfTurn();
@@ -112,42 +108,42 @@ class GameController
         //taking three random cards from player's discardPile and adding them to the player's hand
         for (int i = 0; i < 3; i++)
         {
-
-            //TODO use get methods for discardPile and hand 
             int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
             Card c = this.currentPlayer.discardPile[rand];
             this.currentPlayer.moveFromDiscardToHand(c);
         }
-        //in TouchCore was EndOfMove()
         endOfTurn();
     }
 
     public void chosenPosition(Position p)
     {
-        //TODO is played card a Stack or a List ?
         ActionCard topOfPile = this.currentRound.topOfPlayedCards();
 
         //if the action card is a Move Marshall action
-        if (topOfPile.getKind().Equals(ActionKind.Marshal)){ 
+        if (topOfPile.getKind().Equals(ActionKind.Marshal))
+        {
             this.aMarshal.setPosition(p);
 
             //check for all players at position p 
-            foreach (Player aPlayer in p.getPlayers()){
-                    BulletCard b = new BulletCard();
-                    aPlayer.addToDiscardPile(b);
-                    p.getTrainCar().moveRoofCar(aPlayer);
-                
+            foreach (Player aPlayer in p.getPlayers())
+            {
+                BulletCard b = new BulletCard();
+                aPlayer.addToDiscardPile(b);
+                p.getTrainCar().moveRoofCar(aPlayer);
+
             }
         }
         //if the action card is a Move action
-        if (topOfPile.getKind() == ActionKind.Move){
+        if (topOfPile.getKind() == ActionKind.Move)
+        {
             currentPlayer.setPosition(p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
-            if(p.hasMarshal(aMarshal)){
-                    BulletCard b = new BulletCard();
-                    currentPlayer.addToDiscardPile(b);
-                    p.getTrainCar().moveRoofCar(currentPlayer);
+            if (p.hasMarshal(aMarshal))
+            {
+                BulletCard b = new BulletCard();
+                currentPlayer.addToDiscardPile(b);
+                p.getTrainCar().moveRoofCar(currentPlayer);
             }
         }
 
@@ -173,16 +169,18 @@ class GameController
             dest.getTrainCar().moveRoofCar(victim);
         }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
-        if (dest.hasMarshal(aMarshal)){
-                BulletCard b = new BulletCard();
-                victim.discardPile.Add(b);
-                dest.getTrainCar().moveRoofCar(victim);
+        if (dest.hasMarshal(aMarshal))
+        {
+            BulletCard b = new BulletCard();
+            victim.discardPile.Add(b);
+            dest.getTrainCar().moveRoofCar(victim);
         }
 
         endOfCards();
     }
 
-    public void chosenShootTarget(Player target){
+    public void chosenShootTarget(Player target)
+    {
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
@@ -258,22 +256,24 @@ class GameController
         }
     }
     
-    
-    private void endOfCards(){
-        
+    private void endOfCards()
+    {
+
         this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
 
         //if all cards in the pile have been played 
-        if(this.currentRound.getPlayedCards().Count == 0){
+        if (this.currentRound.getPlayedCards().Count == 0)
+        {
 
             //if this is the last round 
-            if(this.currentRound.Equals(this.rounds[this.rounds.Count - 1])){
+            if (this.currentRound.Equals(this.rounds[this.rounds.Count - 1]))
+            {
                 calculateGameScore();
             }
             else
             {
                 //setting the next round, setting the first turn of the round 
-                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound)+1];
+                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
 
                 //setting the next player and game status of the game 
@@ -285,7 +285,8 @@ class GameController
                 foreach (Player p in this.players)
                 {
                     Random rnd = new Random();
-                    for (int i=0; i<6; i++){
+                    for (int i = 0; i < 6; i++)
+                    {
                         int rand = rnd.Next(0, p.discardPile.Count);
                         p.hand.Add(p.discardPile[rand]);
                         p.discardPile.RemoveAt(rand);
@@ -319,12 +320,12 @@ class GameController
         this.myTrain.Add(new TrainCar(true));
 
         //initializing train cars
-        for (int i = 0; i < myTrain.Count; i++)
+        for (int i = 0; i < players.Count; i++)
         {
             this.myTrain.Add(new TrainCar(false));
         }
 
-        // initializing the marshall and init his position
+        // initializing the marshall and init his position to inside locomotive
         this.aMarshal = Marshal.getInstance();
         myTrain[0].moveInsideCar(aMarshal);
 
@@ -332,12 +333,88 @@ class GameController
 
     private void initializeLoot()
     {
-        //TO DO
+        //initializaing a Strongbox in the locomotive 
+        GameItem locomotiveStongBox = new GameItem(ItemType.Strongbox, 1000);
+        locomotiveStongBox.setPosition(myTrain[0].getInside());
+
+        // depending on the number of player, 
+        // we'll initialize loots for totalPlayer number of wagon
+        for (int i=0; i<totalPlayer; i++){
+            
+            switch (i) {
+                //intializing loots in first wagon
+                case 0 :{
+                    GameItem anItem = new GameItem(ItemType.Purse, 500);
+                    anItem.setPosition(myTrain[1].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[1].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem2.setPosition(myTrain[1].getInside());
+                    break;
+                }
+                //intializing loots in second wagon
+                case 1 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[2].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Ruby, 500);
+                    anItem1.setPosition(myTrain[2].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Ruby, 500);
+                    anItem2.setPosition(myTrain[2].getInside());
+                    break;
+                }
+                //intializing loots in third wagon
+                case 2 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[3].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[3].getInside());
+                    break;
+                }
+                //intializing loots in 4th wagon
+                case 3 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[4].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    GameItem anItem3 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[4].getInside());
+                    break;
+                }
+                //intializing loots in 5th wagon
+                case 4 :{
+                    GameItem anItem = new GameItem(ItemType.Ruby, 500);
+                    anItem.setPosition(myTrain[5].getInside());
+                    GameItem anItem1 = new GameItem(ItemType.Purse, 500);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem2 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem3 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    GameItem anItem4 = new GameItem(ItemType.Purse, 250);
+                    anItem1.setPosition(myTrain[5].getInside());
+                    break;
+                }
+                //intializing loots in 6th wagon
+                case 5:{
+                    GameItem anItem = new GameItem(ItemType.Purse, 500);
+                    anItem.setPosition(myTrain[6].getInside());
+                    break;
+                }
+            }
+        }
     }
 
     private void intializeRounds()
     {
-        //TO DO
+        for (int i=0; i<4; i++)
+        {
+            Round aRound = new Round(false, totalPlayer);
+            this.rounds.Add(aRound);
+        }
+        Round aFinalRound = new Round(true, totalPlayer);
+        this.rounds.Add(aFinalRound);
     }
 
     public void readyForNextMove()
@@ -486,7 +563,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
             try
@@ -496,13 +573,12 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
         }
         return possPos;
     }
-
 
     private List<Player> getPossibleShootTarget(Player p)
     {
@@ -543,7 +619,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
 
             // Loof for the players in the next wagon forward
@@ -554,7 +630,7 @@ class GameController
             }
             catch (System.IndexOutOfRangeException e)
             {
-                
+
             }
         }
 
