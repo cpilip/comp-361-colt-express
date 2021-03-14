@@ -30,7 +30,7 @@ namespace RoundSpace {
         private Queue <ActionCard> playedCards;
         private List<Turn> turns;
 
-        public Round(Boolean isLastRound) {
+        public Round(Boolean isLastRound, int nbOfPlayer) {
             
             this.isLastRound = isLastRound;
 
@@ -50,7 +50,7 @@ namespace RoundSpace {
             /*
                 Here, we'll have to choose between a valid game layout 
             */
-            intializeTurn();
+            intializeTurn(nbOfPlayer);
 
         }
 
@@ -79,12 +79,120 @@ namespace RoundSpace {
             return this.playedCards.Dequeue();
         }
 
-        public void intializeTurn(){
+        public void intializeTurn(int nbOfPlayer){
             
-            this.turns.Add(new Turn (TurnType.Standard));
-            this.turns.Add(new Turn (TurnType.Tunnel));
-            this.turns.Add(new Turn (TurnType.SpeedingUp));
-            this.turns.Add(new Turn (TurnType.Switching));
+            Random rnd = new Random ();
+            int rand = rnd.Next(0,7);
+
+            //if there are 5-6 players 
+            if (nbOfPlayer>4){
+                
+                switch (rand)
+                {
+                    case 0 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Switching));
+                        break;
+                    }   
+                    case 1 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        break;
+                    }
+                    case 2 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                    case 3 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        this.turns.Add(new Turn (TurnType.Switching));
+                        break;
+                    }
+                    case 4 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        break;
+                    }
+                    case 5 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Switching));
+                        break;
+                    }
+                    case 6 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                }
+            }
+
+            //else, if there are 2-4 players
+            else {
+                switch (rand)
+                {
+                    case 0 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }   
+                    case 1 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Switching));
+                        break;
+                    }
+                    case 2 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                    case 3 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                    case 4 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                    case 5 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                    case 6 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        break;
+                    }
+                }
+
+            }
 
         }
 

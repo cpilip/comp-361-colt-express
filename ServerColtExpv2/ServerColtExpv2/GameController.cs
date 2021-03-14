@@ -341,11 +341,11 @@ class GameController
     private void intializeRounds()
     {
         for (int i=0; i<4; i++){
-            Round aRound = new Round(false);
+            Round aRound = new Round(false, totalPlayer);
             this.rounds.Add(aRound);
         }
 
-        Round aFinalRound = new Round(true);
+        Round aFinalRound = new Round(true, totalPlayer);
         this.rounds.Add(aFinalRound);
 
     }
