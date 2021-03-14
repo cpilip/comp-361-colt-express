@@ -413,10 +413,8 @@ class GameController
             Round aRound = new Round(false, totalPlayer);
             this.rounds.Add(aRound);
         }
-
         Round aFinalRound = new Round(true, totalPlayer);
         this.rounds.Add(aFinalRound);
-
     }
 
     public void readyForNextMove()
