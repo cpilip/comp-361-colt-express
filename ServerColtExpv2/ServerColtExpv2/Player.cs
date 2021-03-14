@@ -39,6 +39,8 @@ namespace GameUnitSpace {
             // Initialize the possessions
             possessions = new List <GameItem>();
             numOfBulletsShot = 0;
+
+            possessions.Add(new GameItem(ItemType.Purse, 250));
         }
 
         /**
