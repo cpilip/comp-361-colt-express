@@ -5,9 +5,13 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 using RoundSpace;
+using System.Collections.Generic;
 
 class MyTcpListener
 {
+    private Dictionary<GameUnitSpace.Character, IPAddress> playerToIP = new Dictionary<GameUnitSpace.Character, IPAddress>();
+    private Dictionary<IPAddress, GameUnitSpace.Character> IPtoPlayer = new Dictionary<IPAddress, GameUnitSpace.Character>();
+
     public static NetworkStream currentClientStream;
 
 
