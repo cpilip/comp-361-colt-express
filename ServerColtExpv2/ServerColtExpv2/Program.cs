@@ -36,19 +36,28 @@ class MyTcpListener
             GameController aGameController = GameController.getInstance();
 
             // Enter the listening loop.
-            //Loop here waiting for input from Lobby Service
-            //Obtain all the IPs from Lobby Service
+            // Loop here waiting for input from Lobby Service
+            // Obtain all the IPs from client directly !!!
+            // building Dictionary of IP's and stream
+            // Here is where each IP gets a TCP client
 
-            //Here is where all the characters are chosen
+            // while loop to wait for all the player to call chosenCharacters 
+            // When last player chose his character, initialization of the game state 
 
-            //Here is where all the initialization takes place
+            // Main while loop 
 
-            //initializeLoot();
+                // for each player, wait for client response to play his turn (either playCard() or drawCards())
+                // endOfTurn() is called and current player is changed to the next one. 
+                // repeat for all turns of the round, move to Stealin phase 
 
-            //Here is where each IP gets a TCP client
+                // call readyForNextMove() 
+                // for each card is the playedCard pile, call corresponding client for neccessary information
+                // send game state to all clients, endOfCard() is called
+                // repeat until there are no cards in the pile
+                // if it is the last round, calculateGameScore() and exit the loop. 
+            
+            // End of Game, send all clients to GameScore scene 
 
-            // Enter the listening loop for currentClient's response.
-            // Go to next client.
 
             while (true)
             {
@@ -121,7 +130,7 @@ class MyTcpListener
 
     public static void receiveFromClient(string data){
 
-        
+
 
 
     }
