@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Newtonsoft.Json;
+
 
 public class GetPlayersInLobby : MonoBehaviour
 {
@@ -48,8 +50,10 @@ public class GetPlayersInLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
-        SessionInformation sessInfo = JsonUtility.FromJson<SessionInformation>(response);
-        // GameObject.Find("GameLister").GetComponent<PlayersInLobby>().setPlayers(sessInfo.players); 
+        SessionInformation sessInfo = JsonConvert.DeserializeObject<SessionInformation>(response);;
+        GameObject.Find("GameLister").GetComponent<PlayersInLobby>().setPlayers(sessInfo.players.ToArray()); 
+
+        Debug.Log(sessInfo.creator);
 
         if (sessInfo.creator.Equals(this.name)) {
             this.lobbyLeader = true;
