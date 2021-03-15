@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RobAcion : MonoBehaviour
+public class RobAction : MonoBehaviour
 {
     public GameObject player;
     public GameObject train;
