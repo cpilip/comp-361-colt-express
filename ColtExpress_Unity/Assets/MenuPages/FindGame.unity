@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 360548507}
   - component: {fileID: 360548508}
   m_Layer: 0
-  m_Name: GameFinder
+  m_Name: SessionFinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1160,7 +1160,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 360548508}
         m_MethodName: findGames
         m_Mode: 1
         m_Arguments:
@@ -1624,7 +1624,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -132.5}
+  m_AnchoredPosition: {x: 0, y: -22.679375}
   m_SizeDelta: {x: 275, y: 132.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1305547066
@@ -1831,7 +1831,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 356773289}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.25037727
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

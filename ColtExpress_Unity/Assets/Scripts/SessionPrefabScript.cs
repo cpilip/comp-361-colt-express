@@ -5,6 +5,7 @@ using UnityEngine;
 public class SessionPrefabScript : MonoBehaviour
 {
     public string sessionID;
+    public string name;
 
     public void setSessionId(string id)
     {
