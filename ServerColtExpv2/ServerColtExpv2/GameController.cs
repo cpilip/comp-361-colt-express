@@ -78,28 +78,33 @@ class GameController
             MyTcpListener.sendToClient(JsonConvert.SerializeObject(myTrain));
 
            
-
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updatePlayers", players);
             
             initializeLoot();
 
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateTrai", myTrain);
 
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateGameStatus", true);
 
             this.currentRound = rounds[0];
             //TO CHECK, do we send all rounds ?
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateCurrentRound", currentRound);
 
             this.currentTurn = currentRound.getTurns()[0];
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
             players[0].setWaitingForInput(true);
 
             this.currentPlayer = players[0];
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
         }
     }
@@ -132,6 +137,8 @@ class GameController
         Card c2 = this.currentPlayer.discardPile[rand];
         this.currentPlayer.moveFromDiscardToHand(c);
 
+
+        //TO SPECIFIC PLAYER 
         CommunicationAPI.sendMessageToClient("addCards", c, c1, c2);
         
         endOfTurn();
@@ -145,6 +152,7 @@ class GameController
         if (aKind.Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("moveGameUnit", this.aMarshal, p);
 
             //check for all players at position p 
@@ -153,7 +161,8 @@ class GameController
                 BulletCard b = new BulletCard();
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
-
+                
+                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient("moveGameUnit", aPlayer, p.getTrainCar().getRoof());
 
             }
@@ -162,6 +171,7 @@ class GameController
         if (aKind.Equals(ActionKind.Move))
         {
             currentPlayer.setPosition(p);
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
@@ -170,6 +180,7 @@ class GameController
                 BulletCard b = new BulletCard();
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
+                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
             }
         }
@@ -183,14 +194,17 @@ class GameController
 
         //drop the loot at victim position, sends victim to destination 
         loot.setPosition(victim.getPosition());
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("moveGameItem", loot, victim.getPosition()); 
 
         victim.setPosition(dest);
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest); 
 
 
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("decrement", loot); 
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
@@ -199,6 +213,7 @@ class GameController
             BulletCard b = new BulletCard();
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest.getTrainCar().getRoof()); 
         }
 
@@ -211,6 +226,7 @@ class GameController
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("decrement", this.currentPlayer.bullets);
         endOfCards();
     }
@@ -220,6 +236,7 @@ class GameController
         //the loot is transfered from the position to the currentPlayer possensions
         loot.setPosition(null);
         currentPlayer.addToPossessions(loot);
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("increment", loot);
         endOfCards();
     }
@@ -251,6 +268,7 @@ class GameController
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
+                            //TO SPECIFIC PLAYERS
                             CommunicationAPI.sendMessageToClient("updateMovePositions", moves);
                         }
                         else
@@ -264,6 +282,7 @@ class GameController
                         if (this.currentPlayer.getPosition().isInside())
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
+                            //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
                         }
                         else
