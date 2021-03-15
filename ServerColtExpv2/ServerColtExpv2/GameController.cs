@@ -20,7 +20,6 @@ enum GameStatus
 
 class GameController
 {
-
     private static GameController myGameController = new GameController();
     private readonly int totalPlayer;
     private GameStatus aGameStatus;
@@ -30,7 +29,6 @@ class GameController
     private List<Player> players;
     private Player currentPlayer;
     private int currentPlayerIndex;
-    //added this for Switching turn
     private List<TrainCar> myTrain;
     private Marshal aMarshal;
 
@@ -45,6 +43,7 @@ class GameController
     {
         return myGameController;
     }
+
 
 
     /**
@@ -288,12 +287,14 @@ class GameController
                         else
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
+                            //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
 
                             if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
                             {
                                 this.currentPlayer.addToDiscardPile(new BulletCard());
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
+                                //TO ALL PLAYERS
                                 CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
                             }
                         }
@@ -310,6 +311,7 @@ class GameController
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
+                            //TO SPECIFIC PLAYER
                             CommunicationAPI.sendMessageToClient("updatePossTarget", possTargets);
                         }
                         break;
@@ -320,6 +322,7 @@ class GameController
                         List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
+                        //TO SPECIFIC PLAYER
                         CommunicationAPI.sendMessageToClient("updateLootAtLocation", atLocation);
                         break;
                     }
@@ -334,6 +337,7 @@ class GameController
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
+                            //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient("updateMovePositions", possPosition);
 
                         }
@@ -341,10 +345,11 @@ class GameController
                     }
                 case ActionKind.Punch:
                     {
-                        //TODO Do we need to check if there is olny one loot ?
+                        //TODO Do we need to check if there is olny one player ?
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
+                        //TO SPECIFIC PLAYER
                         CommunicationAPI.sendMessageToClient("updatePossTarget", atLocation);
                         break;
                     }
@@ -356,15 +361,15 @@ class GameController
 
 
     /**
-        Private helper methods
+    *   Private helper methods
     */
 
     private void endOfTurn()
     {
-
         //if the player has another action, then the anotherAction flag is set to false
         if (this.currentPlayer.isGetsAnotherAction())
         {
+            //TO SPECIFIC PLAYER
             CommunicationAPI.sendMessageToClient("updateHasAnotherAction", currentPlayerIndex, true);
             this.currentPlayer.setGetsAnotherAction(false);
         }
@@ -372,6 +377,7 @@ class GameController
         else
         {
             this.currentPlayer.setWaitingForInput(false);
+            //TO SPECIFIC PLAYER 
             CommunicationAPI.sendMessageToClient("updateWaitingForInput", currentPlayerIndex, false);
 
             //if this is not the last turn of the round
@@ -384,6 +390,7 @@ class GameController
                 {
                     this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
+                    //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
                 }
                 //otherwise, it is the next player in the list 
@@ -391,6 +398,7 @@ class GameController
                 {
                     this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
+                    //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
                 }
 
@@ -410,6 +418,7 @@ class GameController
                     //NEED MESSAGE HERE
                     p.setWaitingForInput(true);
                     this.aGameStatus = GameStatus.Stealin;
+                    //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient("updateGameStatus", false);
                 }
             }
@@ -420,6 +429,7 @@ class GameController
     {
         Card c = this.currentRound.topOfPlayedCards();
         this.currentPlayer.addToDiscardPile(c);
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("removeTopCardVaddCards", c);
 
         //if all cards in the pile have been played 
@@ -436,17 +446,21 @@ class GameController
                 //setting the next round, setting the first turn of the round 
                 this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
+                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
                 //setting the next player and game status of the game 
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
                 this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
+                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient("updateCurrentPlayer", this.currentPlayerIndex);
 
                 this.currentPlayer.setWaitingForInput(true);
+                //TO SPECIFIC PLAYER
                 CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.currentPlayerIndex, true);
                 
                 this.aGameStatus = GameStatus.Schemin;
+                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient("updateGameStatus", true);
 
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
@@ -465,6 +479,7 @@ class GameController
                         p.discardPile.Remove(aCard);
                     }
                     //NEED TO SEE WITH CRISTINA
+                    //TO SPECIFIC PLAYER
                     CommunicationAPI.sendMessageToClient("updatePlayerHand", currentPlayerIndex, cardsToAdd);
                 }
             }
@@ -472,7 +487,7 @@ class GameController
     }
 
     /*
-    *   HECTOR: change this function to void because only need to send results to clients. 
+    *   UPDATE HECTOR: change this function to void because only need to send results to clients. 
     */
     private void calculateGameScore() {
         
@@ -493,6 +508,7 @@ class GameController
         var myList = scores.ToList();
         myList.Sort((pair1,pair2) => pair1.Value.CompareTo(pair2.Value));
 
+        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("finalGameScore", myList);
         
         //return scores;
