@@ -29,6 +29,9 @@ class MyTcpListener
             Byte[] bytes = new Byte[256];
             String data = null;
 
+
+            GameController aGameController = GameController.getInstance();
+
             // Enter the listening loop.
             while (true)
             {
@@ -87,4 +90,6 @@ class MyTcpListener
         Console.WriteLine("\nHit enter to continue...");
         Console.Read();
     }
+
+    
 }

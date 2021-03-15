@@ -72,18 +72,21 @@ class GameController
                 {
                     myTrain[myTrain.Count - 1].moveInsideCar(players[i]);
                 }
-
             }
-
+            // SEND MESSAGE to all player
+            
             initializeLoot();
 
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
+            //SEND MESSAGE to all player 
 
             this.currentRound = rounds[0];
+            //SEND MESSAGE to all player 
 
             this.currentTurn = currentRound.getTurns()[0];
+            //SEND MESSAGE to all player
 
             players[0].setWaitingForInput(true);
 
@@ -123,6 +126,7 @@ class GameController
         if (topOfPile.getKind().Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
+            //SEND MESSAGE to all player
 
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
@@ -130,6 +134,7 @@ class GameController
                 BulletCard b = new BulletCard();
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
+                //SEND MESSAGE to all player
 
             }
         }
@@ -137,6 +142,7 @@ class GameController
         if (topOfPile.getKind() == ActionKind.Move)
         {
             currentPlayer.setPosition(p);
+            //SEND MESSAGE Game unit / to all player
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
@@ -144,6 +150,7 @@ class GameController
                 BulletCard b = new BulletCard();
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
+                //SEND MESSAGE to all player
             }
         }
 
@@ -156,18 +163,12 @@ class GameController
 
         //drop the loot at victim position, sends victim to destination 
         loot.setPosition(victim.getPosition());
+        //SEND 
         victim.setPosition(dest);
 
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
 
-        //if the marshal is at position dest, bullet card in deck + sent to the roof 
-        if (dest.hasMarshal(aMarshal))
-        {
-            BulletCard b = new BulletCard();
-            victim.discardPile.Add(b);
-            dest.getTrainCar().moveRoofCar(victim);
-        }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
@@ -206,8 +207,8 @@ class GameController
         //if the player has another action, then the anotherAction flag is set to false
         if (this.currentPlayer.isGetsAnotherAction())
         {
-
             this.currentPlayer.setGetsAnotherAction(false);
+            //SEND Another action Player + 
         }
 
         else
@@ -222,16 +223,15 @@ class GameController
                 //if the turn is Switching, order of players is reversed
                 if (this.currentTurn.getType() == TurnType.Switching)
                 {
-
                     this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
                     //don't use playerIndex
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer)];
+                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1];
                 }
                 //otherwise, it is the next player in the list 
                 else
                 {
                     this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer)];
+                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1];
                 }
 
                 //if the turn is Speeding up, the next player has another action 
@@ -243,7 +243,6 @@ class GameController
             // if it is the last turn of the round 
             else
             {
-
                 //prepare for Stealing phase 
                 foreach (Player p in this.players)
                 {
@@ -258,8 +257,8 @@ class GameController
     
     private void endOfCards()
     {
-
-        this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
+        
+        this.currentPlayer.addToDiscardPile(this.currentRound.topOfPlayedCards());
 
         //if all cards in the pile have been played 
         if (this.currentRound.getPlayedCards().Count == 0)
@@ -275,10 +274,13 @@ class GameController
                 //setting the next round, setting the first turn of the round 
                 this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
+                //SEND index 
 
                 //setting the next player and game status of the game 
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
                 this.currentPlayer.setWaitingForInput(true);
+                //SEND player
+                
                 this.aGameStatus = GameStatus.Schemin;
 
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
@@ -299,9 +301,11 @@ class GameController
     }
 
     private Dictionary<Player, int> calculateGameScore() {
+        
         Dictionary<Player, int> scores = new Dictionary<Player, int>();
         int max = -1;
         Player maxPlayer = null;
+        
         foreach (Player pl in this.players) {
             scores.Add(pl, pl.getPossesionsValue());
             if (pl.getNumOfBulletsShot() > max) {
@@ -309,6 +313,7 @@ class GameController
                 maxPlayer = pl;
             }
         }
+        //TODO Sort Dictionnary for the clients 
         scores[maxPlayer] = scores[maxPlayer] + 1000;
         return scores;
     }
@@ -318,7 +323,7 @@ class GameController
 
         //initializing Locomotive
         this.myTrain.Add(new TrainCar(true));
-
+        
         //initializing train cars
         for (int i = 0; i < players.Count; i++)
         {

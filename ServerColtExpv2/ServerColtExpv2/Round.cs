@@ -29,6 +29,7 @@ namespace RoundSpace {
         private readonly EndOfRoundEvent anEvent;
         [JsonProperty]
         private Boolean isLastRound;
+        [JsonProperty]
         private Queue <ActionCard> playedCards;
         [JsonProperty]
         private List<Turn> turns;
@@ -194,7 +195,7 @@ namespace RoundSpace {
                         break;
                     }
                 }
-
+                
             }
 
         }
