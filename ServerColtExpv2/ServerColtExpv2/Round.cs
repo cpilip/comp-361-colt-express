@@ -195,11 +195,14 @@ namespace RoundSpace {
                         break;
                     }
                 }
-                
+
             }
 
         }
 
 
+        public Boolean getIsLastRound(){
+            return this.isLastRound;
+        }
     }
 }

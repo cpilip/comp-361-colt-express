@@ -88,6 +88,7 @@ class GameController
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
+            CommunicationAPI.sendMessageToClient("updateGameStatus", true);
 
             this.currentRound = rounds[0];
             //TO CHECK, do we send all rounds ?
@@ -136,12 +137,12 @@ class GameController
         endOfTurn();
     }
 
-    public void chosenPosition(Position p)
+    public void chosenPosition(Position p, ActionKind aKind)
     {
-        ActionCard topOfPile = this.currentRound.topOfPlayedCards();
+        //ActionCard topOfPile = this.currentRound.topOfPlayedCards();
 
         //if the action card is a Move Marshall action
-        if (topOfPile.getKind().Equals(ActionKind.Marshal))
+        if (aKind.Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
             CommunicationAPI.sendMessageToClient("moveGameUnit", this.aMarshal, p);
@@ -158,7 +159,7 @@ class GameController
             }
         }
         //if the action card is a Move action
-        if (topOfPile.getKind() == ActionKind.Move)
+        if (aKind.Equals(ActionKind.Move))
         {
             currentPlayer.setPosition(p);
             CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p);
@@ -223,6 +224,118 @@ class GameController
         endOfCards();
     }
 
+    public void readyForNextMove()
+    {
+        this.currentPlayer.setWaitingForInput(false);
+        Boolean waiting = true;
+
+        foreach (Player p in this.players)
+        {
+            if (p.getWaitingForInput())
+                waiting = false;
+            
+        }
+
+        if (waiting)
+        {
+            // Get the top of the played cards from the schemin phase
+            ActionCard top = this.currentRound.topOfPlayedCards();
+
+            switch (top.getKind())
+            {
+                case ActionKind.Move:
+                    {
+                        List<Position> moves = this.getPossibleMoves(this.currentPlayer);
+
+                        if (moves.Count > 1)
+                        {
+                            this.aGameStatus = GameStatus.FinalizingCard;
+                            this.currentPlayer.setWaitingForInput(true);
+                            CommunicationAPI.sendMessageToClient("updateMovePositions", moves);
+                        }
+                        else
+                        {
+                            chosenPosition(moves[0], ActionKind.Move);
+                        }
+                        break;
+                    }
+                case ActionKind.ChangeFloor:
+                    {
+                        if (this.currentPlayer.getPosition().isInside())
+                        {
+                            this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
+                            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                        }
+                        else
+                        {
+                            this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
+                            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
+
+                            if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
+                            {
+                                this.currentPlayer.addToDiscardPile(new BulletCard());
+                                this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
+                                CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                            }
+                        }
+                        break;
+                    }
+                case ActionKind.Shoot:
+                    {
+                        List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
+                        if (possTargets.Count == 1)
+                        {
+                            this.chosenShootTarget(possTargets[0]);
+                        }
+                        else
+                        {
+                            this.aGameStatus = GameStatus.FinalizingCard;
+                            this.currentPlayer.setWaitingForInput(true);
+                            CommunicationAPI.sendMessageToClient("updatePossTarget", possTargets);
+                        }
+                        break;
+                    }
+                case ActionKind.Rob:
+                    {
+                        //TODO Do we need to check if there is olny one loot ?
+                        List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
+                        this.aGameStatus = GameStatus.FinalizingCard;
+                        this.currentPlayer.setWaitingForInput(true);
+                        CommunicationAPI.sendMessageToClient("updateLootAtLocation", atLocation);
+                        break;
+                    }
+                case ActionKind.Marshal:
+                    {
+                        List<Position> possPosition = this.aMarshal.getPossiblePositions();
+                        if (possPosition.Count == 1)
+                        {
+                            this.chosenPosition(possPosition[0], ActionKind.Marshal);
+                        }
+                        else
+                        {
+                            this.aGameStatus = GameStatus.FinalizingCard;
+                            this.currentPlayer.setWaitingForInput(true);
+                            CommunicationAPI.sendMessageToClient("updateMovePositions", possPosition);
+
+                        }
+                        break;
+                    }
+                case ActionKind.Punch:
+                    {
+                        //TODO Do we need to check if there is olny one loot ?
+                        List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
+                        this.aGameStatus = GameStatus.FinalizingCard;
+                        this.currentPlayer.setWaitingForInput(true);
+                        CommunicationAPI.sendMessageToClient("updatePossTarget", atLocation);
+                        break;
+                    }
+            }
+            this.endOfCards();
+        }
+    }
+
+
+
     /**
         Private helper methods
     */
@@ -233,31 +346,33 @@ class GameController
         //if the player has another action, then the anotherAction flag is set to false
         if (this.currentPlayer.isGetsAnotherAction())
         {
+            CommunicationAPI.sendMessageToClient("updateHasAnotherAction", currentPlayerIndex, true);
             this.currentPlayer.setGetsAnotherAction(false);
-             
         }
 
         else
         {
             this.currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient("updateWaitingForInput", currentPlayerIndex, false);
 
             //if this is not the last turn of the round
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
             {
 
                 //determining the next player 
-                //if the turn is Switching, order of players is reversed
+                //if the turn is Switching, order of players is reversed, so next player is previous in the list
                 if (this.currentTurn.getType() == TurnType.Switching)
                 {
                     this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
-                    //don't use playerIndex
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1];
+                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
+                    CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
                 }
                 //otherwise, it is the next player in the list 
                 else
                 {
                     this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1];
+                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
+                    CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
                 }
 
                 //if the turn is Speeding up, the next player has another action 
@@ -272,10 +387,11 @@ class GameController
                 //prepare for Stealing phase 
                 foreach (Player p in this.players)
                 {
-
                     p.moveCardsToDiscard();
+                    //NEED MESSAGE HERE
                     p.setWaitingForInput(true);
                     this.aGameStatus = GameStatus.Stealin;
+                    CommunicationAPI.sendMessageToClient("updateGameStatus", false);
                 }
             }
         }
@@ -283,15 +399,16 @@ class GameController
     
     private void endOfCards()
     {
-        
-        this.currentPlayer.addToDiscardPile(this.currentRound.topOfPlayedCards());
+        Card c = this.currentRound.topOfPlayedCards();
+        this.currentPlayer.addToDiscardPile(c);
+        CommunicationAPI.sendMessageToClient("removeTopCardVaddCards", c);
 
         //if all cards in the pile have been played 
         if (this.currentRound.getPlayedCards().Count == 0)
         {
 
             //if this is the last round 
-            if (this.currentRound.Equals(this.rounds[this.rounds.Count - 1]))
+            if (this.currentRound.getIsLastRound())
             {
                 calculateGameScore();
             }
@@ -300,31 +417,45 @@ class GameController
                 //setting the next round, setting the first turn of the round 
                 this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
-                //SEND index 
+                CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
                 //setting the next player and game status of the game 
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
+                this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
+                CommunicationAPI.sendMessageToClient("updateCurrentPlayer", this.currentPlayerIndex);
+
                 this.currentPlayer.setWaitingForInput(true);
-                //SEND player
+                CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.currentPlayerIndex, true);
                 
                 this.aGameStatus = GameStatus.Schemin;
+                CommunicationAPI.sendMessageToClient("updateGameStatus", true);
 
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)
                 {
+                    List<Card> cardsToAdd = new List<Card>();
+                    int index = this.players.IndexOf(p);
+
                     Random rnd = new Random();
                     for (int i = 0; i < 6; i++)
                     {
                         int rand = rnd.Next(0, p.discardPile.Count);
-                        p.hand.Add(p.discardPile[rand]);
-                        p.discardPile.RemoveAt(rand);
+                        Card aCard = p.discardPile[rand];
+                        p.hand.Add(aCard);
+                        cardsToAdd.Add(aCard);
+                        p.discardPile.Remove(aCard);
                     }
+                    //NEED TO SEE WITH CRISTINA
+                    CommunicationAPI.sendMessageToClient("updatePlayerHand", currentPlayerIndex, cardsToAdd);
                 }
             }
         }
     }
 
-    private Dictionary <Player,int> calculateGameScore() {
+    /*
+    *   HECTOR: change this function to void because only need to send results to clients. 
+    */
+    private void calculateGameScore() {
         
         Dictionary <Player, int> scores = new Dictionary <Player, int>();
         int max = -1;
@@ -343,10 +474,10 @@ class GameController
         var myList = scores.ToList();
         myList.Sort((pair1,pair2) => pair1.Value.CompareTo(pair2.Value));
 
+        CommunicationAPI.sendMessageToClient("finalGameScore", myList);
         
-        return scores;
+        //return scores;
     }
-
 
     private void initializeGameBoard()
     {
@@ -452,109 +583,6 @@ class GameController
         this.rounds.Add(aFinalRound);
     }
 
-    public void readyForNextMove()
-    {
-        this.currentPlayer.setWaitingForInput(false);
-        Boolean waiting = true;
-
-        foreach (Player p in this.players)
-        {
-            if (p.getWaitingForInput())
-                waiting = false;
-        }
-
-        if (waiting)
-        {
-            // Get the top of the played cards from the schemin phase
-            ActionCard top = this.currentRound.topOfPlayedCards();
-
-            switch (top.getKind())
-            {
-                case ActionKind.Move:
-                    {
-                        List<Position> moves = this.getPossibleMoves(this.currentPlayer);
-
-                        // SENDMESSAGE with moves
-                        if (moves.Count > 1)
-                        {
-                            this.aGameStatus = GameStatus.FinalizingCard;
-                        }
-                        else
-                        {
-                            chosenPosition(moves[0]);
-                        }
-                        break;
-                    }
-                case ActionKind.ChangeFloor:
-                    {
-                        if (this.currentPlayer.getPosition().isInside())
-                        {
-                            this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
-                        }
-                        else
-                        {
-                            this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
-
-                            if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
-                            {
-                                this.currentPlayer.addToDiscardPile(new BulletCard());
-                                this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
-                            }
-                        }
-                        break;
-                    }
-                case ActionKind.Shoot:
-                    {
-                        List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
-                        if (possTargets.Count == 1)
-                        {
-                            this.chosenShootTarget(possTargets[0]);
-                        }
-                        else
-                        {
-                            // SENDMESSAGE with possTargets
-                            this.aGameStatus = GameStatus.FinalizingCard;
-                            this.currentPlayer.setWaitingForInput(true);
-                        }
-                        break;
-                    }
-                case ActionKind.Rob:
-                    {
-                        List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
-                        // Send message with atLocation
-                        this.aGameStatus = GameStatus.FinalizingCard;
-                        this.currentPlayer.setWaitingForInput(true);
-                        break;
-                    }
-                case ActionKind.Marshal:
-                    {
-                        List<Position> possPosition = this.aMarshal.getPossiblePositions();
-                        if (possPosition.Count == 1)
-                        {
-                            this.chosenPosition(possPosition[0]);
-                        }
-                        else
-                        {
-                            // SENDMESSAGE with possPosition
-                            this.aGameStatus = GameStatus.FinalizingCard;
-                            this.currentPlayer.setWaitingForInput(true);
-                        }
-                        break;
-                    }
-                case ActionKind.Punch:
-                    {
-                        List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
-                        // Send message with atLocation
-                        this.aGameStatus = GameStatus.FinalizingCard;
-                        this.currentPlayer.setWaitingForInput(true);
-                        break;
-                    }
-            }
-            this.endOfCards();
-        }
-    }
-
-    // Get a list of all possible wagons where a player p can move from its current position
     private List<Position> getPossibleMoves(Player p)
     {
         List<Position> possPos = new List<Position>();
