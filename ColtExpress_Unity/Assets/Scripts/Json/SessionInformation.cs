@@ -13,7 +13,7 @@ public class SessionInformation
     public GameParameter gameParameters {get; set;}
     public bool launched {get; set;}
     public List<string> players {get; set;}
-    public Dictionary<int, string> playerLocations {get; set;}
+    // public Dictionary<int, string> playerLocations {get; set;}
     public string savegameid;
 }
 
