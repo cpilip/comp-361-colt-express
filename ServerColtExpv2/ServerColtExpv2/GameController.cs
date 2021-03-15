@@ -22,6 +22,7 @@ class GameController
 {
     private static GameController myGameController = new GameController();
     private readonly int totalPlayer;
+    private Boolean endOfGame;
     private GameStatus aGameStatus;
     private Round currentRound;
     private Turn currentTurn;
@@ -37,6 +38,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
+        this.endOfGame = false;
     }
 
     public static GameController getInstance()
@@ -143,12 +145,12 @@ class GameController
         endOfTurn();
     }
 
-    public void chosenPosition(Position p, ActionKind aKind)
+    public void chosenPosition(Position p)
     {
-        //ActionCard topOfPile = this.currentRound.topOfPlayedCards();
+        ActionCard topOfPile = this.currentRound.seeTopOfPlayedCards();
 
         //if the action card is a Move Marshall action
-        if (aKind.Equals(ActionKind.Marshal))
+        if (topOfPile.getKind().Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
             //TO ALL PLAYERS
@@ -167,7 +169,7 @@ class GameController
             }
         }
         //if the action card is a Move action
-        if (aKind.Equals(ActionKind.Move))
+        if (topOfPile.getKind().Equals(ActionKind.Move))
         {
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
@@ -183,9 +185,6 @@ class GameController
                 CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
             }
         }
-
-        endOfCards();
-
     }
 
     public void chosenPunchTarget(Player victim, GameItem loot, Position dest)
@@ -215,8 +214,6 @@ class GameController
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest.getTrainCar().getRoof()); 
         }
-
-        endOfCards();
     }
 
     public void chosenShootTarget(Player target)
@@ -227,7 +224,6 @@ class GameController
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("decrement", this.currentPlayer.bullets);
-        endOfCards();
     }
 
     public void chosenLoot(GameItem loot)
@@ -237,7 +233,6 @@ class GameController
         currentPlayer.addToPossessions(loot);
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("increment", loot);
-        endOfCards();
     }
 
     public void readyForNextMove()
@@ -255,7 +250,7 @@ class GameController
         if (waiting)
         {
             // Get the top of the played cards from the schemin phase
-            ActionCard top = this.currentRound.topOfPlayedCards();
+            ActionCard top = this.currentRound.seeTopOfPlayedCards();
 
             switch (top.getKind())
             {
@@ -272,7 +267,7 @@ class GameController
                         }
                         else
                         {
-                            chosenPosition(moves[0], ActionKind.Move);
+                            chosenPosition(moves[0]);
                         }
                         break;
                     }
@@ -331,7 +326,7 @@ class GameController
                         List<Position> possPosition = this.aMarshal.getPossiblePositions();
                         if (possPosition.Count == 1)
                         {
-                            this.chosenPosition(possPosition[0], ActionKind.Marshal);
+                            this.chosenPosition(possPosition[0]);
                         }
                         else
                         {
@@ -427,10 +422,10 @@ class GameController
     
     private void endOfCards()
     {
-        Card c = this.currentRound.topOfPlayedCards();
+        Card c = this.currentRound.getTopOfPlayedCards();
         this.currentPlayer.addToDiscardPile(c);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("removeTopCardVaddCards", c);
+        CommunicationAPI.sendMessageToClient("removeTopCard", c);
 
         //if all cards in the pile have been played 
         if (this.currentRound.getPlayedCards().Count == 0)
@@ -484,11 +479,9 @@ class GameController
                 }
             }
         }
+        readyForNextMove();
     }
 
-    /*
-    *   UPDATE HECTOR: change this function to void because only need to send results to clients. 
-    */
     private void calculateGameScore() {
         
         Dictionary <Player, int> scores = new Dictionary <Player, int>();
@@ -511,7 +504,7 @@ class GameController
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient("finalGameScore", myList);
         
-        //return scores;
+        this.endOfGame = true;
     }
 
     private void initializeGameBoard()
