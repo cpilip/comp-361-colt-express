@@ -8,11 +8,14 @@ using RoundSpace;
 
 class MyTcpListener
 {
+    public static NetworkStream currentClientStream;
+
+
+    //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
     public static void Main()
     {
         
-
-            TcpListener server = null;
+        TcpListener server = null;
         try
         {
             // Set the TcpListener on port 13000.
@@ -30,9 +33,26 @@ class MyTcpListener
             String data = null;
 
 
+<<<<<<< HEAD
             GameController aGameController = GameController.getInstance();
 
             // Enter the listening loop.
+=======
+            //Loop here waiting for input from Lobby Service
+            //Obtain all the IPs from Lobby Service
+
+            //Here is where all the characters are chosen
+
+            //Here is where all the initialization takes place
+
+            //initializeLoot();
+
+            //Here is where each IP gets a TCP client
+
+            // Enter the listening loop for currentClient's response.
+            // Go to next client.
+
+>>>>>>> 3c5eb83d3b5ccc7ceca661c48c77d40fc13046af
             while (true)
             {
                 Console.Write("Waiting for a connection... ");
@@ -44,15 +64,17 @@ class MyTcpListener
                 
 
                 IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                Console.WriteLine("From: " + remoteIpEndPoint.Address);
+                Console.WriteLine("Connection from: " + remoteIpEndPoint.Address);
 
                 data = null;
 
                 // Get a stream object for reading and writing
-                NetworkStream stream = client.GetStream();
+                currentClientStream = client.GetStream();
+
+                
                 
 
-                int i;
+                /*int i;
 
                 // Loop to receive all the data sent by the client.
                 while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
@@ -62,16 +84,20 @@ class MyTcpListener
                     Console.WriteLine("Received: {0} from {1}", data, IPAddress.Parse(((IPEndPoint) client.Client.RemoteEndPoint).Address.ToString()));
 
                     // Process the data sent by the client.
-                    data = data.ToUpper();
+                    //data = data.ToUpper();
 
+                    
+                    // Send a message/response to the client
                     data = CommunicationAPI.sendMessageToClient("testJSON", new Turn(TurnType.Standard));
+                    sendToClient(stream, data);
+                    //data = "Your message was received, Client: " + IPAddress.Parse(((IPEndPoint) client.Client.RemoteEndPoint).Address.ToString());
 
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                } */
 
-                    // Send back a response.
-                    stream.Write(msg, 0, msg.Length);
-                    Console.WriteLine("Sent: {0}", data);
-                }
+                //data = CommunicationAPI.sendMessageToClient("testJSON", new Turn(TurnType.Standard));
+                //sendToClient(data);
+
+
 
                 // Shutdown and end connection
                 client.Close();
@@ -91,5 +117,16 @@ class MyTcpListener
         Console.Read();
     }
 
+<<<<<<< HEAD
     
+=======
+    public static void sendToClient(string data)
+    {
+        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+
+        currentClientStream.Write(msg, 0, msg.Length);
+        Console.WriteLine("Sent to Client: {0}", data);
+    }
+
+>>>>>>> 3c5eb83d3b5ccc7ceca661c48c77d40fc13046af
 }

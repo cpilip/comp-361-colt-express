@@ -38,10 +38,10 @@ public class CommunicationAPIHandler : MonoBehaviour
         SerializationBinder = knownTypesBinder
     };
 
-    //action is the action you wish to execute on the client (list will be provided)
-    //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
+    //Get JSON from server and figure out what event to trigger
     public static void getMessageFromServer(string data)
     {
+
 
         List<System.Object> t = JsonConvert.DeserializeObject<List<System.Object>>(data, settings);
         t.RemoveAt(0);
