@@ -33,11 +33,9 @@ class MyTcpListener
             String data = null;
 
 
-<<<<<<< HEAD
             GameController aGameController = GameController.getInstance();
 
             // Enter the listening loop.
-=======
             //Loop here waiting for input from Lobby Service
             //Obtain all the IPs from Lobby Service
 
@@ -52,7 +50,6 @@ class MyTcpListener
             // Enter the listening loop for currentClient's response.
             // Go to next client.
 
->>>>>>> 3c5eb83d3b5ccc7ceca661c48c77d40fc13046af
             while (true)
             {
                 Console.Write("Waiting for a connection... ");
@@ -61,7 +58,7 @@ class MyTcpListener
                 // You could also use server.AcceptSocket() here.
                 TcpClient client = server.AcceptTcpClient();
                 Console.WriteLine("Connected!");
-                
+
 
                 IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
                 Console.WriteLine("Connection from: " + remoteIpEndPoint.Address);
@@ -70,9 +67,6 @@ class MyTcpListener
 
                 // Get a stream object for reading and writing
                 currentClientStream = client.GetStream();
-
-                
-                
 
                 /*int i;
 
@@ -117,9 +111,6 @@ class MyTcpListener
         Console.Read();
     }
 
-<<<<<<< HEAD
-    
-=======
     public static void sendToClient(string data)
     {
         byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
@@ -128,5 +119,12 @@ class MyTcpListener
         Console.WriteLine("Sent to Client: {0}", data);
     }
 
->>>>>>> 3c5eb83d3b5ccc7ceca661c48c77d40fc13046af
+    public static void receiveFromClient(string data){
+
+        
+
+
+    }
+
+
 }

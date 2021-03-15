@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Linq;
 
 using RoundSpace;
 using CardSpace;
@@ -73,30 +75,37 @@ class GameController
                     myTrain[myTrain.Count - 1].moveInsideCar(players[i]);
                 }
             }
-            // SEND MESSAGE to all player
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(myTrain));
+
+           
+
+            CommunicationAPI.sendMessageToClient("updatePlayers", players);
             
             initializeLoot();
+
+            CommunicationAPI.sendMessageToClient("updateTrai", myTrain);
 
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
-            //SEND MESSAGE to all player 
 
             this.currentRound = rounds[0];
-            //SEND MESSAGE to all player 
+            //TO CHECK, do we send all rounds ?
+            CommunicationAPI.sendMessageToClient("updateCurrentRound", currentRound);
 
             this.currentTurn = currentRound.getTurns()[0];
-            //SEND MESSAGE to all player
+            CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
             players[0].setWaitingForInput(true);
 
             this.currentPlayer = players[0];
+            CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
         }
     }
 
     public void playActionCard(ActionCard c)
     {
-
+        
         //adding the action card to the playedCard pile and removind it from player's hand
         this.currentRound.addToPlayedCards(c);
         this.currentPlayer.hand.Remove(c);
@@ -109,12 +118,21 @@ class GameController
         Random rnd = new Random();
 
         //taking three random cards from player's discardPile and adding them to the player's hand
-        for (int i = 0; i < 3; i++)
-        {
-            int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
-            Card c = this.currentPlayer.discardPile[rand];
-            this.currentPlayer.moveFromDiscardToHand(c);
-        }
+
+        int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+        Card c = this.currentPlayer.discardPile[rand];
+        this.currentPlayer.moveFromDiscardToHand(c);
+
+        rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+        Card c1 = this.currentPlayer.discardPile[rand];
+        this.currentPlayer.moveFromDiscardToHand(c);
+
+        rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+        Card c2 = this.currentPlayer.discardPile[rand];
+        this.currentPlayer.moveFromDiscardToHand(c);
+
+        CommunicationAPI.sendMessageToClient("addCards", c, c1, c2);
+        
         endOfTurn();
     }
 
@@ -126,7 +144,7 @@ class GameController
         if (topOfPile.getKind().Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
-            //SEND MESSAGE to all player
+            CommunicationAPI.sendMessageToClient("moveGameUnit", this.aMarshal, p);
 
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
@@ -134,7 +152,8 @@ class GameController
                 BulletCard b = new BulletCard();
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
-                //SEND MESSAGE to all player
+
+                CommunicationAPI.sendMessageToClient("moveGameUnit", aPlayer, p.getTrainCar().getRoof());
 
             }
         }
@@ -142,7 +161,7 @@ class GameController
         if (topOfPile.getKind() == ActionKind.Move)
         {
             currentPlayer.setPosition(p);
-            //SEND MESSAGE Game unit / to all player
+            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
@@ -150,7 +169,7 @@ class GameController
                 BulletCard b = new BulletCard();
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
-                //SEND MESSAGE to all player
+                CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
             }
         }
 
@@ -163,18 +182,23 @@ class GameController
 
         //drop the loot at victim position, sends victim to destination 
         loot.setPosition(victim.getPosition());
-        //SEND 
+        CommunicationAPI.sendMessageToClient("moveGameItem", loot, victim.getPosition()); 
+
         victim.setPosition(dest);
+        CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest); 
+
 
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
+        CommunicationAPI.sendMessageToClient("decrement", loot); 
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
             BulletCard b = new BulletCard();
-            victim.discardPile.Add(b);
+            victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
+            CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest.getTrainCar().getRoof()); 
         }
 
         endOfCards();
@@ -186,6 +210,7 @@ class GameController
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
+        CommunicationAPI.sendMessageToClient("decrement", this.currentPlayer.bullets);
         endOfCards();
     }
 
@@ -194,6 +219,7 @@ class GameController
         //the loot is transfered from the position to the currentPlayer possensions
         loot.setPosition(null);
         currentPlayer.addToPossessions(loot);
+        CommunicationAPI.sendMessageToClient("increment", loot);
         endOfCards();
     }
 
@@ -208,7 +234,7 @@ class GameController
         if (this.currentPlayer.isGetsAnotherAction())
         {
             this.currentPlayer.setGetsAnotherAction(false);
-            //SEND Another action Player + 
+             
         }
 
         else
@@ -296,13 +322,11 @@ class GameController
                 }
             }
         }
-
-
     }
 
-    private Dictionary<Player, int> calculateGameScore() {
+    private Dictionary <Player,int> calculateGameScore() {
         
-        Dictionary<Player, int> scores = new Dictionary<Player, int>();
+        Dictionary <Player, int> scores = new Dictionary <Player, int>();
         int max = -1;
         Player maxPlayer = null;
         
@@ -313,10 +337,16 @@ class GameController
                 maxPlayer = pl;
             }
         }
-        //TODO Sort Dictionnary for the clients 
         scores[maxPlayer] = scores[maxPlayer] + 1000;
+
+        //Sorted list to send to clients
+        var myList = scores.ToList();
+        myList.Sort((pair1,pair2) => pair1.Value.CompareTo(pair2.Value));
+
+        
         return scores;
     }
+
 
     private void initializeGameBoard()
     {
