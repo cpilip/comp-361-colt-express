@@ -19,7 +19,7 @@ namespace PositionSpace
         private readonly TrainCar trainCar;
         [JsonProperty]
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
-
+        
         public Position(TrainCar trainCar, Floor floor)
         {
             this.trainCar = trainCar;

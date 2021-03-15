@@ -79,9 +79,13 @@ namespace RoundSpace {
             this.playedCards.Enqueue(c);
         }
 
-        public ActionCard topOfPlayedCards() {
+        public ActionCard getTopOfPlayedCards() {
             return this.playedCards.Dequeue();
         }
+        public ActionCard seeTopOfPlayedCards() {
+            return this.playedCards.Peek();
+        }
+
 
         public void intializeTurn(int nbOfPlayer){
             
@@ -195,11 +199,14 @@ namespace RoundSpace {
                         break;
                     }
                 }
-                
+
             }
 
         }
 
 
+        public Boolean getIsLastRound(){
+            return this.isLastRound;
+        }
     }
 }
