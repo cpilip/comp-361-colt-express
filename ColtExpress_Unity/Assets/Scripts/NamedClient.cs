@@ -43,6 +43,11 @@ public class NamedClient : MonoBehaviour
 
     }
 
+    void Update()
+    {
+        getFromServer();
+    }
+
     public void SendMessageToServer(string message)
     {
         Debug.Log("Message sent");
@@ -73,5 +78,34 @@ public class NamedClient : MonoBehaviour
         Console.WriteLine("SocketException: {0}", e);
         }
 
-    }   
+    }
+
+    public static string getFromServer()
+    {
+        
+        int i;
+        string data = null;
+        Byte[] bytes = new Byte[256];
+        // Loop to receive all the data sent by the client.
+
+       // Debug.Log("Getting from server.");
+
+        //i = number of bytes read
+        while (stream.DataAvailable) 
+        {
+            i = stream.Read(bytes, 0, bytes.Length);
+            // Translate data bytes to a ASCII string.
+            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+
+            CommunicationAPIHandler.getMessageFromServer(data);
+
+
+            Debug.Log("Received.");
+        }
+
+       // Debug.Log("No message.");
+
+        return data;
+
+    }
 }

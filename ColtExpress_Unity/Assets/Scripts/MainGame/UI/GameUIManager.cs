@@ -25,9 +25,9 @@ public class GameUIManager : MonoBehaviour
     public Sprite Belle;
 
     int numPlayers = 0;
-    private Dictionary<Character, GameObject> characters;
-    private Dictionary<Character, GameObject> playerProfiles;
-    private Dictionary<int, GameObject> trainCarPositions;
+    private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
+    private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();;
+    private Dictionary<int, GameObject> trainCarPositions = new Dictionary<int, GameObject>();
 
     //EventManager instance
     private static GameUIManager gameController;

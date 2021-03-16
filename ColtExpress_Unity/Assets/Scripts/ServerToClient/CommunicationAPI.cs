@@ -58,16 +58,11 @@ namespace ClientCommunicationAPI
 
             //var testType = args[0].GetType().MakeGenericType();
 
-            if ()
-            {
-
-            }
-
-            dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
+            //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
 
 
             //Serialize parameters as list
-            string data = JsonConvert.SerializeObject((type)args[0], settings);
+            string data = JsonConvert.SerializeObject((Character)args[0], settings);
 
             //Send to server
 

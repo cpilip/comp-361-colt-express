@@ -126,7 +126,7 @@ class MyTcpListener
         } while (streamToReadFrom.DataAvailable);
 
         clients.TryGetValue(currentClient, out string fromClientatIP);
-
+        
         Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
