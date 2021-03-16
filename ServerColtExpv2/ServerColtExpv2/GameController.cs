@@ -114,6 +114,27 @@ class GameController
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
 
             Console.WriteLine("Finished initialization.");
+
+            //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
+            foreach (Player p in this.players)
+            {
+                List<Card> cardsToAdd = new List<Card>();
+                int index = this.players.IndexOf(p);
+
+                Random rnd = new Random();
+                for (int i = 0; i < 6; i++)
+                {
+                    int rand = rnd.Next(0, p.discardPile.Count);
+                    Card aCard = p.discardPile[rand];
+                    p.hand.Add(aCard);
+                    cardsToAdd.Add(aCard);
+                    p.discardPile.Remove(aCard);
+                }
+                //TODO NEED TO SEE WITH CRISTINA
+                //TO SPECIFIC PLAYER
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
+                 
+            }
         }
     }
 
