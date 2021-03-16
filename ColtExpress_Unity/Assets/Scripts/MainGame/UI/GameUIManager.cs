@@ -12,9 +12,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject playerProfileLocation;
     
     public GameObject characterPrefab;
-    public GameObject trainCarRoofPrefab;
     public GameObject trainCarPrefab;
-    public GameObject trainCarLocomotivePrefab;
     public GameObject playerProfilePrefab;
 
     public Sprite Tuco;
@@ -26,7 +24,7 @@ public class GameUIManager : MonoBehaviour
 
     int numPlayers = 0;
     private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
-    private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();;
+    private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCarPositions = new Dictionary<int, GameObject>();
 
     //EventManager instance
@@ -108,24 +106,25 @@ public class GameUIManager : MonoBehaviour
         return trainCarPosition;
     }
 
-    public GameObject createTrainCarObject(int index)
+    public void createTrainCarObject(int index)
     {
         GameObject newTrainCar;
-        if (index == 0)
-        {
-            newTrainCar = Instantiate(trainCarRoofPrefab);
-        } else if (index != numPlayers)
-        {
-            newTrainCar = Instantiate(trainCarPrefab);
-        } else
-        {
-            newTrainCar = Instantiate(trainCarLocomotivePrefab);
-        }
 
-        trainCarPositions.Add(index, newTrainCar);
+        //Make the roof
+        newTrainCar = Instantiate(trainCarPrefab);
         newTrainCar.transform.SetParent(trainLocation.transform);
-        
-        return newTrainCar;
+        newTrainCar.transform.SetSiblingIndex(index);
+        trainCarPositions.Add(index, newTrainCar);
+
+        int carIndex = (index == 0) ? index + numPlayers: index + numPlayers;
+
+        //Make the car
+        newTrainCar = Instantiate(trainCarPrefab);
+        newTrainCar.transform.SetParent(trainLocation.transform);
+        newTrainCar.transform.SetSiblingIndex(carIndex);
+        trainCarPositions.Add(carIndex, newTrainCar);
+
+        //return newTrainCar;
     }
 
     void Awake()

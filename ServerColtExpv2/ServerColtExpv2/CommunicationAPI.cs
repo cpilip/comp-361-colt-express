@@ -56,9 +56,18 @@ public class CommunicationAPI
             int i = 0;
             foreach (TrainCar n in t)
             {
-                var definition = new { eventName = action, car = n };
+                var definition = new {
+                    eventName = action,
+                    indexofCar = i,
+                    i_items = n.getInside().getUnits_items(),
+                    i_players = n.getInside().getUnits_players(),
+                    r_items = n.getRoof().getUnits_items(),
+                    r_players = n.getRoof().getUnits_players(),
+                };
+                i++;
                 MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
             }
+            return;
         } else if (action == "updatePlayers")
         {
             List<Player> t = (List<Player>)args[0];
@@ -74,7 +83,9 @@ public class CommunicationAPI
                     d_BulletCards = n.getDiscard_bulletCards()
                 };
                 MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+                
             }
+            return;
         }
 
         List<System.Object> objectsToSerialize = new List<System.Object>();

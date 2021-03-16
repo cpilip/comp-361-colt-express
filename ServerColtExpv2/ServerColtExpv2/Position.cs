@@ -17,7 +17,7 @@ namespace PositionSpace
         private readonly Floor floor; // **Did not implement "setFloor"; Floor passed in constructor
         //[JsonProperty]
         private readonly TrainCar trainCar;
-        [JsonProperty]
+        //[JsonProperty]
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
 
         public Position()
@@ -84,11 +84,11 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
-        public List<ItemType> getUnits_items()
+        public List<GameItem> getUnits_items()
         {
-            List<ItemType> l = new List<ItemType>();
+            List<GameItem> l = new List<GameItem>();
             this.units.OfType<GameItem>().ToList()
-                .ForEach(i => l.Add(i.getType()));
+                .ForEach(i => l.Add(i));
             return l;
         }
 
