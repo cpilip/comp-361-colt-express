@@ -52,6 +52,7 @@ public class CommunicationAPI
     
     public static void sendMessageToClient(TcpClient cli, string action, params System.Object[] args)
     {
+
         if (action == "updateTrain")
         {
             List<TrainCar> t = (List<TrainCar>)args[0];
@@ -70,7 +71,6 @@ public class CommunicationAPI
                 i++;
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-            return;
         } else if (action == "updatePlayers")
         {
             List<Player> t = (List<Player>)args[0];
@@ -88,7 +88,6 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
                 
             }
-            return;
         }
         else if (action == "updatePlayerHand")
         {
@@ -104,7 +103,17 @@ public class CommunicationAPI
                 currentPlayerIndex = i,
                 cardsToAdd = l 
             };
-           
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
         } else if (action == "updateGameStatus")
         {
             var definition = new
@@ -112,7 +121,17 @@ public class CommunicationAPI
                 eventName = "updateGameStatus",
                 statusIs = (bool)args[0],
             };
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
 
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
         }
         else if (action == "updateCurrentRound")
         {
@@ -128,7 +147,17 @@ public class CommunicationAPI
                 isLastRound = r.getIsLastRound(),
                 turns = l
             };
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
 
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
         }
         else if (action == "updateCurrentTurn")
         {
@@ -140,6 +169,18 @@ public class CommunicationAPI
                 currentTurn = i
             };
 
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+
         } else if (action == "updateWaitingForInput")
             {
                 Character c = (Character)args[0];
@@ -150,20 +191,25 @@ public class CommunicationAPI
                 currentPlayer = c
             };
 
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
         } 
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);
         objectsToSerialize.AddRange(args);
 
-        if (cli == null) {
-            //Serialize parameters as a array with first element being the action
-            MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
-
-        } else {
-            //Serialize parameters as a array with first element being the action
-            MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
-        }
+       
     }
 
     
