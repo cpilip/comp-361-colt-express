@@ -84,9 +84,8 @@ class GameController
 
             initializeLoot();
 
+            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateTrain", myTrain);
-            //Send Train object
-            return;
 
             intializeRounds();
 
