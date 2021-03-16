@@ -26,7 +26,6 @@ namespace GameUnitSpace {
         private bool getsAnotherAction;
         //[JsonProperty]
         private int numOfBulletsShot;
-
         public List <Card> hand;
         public List <Card> discardPile;
         public List <BulletCard> bullets;

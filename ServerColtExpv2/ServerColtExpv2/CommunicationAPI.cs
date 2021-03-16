@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Net;
+using System.Net.Sockets;
+
 using CardSpace;
 using GameUnitSpace;
 using PositionSpace;
@@ -47,7 +50,7 @@ public class CommunicationAPI
     //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
     
     
-    public static void sendMessageToClient(string action, params System.Object[] args)
+    public static void sendMessageToClient(TcpClient cli, string action, params System.Object[] args)
     {
         if (action == "updateTrain")
         {
@@ -92,8 +95,14 @@ public class CommunicationAPI
         objectsToSerialize.Add(action);
         objectsToSerialize.AddRange(args);
 
-        //Serialize parameters as a array with first element being the action
-        MyTcpListener.sendToClient(JsonConvert.SerializeObject(objectsToSerialize, settings));
+        if (cli == null) {
+            //Serialize parameters as a array with first element being the action
+            MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(objectsToSerialize, settings));
+
+        } else {
+            //Serialize parameters as a array with first element being the action
+            MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(objectsToSerialize, settings));
+        }
     }
 
     
