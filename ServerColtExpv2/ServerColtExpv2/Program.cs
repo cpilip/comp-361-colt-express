@@ -72,9 +72,7 @@ class MyTcpListener
 
 
             while (haveAllConnections == false)
-
-                while (true)
-                {
+            {
                     //Open a stream for each client
                     TcpClient client = server.AcceptTcpClient();
 
@@ -93,7 +91,7 @@ class MyTcpListener
                     {
                         haveAllConnections = true;
                     }
-                }
+            }
 
             Console.WriteLine("All clients successfully connected.");
 
@@ -106,10 +104,11 @@ class MyTcpListener
             foreach (TcpClient cli in clientStreams.Keys)
             {
                 Character c = JsonConvert.DeserializeObject<Character>(getFromClient(cli));
+                currentClient = cli;
                 aController.chosenCharacter(c);
 
                 Player p = aController.getPlayerByCharacter(c);
-                players.Add(p, cli);
+                //players.Add(p, cli);
             }
 
             while (!aController.getEndOfGame())
@@ -199,6 +198,11 @@ class MyTcpListener
     public static TcpClient getClientByPlayer(Player p)
     {
         return players[p];
+    }
+
+    public static void addPlayerWithClient(Player p)
+    {
+        players.Add(p, currentClient);
     }
 
     public static void sendToClient(string data)

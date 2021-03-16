@@ -38,7 +38,9 @@ namespace RoundSpace {
             
             this.isLastRound = isLastRound;
 
-            if(!isLastRound){
+            this.turns = new List<Turn>();
+
+            if (!isLastRound){
                 /*
                     here, need to use a randomn number to chose between the first 8 EndOfRoundEvents 
                 */

@@ -62,10 +62,12 @@ class GameController
         Player tmp = new Player(aChar);
         this.players.Add(tmp);
 
+        MyTcpListener.addPlayerWithClient(tmp);
+
         Console.WriteLine("A player picked a character.");
         
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 4)
+        if (players.Count == 1)
         {
 
             initializeGameBoard();
@@ -111,7 +113,7 @@ class GameController
             this.currentPlayer = players[0];
             //TO ALL PLAYERS
             //Send the current player as index and value for waiting for input for that index/player
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
             Console.WriteLine("Finished initialization.");
 
@@ -521,7 +523,7 @@ class GameController
                     }
                     //TODO NEED TO SEE WITH CRISTINA
                     //TO SPECIFIC PLAYER
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
                    
                 }
             }

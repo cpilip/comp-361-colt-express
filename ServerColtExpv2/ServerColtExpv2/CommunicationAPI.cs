@@ -90,6 +90,78 @@ public class CommunicationAPI
             }
             return;
         }
+        else if (action == "updatePlayerHand")
+        {
+            int i = (int)args[0];
+            List<Card> c = (List<Card>)args[1];
+            List<ActionKind> l  = new List<ActionKind>();
+
+            c.OfType<ActionCard>().ToList().ForEach(t => l.Add(t.getKind()));
+
+            var definition = new
+            {
+                eventName = "updatePlayerHand",
+                currentPlayerIndex = i,
+                cardsToAdd = l 
+            };
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+
+            
+            return;
+        } else if (action == "updateGameStatus")
+        {
+            var definition = new
+            {
+                eventName = "updateGameStatus",
+                statusIs = (bool)args[0],
+            };
+
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+            return;
+        }
+        else if (action == "updateCurrentRound")
+        {
+            Round r = (Round)args[0];
+            List<TurnType> l = new List<TurnType>();
+
+            r.getTurns().ForEach(t => l.Add(t.getType()));
+
+            var definition = new
+            {
+                eventName = "updateCurrentRound",
+                //anEvent = r.getEvent();
+                isLastRound = r.getIsLastRound(),
+                turns = l
+            };
+
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+            return;
+        }
+        else if (action == "updateCurrentTurn")
+        {
+            int i = (int)args[0];
+
+            var definition = new
+            {
+                eventName = "updateCurrentTurn",
+                currentTurn = i
+            };
+
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+            return;
+        } else if (action == "updateWaitingForInput")
+            {
+                Character c = (Character)args[0];
+
+            var definition = new
+            {
+                eventName = "updateWaitingForInput",
+                currentPlayer = c
+            };
+
+            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+            return;
+        } 
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);

@@ -9853,6 +9853,7 @@ GameObject:
   - component: {fileID: 1573264381}
   - component: {fileID: 1573264383}
   - component: {fileID: 1573264382}
+  - component: {fileID: 1573264384}
   m_Layer: 5
   m_Name: Hand
   m_TagString: Untagged
@@ -9919,6 +9920,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573264380}
   m_CullTransparentMesh: 0
+--- !u!114 &1573264384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573264380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fbb47ac6fdba244eb1797ab9f7d7f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: updatePlayerHand
+  deck: {fileID: 288253714}
+  actionCardPrefabMove: {fileID: 5659350456980819034, guid: ceaf731a6c4f27d418d87752480d455b,
+    type: 3}
+  actionCardPrefabShoot: {fileID: 1704578708929176353, guid: 426c926281b9fcc47b0490e8e546417c,
+    type: 3}
+  actionCardPrefabRob: {fileID: 6916430167177836706, guid: c958abb8fd9cb3048a38b47e5fd62260,
+    type: 3}
+  actionCardPrefabPunch: {fileID: 1005896428546229953, guid: 3313a4365ecf37a44aa132327130fa6e,
+    type: 3}
+  actionCardPrefabChangeFloor: {fileID: 7701108726353377673, guid: 7e4fcf32e088ee34ea8faf47e817cb38,
+    type: 3}
+  actionCardPrefabMarshal: {fileID: 6301086056688440769, guid: c0fe3bf6ae967414dbd36634e67973f4,
+    type: 3}
 --- !u!1 &1594952566
 GameObject:
   m_ObjectHideFlags: 0

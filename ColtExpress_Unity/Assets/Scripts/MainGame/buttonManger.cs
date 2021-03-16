@@ -38,7 +38,6 @@ public class buttonManger : MonoBehaviour
             checkPhase = true;
             turnMenu.SetActive(false);
 
-
         }
         if (checkPhase == true)
         {
