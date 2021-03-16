@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 
 using RoundSpace;
 using CardSpace;
@@ -499,6 +501,7 @@ class GameController
                     //NEED TO SEE WITH CRISTINA
                     //TO SPECIFIC PLAYER
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
+                   
                 }
             }
         }

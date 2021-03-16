@@ -8,6 +8,7 @@ using System.Text;
 using GameUnitSpace;
 using Newtonsoft.Json;
 using PositionSpace;
+using CardSpace;
 using RoundSpace;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
@@ -122,15 +123,15 @@ class MyTcpListener
                 if (eventName.Equals("RobMessage"))
                 {
                     // Get item
-                    ItemType type = o.selectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemFromTypePosition(type);
+                    ItemType type = o.SelectToken("item").ToObject<ItemType>();
+                    GameItem it = aController.getItemfromTypePosition(type);
 
                     aController.chosenLoot(it);
                 }
                 else if (eventName.Equals("ShootMessage"))
                 {
                     // Get player
-                    Character ch = o.selectToken("target").ToObject<Character>();
+                    Character ch = o.SelectToken("target").ToObject<Character>();
                     Player pl = aController.getPlayerByCharacter(ch);
 
                     aController.chosenShootTarget(pl);
@@ -138,16 +139,16 @@ class MyTcpListener
                 else if (eventName.Equals("PunchMessage"))
                 {
                     // Get character
-                    Character ch = o.selectToken("target").ToObject<Character>();
+                    Character ch = o.SelectToken("target").ToObject<Character>();
                     Player pl = aController.getPlayerByCharacter(ch);
 
                     // Get item
-                    ItemType type = o.selectToken("item").ToObject<ItemType>();
+                    ItemType type = o.SelectToken("item").ToObject<ItemType>();
                     GameItem it = aController.getItemfromTypePossession(type);
 
                     // Get position
-                    int index = (int)o.selectToken("index").ToString();
-                    Boolean inside = o.selectToken("inside").ToObject<Boolean>();// ???????????
+                    int index = Int32.Parse(o.SelectToken("index").ToString());
+                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
                     Position pos = aController.getPositionByIndex(index, inside);
 
                     aController.chosenPunchTarget(pl, it, pos);
@@ -155,15 +156,15 @@ class MyTcpListener
                 else if (eventName.Equals("MoveMessage"))
                 {
                     // Get position
-                    int index = (int)o.selectToken("index").ToString();
-                    Boolean inside = o.selectToken("inside").ToObject<Boolean>();// ???????????
+                    int index = Int32.Parse(o.SelectToken("index").ToString());
+                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
                     Position pos = aController.getPositionByIndex(index, inside);
 
                     aController.chosenPosition(pos);
                 }
                 else if (eventName.Equals("CardMessage"))
                 {
-                    int index = (int)o.selectToken("index").ToString();
+                    int index = Int32.Parse(o.SelectToken("index").ToString());
                     ActionCard crd = aController.getCardByIndex(index);
 
                     aController.playActionCard(crd);
