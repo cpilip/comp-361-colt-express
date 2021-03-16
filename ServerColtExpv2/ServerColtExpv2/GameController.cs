@@ -64,7 +64,7 @@ class GameController
 
         Console.WriteLine("A player picked a character.");
         
-        //if all players are here (HARD CODED, usually is players.Count == totalPlayers )
+        //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
         if (players.Count == 4)
         {
 
