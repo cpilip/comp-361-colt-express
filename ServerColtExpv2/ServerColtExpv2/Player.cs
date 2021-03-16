@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using PositionSpace;
 using CardSpace;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace GameUnitSpace {
 
@@ -23,7 +24,7 @@ namespace GameUnitSpace {
         private bool waitingForInput;
         [JsonProperty]
         private bool getsAnotherAction;
-        [JsonProperty]
+        //[JsonProperty]
         private int numOfBulletsShot;
         public List <Card> hand;
         public List <Card> discardPile;
@@ -52,10 +53,12 @@ namespace GameUnitSpace {
 
         private void initializeCards() {
             // Create and add 6 bullet cards
+            bullets = new List<BulletCard>();
             for (int i = 0 ; i < 6 ;i++) {
                 bullets.Add(new BulletCard());
             }
-
+            discardPile = new List<Card>();
+            hand = new List<Card>();
             // Create and add all necessary action cards
             discardPile.Add(new ActionCard(ActionKind.Move));
             discardPile.Add(new ActionCard(ActionKind.Move));
@@ -142,6 +145,29 @@ namespace GameUnitSpace {
 
         public int getNumOfBulletsShot() {
             return this.numOfBulletsShot;
+        }
+
+        public List<ActionCard> getHand_actionCards()
+        {
+            return this.hand.OfType<ActionCard>().ToList();
+        }
+
+        public List<BulletCard> getHand_bulletCards()
+        {
+            return this.hand.OfType<BulletCard>().ToList();
+        }
+
+        public List<ActionKind> getDiscard_actionCards()
+        {
+            List<ActionKind> l = new List<ActionKind>();
+            this.discardPile.OfType<ActionCard>().ToList()
+                .ForEach(i => l.Add(i.getKind()));
+            return l;
+        }
+
+        public int getDiscard_bulletCards()
+        {
+            return this.discardPile.OfType<BulletCard>().ToList().Count;
         }
 
     }

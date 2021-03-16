@@ -37,14 +37,15 @@ namespace ClientCommunicationAPI
             typeof(Position),
             typeof(Round),
             typeof(TrainCar),
-            typeof(Turn)
+            typeof(Turn),
+            typeof(Character)
         }
         };
 
         //Will include object type in JSON string
         private static JsonSerializerSettings settings = new JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto,
+            TypeNameHandling = TypeNameHandling.All,
             SerializationBinder = knownTypesBinder
         };
 
@@ -52,11 +53,16 @@ namespace ClientCommunicationAPI
         //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
         public static void sendMessageToServer(params object[] args)
         {
-            List<System.Object> objectsToSerialize = new List<System.Object>();
-            objectsToSerialize.AddRange(args);
+            //List<System.Object> objectsToSerialize = new List<System.Object>();
+            //objectsToSerialize.AddRange(args);
+
+            //var testType = args[0].GetType().MakeGenericType();
+
+            //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
+
 
             //Serialize parameters as list
-            string data = JsonConvert.SerializeObject(objectsToSerialize, settings);
+            string data = JsonConvert.SerializeObject((Character)args[0], settings);
 
             //Send to server
 

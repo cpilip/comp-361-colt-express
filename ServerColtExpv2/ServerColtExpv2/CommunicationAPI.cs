@@ -9,6 +9,7 @@ using CardSpace;
 using GameUnitSpace;
 using PositionSpace;
 using RoundSpace;
+using Newtonsoft.Json.Linq;
 
 /* Author: Christina Pilip
  * Usage: Server to client communication (for now)
@@ -20,13 +21,13 @@ public class CommunicationAPI
 {
     private static KnownTypesBinder knownTypesBinder = new KnownTypesBinder
     {
-        KnownTypes = new List<Type> { 
-            typeof(Card), 
-            typeof(ActionCard), 
-            typeof(BulletCard), 
-            typeof(GameItem), 
-            typeof(GameUnit), 
-            typeof(GameStatus), 
+        KnownTypes = new List<Type> {
+            typeof(Card),
+            typeof(ActionCard),
+            typeof(BulletCard),
+            typeof(GameItem),
+            typeof(GameUnit),
+            typeof(GameStatus),
             typeof(Marshal),
             typeof(Player),
             typeof(Position),
@@ -45,15 +46,58 @@ public class CommunicationAPI
 
     //action is the action you wish to execute on the client (list will be provided)
     //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
-    public static void sendMessageToClient(string action, params object[] args)
+    
+    
+    public static void sendMessageToClient(string action, params System.Object[] args)
     {
-        List<Object> objectsToSerialize = new List<Object>();
+        if (action == "updateTrain")
+        {
+            List<TrainCar> t = (List<TrainCar>)args[0];
+            
+            int i = 0;
+            foreach (TrainCar n in t)
+            {
+                var definition = new {
+                    eventName = action,
+                    indexofCar = i,
+                    i_items = n.getInside().getUnits_items(),
+                    i_players = n.getInside().getUnits_players(),
+                    r_items = n.getRoof().getUnits_items(),
+                    r_players = n.getRoof().getUnits_players(),
+                };
+                i++;
+                MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+            }
+            return;
+        } else if (action == "updatePlayers")
+        {
+            List<Player> t = (List<Player>)args[0];
+
+            foreach (Player n in t)
+            {
+                var definition = new {
+                    eventName = "updatePlayer",
+                    player = n.getBandit(),
+                    h_ActionCards = n.getHand_actionCards(),
+                    h_BulletCards = n.getHand_bulletCards(),
+                    d_ActionCards = n.getDiscard_actionCards(),
+                    d_BulletCards = n.getDiscard_bulletCards()
+                };
+                MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+                
+            }
+            return;
+        }
+
+        List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);
         objectsToSerialize.AddRange(args);
 
-        //Serialize parameters as list, with first parameter being the action
+        //Serialize parameters as a array with first element being the action
         MyTcpListener.sendToClient(JsonConvert.SerializeObject(objectsToSerialize, settings));
     }
+
+    
 }
 
 //Clean up type formatting
@@ -71,5 +115,7 @@ public class KnownTypesBinder : ISerializationBinder
         assemblyName = null;
         typeName = serializedType.Name;
     }
+
 }
+
 

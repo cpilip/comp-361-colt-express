@@ -38,6 +38,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
+        totalPlayer = 1;
         this.endOfGame = false;
     }
 
@@ -58,6 +59,7 @@ class GameController
         //adding a new player to the list of players 
         this.players.Add(new Player(aChar));
 
+        Console.WriteLine("A player picked a character.");
         //if all players are here 
         if (players.Count == totalPlayer)
         {
@@ -65,7 +67,7 @@ class GameController
             initializeGameBoard();
 
             //setting players' positions
-            for (int i = 0; i < myTrain.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 if (i%2 == 0)
                 {
@@ -76,16 +78,15 @@ class GameController
                     myTrain[myTrain.Count - 1].moveInsideCar(players[i]);
                 }
             }
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(myTrain));
+            //Send all Player objects
 
-           
-            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updatePlayers", players);
-            
+
             initializeLoot();
 
-            //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateTrai", myTrain);
+            CommunicationAPI.sendMessageToClient("updateTrain", myTrain);
+            //Send Train object
+            return;
 
             intializeRounds();
 
@@ -107,6 +108,9 @@ class GameController
             this.currentPlayer = players[0];
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
+
+            Console.WriteLine("Finished initialization.");
+            //Send the current player as index and value for waiting for input for that index/player
         }
     }
 

@@ -1,24 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using GameUnitSpace;
 using Newtonsoft.Json;
+using PositionSpace;
 using RoundSpace;
 using System.Collections.Generic;
 
 class MyTcpListener
 {
-    private Dictionary<GameUnitSpace.Character, IPAddress> playerToIP = new Dictionary<GameUnitSpace.Character, IPAddress>();
-    private Dictionary<IPAddress, GameUnitSpace.Character> IPtoPlayer = new Dictionary<IPAddress, GameUnitSpace.Character>();
+    public static TcpClient currentClient;
+    public static Dictionary<TcpClient, string> clients = new Dictionary<TcpClient, string>();
+    public static Dictionary<TcpClient, NetworkStream> clientStreams = new Dictionary<TcpClient, NetworkStream>();
 
-    public static NetworkStream currentClientStream;
-
+    public static Byte[] bytes = new Byte[256];
 
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
     public static void Main()
     {
-        
         TcpListener server = null;
         try
         {
@@ -32,13 +35,14 @@ class MyTcpListener
             // Start listening for client requests.
             server.Start();
 
-            // Buffer for reading data
-            Byte[] bytes = new Byte[256];
             String data = null;
 
+            bool haveAllConnections = false;
 
-            GameController aGameController = GameController.getInstance();
+            // Enter the listening loop for all clients to connect
+            Console.WriteLine("Waiting for connections... ");
 
+            while (haveAllConnections == false)
             // Enter the listening loop.
             // Loop here waiting for input from Lobby Service
             // Obtain all the IPs from client directly !!!
@@ -65,50 +69,37 @@ class MyTcpListener
 
             while (true)
             {
-                Console.Write("Waiting for a connection... ");
-
-                // Perform a blocking call to accept requests.
-                // You could also use server.AcceptSocket() here.
+                //Open a stream for each client
                 TcpClient client = server.AcceptTcpClient();
-                Console.WriteLine("Connected!");
-
-
                 IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                Console.WriteLine("Connection from: " + remoteIpEndPoint.Address);
+                NetworkStream currentClientStream = client.GetStream();
 
-                data = null;
+                //Add each client mapped to IP address
+                clients.Add(client, "" + remoteIpEndPoint.Address);
+                clientStreams.Add(client, currentClientStream);
 
-                // Get a stream object for reading and writing
-                currentClientStream = client.GetStream();
+                currentClient = client;
 
-                /*int i;
 
-                // Loop to receive all the data sent by the client.
-                while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                //Verify against lobby service
+                if (clients.Count == 1)
                 {
-                    // Translate data bytes to a ASCII string.
-                    data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                    Console.WriteLine("Received: {0} from {1}", data, IPAddress.Parse(((IPEndPoint) client.Client.RemoteEndPoint).Address.ToString()));
-
-                    // Process the data sent by the client.
-                    //data = data.ToUpper();
-
-                    
-                    // Send a message/response to the client
-                    data = CommunicationAPI.sendMessageToClient("testJSON", new Turn(TurnType.Standard));
-                    sendToClient(stream, data);
-                    //data = "Your message was received, Client: " + IPAddress.Parse(((IPEndPoint) client.Client.RemoteEndPoint).Address.ToString());
-
-                } */
-
-                //data = CommunicationAPI.sendMessageToClient("testJSON", new Turn(TurnType.Standard));
-                //sendToClient(data);
-
-
-
-                // Shutdown and end connection
-                client.Close();
+                    haveAllConnections = true;
+                }
             }
+
+            Console.WriteLine("All clients successfully connected.");
+
+            //Main game loop
+            while (true)
+            {
+
+                Character c = JsonConvert.DeserializeObject<Character>(getFromClient());
+                GameController.getInstance().chosenCharacter(c);
+                break;
+
+            }
+
         }
         catch (SocketException e)
         {
@@ -116,20 +107,56 @@ class MyTcpListener
         }
         finally
         {
-            // Stop listening for new clients.
-            server.Stop();
-        }
+            //Close all connections
+            var flattenListOfClients = clients.Keys.ToList();
+            flattenListOfClients.ForEach(c => c.Close());
 
-        Console.WriteLine("\nHit enter to continue...");
-        Console.Read();
+            //Stop listening for new clients.
+            server.Stop();
+
+
+            Console.WriteLine("\nHit enter to continue...");
+            Console.Read();
+        }
     }
 
     public static void sendToClient(string data)
     {
         byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
-        currentClientStream.Write(msg, 0, msg.Length);
+        clientStreams.TryGetValue(currentClient, out NetworkStream streamToSendto);
+        streamToSendto.Write(msg, 0, msg.Length);
         Console.WriteLine("Sent to Client: {0}", data);
     }
 
+    public static string getFromClient()
+    {
+        clientStreams.TryGetValue(currentClient, out NetworkStream streamToReadFrom);
+
+        int i;
+        string data = null;
+        // Loop to receive all the data sent by the client.
+        while (streamToReadFrom.DataAvailable == false)
+        {
+
+        }
+
+        //i = number of bytes read
+        do
+        {
+            i = streamToReadFrom.Read(bytes, 0, bytes.Length);
+            // Translate data bytes to a ASCII string.
+            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+
+
+        } while (streamToReadFrom.DataAvailable);
+
+        clients.TryGetValue(currentClient, out string fromClientatIP);
+        
+        Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+
+        return data;
+    }
+
+    
 }

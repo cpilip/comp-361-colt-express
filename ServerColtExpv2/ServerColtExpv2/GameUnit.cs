@@ -1,3 +1,4 @@
+
 using Newtonsoft.Json;
 using PositionSpace;
 
@@ -5,10 +6,15 @@ namespace GameUnitSpace
 {
     abstract class GameUnit
     {
-        [JsonProperty]
+        
+        //[JsonProperty]
         private Position aPosition;
         public void setPosition(Position pPosition){
-            this.aPosition.removeUnit(this);
+            if (this.aPosition != null)
+            {
+                this.aPosition.removeUnit(this);
+            }
+
             aPosition = pPosition; 
             this.aPosition.addUnit(this);
         }

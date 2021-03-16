@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using GameUnitSpace;
 using Newtonsoft.Json;
 
@@ -15,11 +15,15 @@ namespace PositionSpace
     {
         [JsonProperty]
         private readonly Floor floor; // **Did not implement "setFloor"; Floor passed in constructor
-        [JsonProperty]
+        //[JsonProperty]
         private readonly TrainCar trainCar;
-        [JsonProperty]
+        //[JsonProperty]
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
-        
+
+        public Position()
+        {
+
+        }
         public Position(TrainCar trainCar, Floor floor)
         {
             this.trainCar = trainCar;
@@ -78,6 +82,22 @@ namespace PositionSpace
         public Boolean hasMarshal(Marshal m)
         {
             return units.Contains(m);
+        }
+
+        public List<GameItem> getUnits_items()
+        {
+            List<GameItem> l = new List<GameItem>();
+            this.units.OfType<GameItem>().ToList()
+                .ForEach(i => l.Add(i));
+            return l;
+        }
+
+        public List<Character> getUnits_players()
+        {
+            List<Character> l = new List<Character>();
+            this.units.OfType<Player>().ToList()
+                .ForEach(i => l.Add(i.getBandit()));
+            return l;
         }
     }
 }
