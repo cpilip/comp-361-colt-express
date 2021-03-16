@@ -58,6 +58,33 @@ public class GameUIManager : MonoBehaviour
     public GameObject createCharacterObject(Character c)
     {
         GameObject newPlayer = Instantiate(characterPrefab);
+
+        switch (c)
+        {
+            case Character.Tuco:
+                newPlayer.GetComponent<Image>().sprite = Tuco;
+                break;
+            case Character.Django:
+                newPlayer.GetComponent<Image>().sprite = Django;
+                break;
+            case Character.Ghost:
+                newPlayer.GetComponent<Image>().sprite = Ghost;
+                break;
+            case Character.Doc:
+                newPlayer.GetComponent<Image>().sprite = Doc;
+                break;
+            case Character.Cheyenne:
+                newPlayer.GetComponent<Image>().sprite = Che;
+                break;
+            case Character.Belle:
+                newPlayer.GetComponent<Image>().sprite = Belle;
+                break;
+            default:
+                newPlayer.GetComponent<Image>().sprite = Belle;
+                break;
+
+        }
+
         newPlayer.GetComponent<getMainCharacter>().setSprite(c); 
         characters.Add(c, newPlayer);
         return newPlayer;
