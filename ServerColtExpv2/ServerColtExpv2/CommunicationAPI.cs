@@ -68,7 +68,7 @@ public class CommunicationAPI
                     r_players = n.getRoof().getUnits_players(),
                 };
                 i++;
-                MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
             return;
         } else if (action == "updatePlayers")
@@ -85,7 +85,7 @@ public class CommunicationAPI
                     d_ActionCards = n.getDiscard_actionCards(),
                     d_BulletCards = n.getDiscard_bulletCards()
                 };
-                MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
                 
             }
             return;
@@ -104,10 +104,7 @@ public class CommunicationAPI
                 currentPlayerIndex = i,
                 cardsToAdd = l 
             };
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
-
-            
-            return;
+           
         } else if (action == "updateGameStatus")
         {
             var definition = new
@@ -116,8 +113,6 @@ public class CommunicationAPI
                 statusIs = (bool)args[0],
             };
 
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
-            return;
         }
         else if (action == "updateCurrentRound")
         {
@@ -134,8 +129,6 @@ public class CommunicationAPI
                 turns = l
             };
 
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
-            return;
         }
         else if (action == "updateCurrentTurn")
         {
@@ -147,8 +140,6 @@ public class CommunicationAPI
                 currentTurn = i
             };
 
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
-            return;
         } else if (action == "updateWaitingForInput")
             {
                 Character c = (Character)args[0];
@@ -159,8 +150,6 @@ public class CommunicationAPI
                 currentPlayer = c
             };
 
-            MyTcpListener.sendToClient(JsonConvert.SerializeObject(definition, settings));
-            return;
         } 
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
@@ -169,11 +158,11 @@ public class CommunicationAPI
 
         if (cli == null) {
             //Serialize parameters as a array with first element being the action
-            MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(objectsToSerialize, settings));
+            MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
 
         } else {
             //Serialize parameters as a array with first element being the action
-            MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(objectsToSerialize, settings));
+            MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
         }
     }
 
