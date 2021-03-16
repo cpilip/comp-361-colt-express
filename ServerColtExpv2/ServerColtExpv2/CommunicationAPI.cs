@@ -69,7 +69,17 @@ public class CommunicationAPI
                     r_players = n.getRoof().getUnits_players(),
                 };
                 i++;
-                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+                if (cli == null)
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+                }
+                else
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+                }
             }
         } else if (action == "updatePlayers")
         {
@@ -85,8 +95,17 @@ public class CommunicationAPI
                     d_ActionCards = n.getDiscard_actionCards(),
                     d_BulletCards = n.getDiscard_bulletCards()
                 };
-                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
-                
+                if (cli == null)
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+                }
+                else
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+                }
             }
         }
         else if (action == "updatePlayerHand")
