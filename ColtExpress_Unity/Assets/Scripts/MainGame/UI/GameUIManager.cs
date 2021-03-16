@@ -85,7 +85,6 @@ public class GameUIManager : MonoBehaviour
 
         }
 
-        newPlayer.GetComponent<getMainCharacter>().setSprite(c); 
         characters.Add(c, newPlayer);
         return newPlayer;
     }
