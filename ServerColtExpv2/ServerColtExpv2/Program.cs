@@ -92,20 +92,30 @@ class MyTcpListener
 
             Console.WriteLine("All clients successfully connected.");
 
-            //Main game loop
-            while (true)
-            {
-                GameController aController = GameController.getInstance();
-                
-                Character c = JsonConvert.DeserializeObject<Character>(getFromClient());
+            //MAIN GAME STARTS HERE
+                           
+            // get permanent instance of GameController
+            GameController aController = GameController.getInstance();
+            
+            // Listen to all players for their character selection
+            foreach (TcpClient cli in clientStreams.Keys) { 
+                Character c = JsonConvert.DeserializeObject<Character>(getFromClient(cli));
                 aController.chosenCharacter(c);
 
                 Player p = aController.getPlayerByCharacter(c);
-                players.Add(Player, )
-
-                break;
-
+                players.Add(p, cli);
             }
+
+            while (!aController.getEndOfGame()) {
+                // Wait for first move of first player
+                string res = getFromClient(players[aController.getCurrentPlayer()]);
+                // Need to parse res and call the right GameController method.
+            }
+
+                        
+
+            break;
+
 
         }
         catch (SocketException e)
@@ -127,9 +137,9 @@ class MyTcpListener
         }
     }
 
-
-
-
+    public static TcpClient getClientByPlayer(Player p) { 
+        return players[p];
+    }
 
     public static void sendToClient(string data)
     {
@@ -140,6 +150,51 @@ class MyTcpListener
         Console.WriteLine("Sent to Client: {0}", data);
     }
 
+    // Send a message to a specific client
+    public static void sendToClient(TcpClient cli, string data)
+    {
+        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+
+        clientStreams.TryGetValue(cli, out NetworkStream streamToSendto);
+        streamToSendto.Write(msg, 0, msg.Length);
+        Console.WriteLine("Sent to Client: {0}", data);
+    }
+
+    // Send a message to all clients
+    public static void sendToAllClients(string data) {
+        foreach (TcpClient cli in clientStreams.Keys) {
+            sendToClient(cli, data);
+        }
+    }
+
+    public static string getFromClient(TcpClient toReadFrom)
+    {
+        clientStreams.TryGetValue(toReadFrom, out NetworkStream streamToReadFrom);
+
+        int i;
+        string data = null;
+        // Loop to receive all the data sent by the client.
+        while (streamToReadFrom.DataAvailable == false)
+        {
+
+        }
+
+        //i = number of bytes read
+        do
+        {
+            i = streamToReadFrom.Read(bytes, 0, bytes.Length);
+            // Translate data bytes to a ASCII string.
+            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+
+
+        } while (streamToReadFrom.DataAvailable);
+
+        clients.TryGetValue(currentClient, out string fromClientatIP);
+        
+        Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+
+        return data;
+    }
     public static string getFromClient()
     {
         clientStreams.TryGetValue(currentClient, out NetworkStream streamToReadFrom);

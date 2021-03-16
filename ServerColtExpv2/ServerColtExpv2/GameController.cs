@@ -60,8 +60,6 @@ class GameController
         Player tmp = new Player(aChar);
         this.players.Add(tmp);
 
-
-
         Console.WriteLine("A player picked a character.");
         //if all players are here 
         if (players.Count == totalPlayer)
@@ -83,37 +81,41 @@ class GameController
             }
             //Send all Player objects
 
-            CommunicationAPI.sendMessageToClient("updatePlayers", players);
+            CommunicationAPI.sendMessageToClient(null, "updatePlayers", players);
 
             initializeLoot();
 
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateTrain", myTrain);
+            CommunicationAPI.sendMessageToClient(null, "updateTrain", myTrain);
 
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateGameStatus", true);
+            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
 
             this.currentRound = rounds[0];
             //TO CHECK, do we send all rounds ?
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateCurrentRound", currentRound);
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", currentRound);
 
             this.currentTurn = currentRound.getTurns()[0];
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
             players[0].setWaitingForInput(true);
 
             this.currentPlayer = players[0];
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
+            //Send the current player as index and value for waiting for input for that index/player
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.players.IndexOf(currentPlayer), currentPlayer.getWaitingForInput());
 
             Console.WriteLine("Finished initialization.");
-            //Send the current player as index and value for waiting for input for that index/player
         }
+    }
+
+    public Player getCurrentPlayer(){
+        return this.currentPlayer;
     }
 
     public Player getPlayerByCharacter(Character aChar){
@@ -154,7 +156,7 @@ class GameController
 
 
         //TO SPECIFIC PLAYER 
-        CommunicationAPI.sendMessageToClient("addCards", c, c1, c2);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", c, c1, c2);
         
         endOfTurn();
     }
@@ -168,7 +170,7 @@ class GameController
         {
             this.aMarshal.setPosition(p);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("moveGameUnit", this.aMarshal, p);
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", this.aMarshal, p);
 
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
@@ -178,7 +180,7 @@ class GameController
                 p.getTrainCar().moveRoofCar(aPlayer);
                 
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient("moveGameUnit", aPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof());
 
             }
         }
@@ -187,7 +189,7 @@ class GameController
         {
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p);
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
@@ -196,7 +198,7 @@ class GameController
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
             }
         }
     }
@@ -207,17 +209,17 @@ class GameController
         //drop the loot at victim position, sends victim to destination 
         loot.setPosition(victim.getPosition());
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("moveGameItem", loot, victim.getPosition()); 
+        CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition()); 
 
         victim.setPosition(dest);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest); 
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest); 
 
 
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("decrement", loot); 
+        CommunicationAPI.sendMessageToClient(null, "decrement", loot); 
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
@@ -226,7 +228,7 @@ class GameController
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("moveGameUnit", victim, dest.getTrainCar().getRoof()); 
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof()); 
         }
     }
 
@@ -237,7 +239,7 @@ class GameController
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("decrement", this.currentPlayer.bullets);
+        CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.bullets);
     }
 
     public void chosenLoot(GameItem loot)
@@ -246,25 +248,28 @@ class GameController
         loot.setPosition(null);
         currentPlayer.addToPossessions(loot);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("increment", loot);
+        CommunicationAPI.sendMessageToClient(null, "increment", loot);
     }
 
     public void readyForNextMove()
     {
+        ActionCard top = this.currentRound.seeTopOfPlayedCards();
+        this.currentPlayer = top.belongsTo();
+        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
+
         this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
 
-        foreach (Player p in this.players)
-        {
-            if (p.getWaitingForInput())
-                waiting = false;
+        // foreach (Player p in this.players)
+        // {
+        //     if (p.getWaitingForInput())
+        //         waiting = false;
             
-        }
+        // }
 
         if (waiting)
         {
             // Get the top of the played cards from the schemin phase
-            ActionCard top = this.currentRound.seeTopOfPlayedCards();
 
             switch (top.getKind())
             {
@@ -277,7 +282,7 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO SPECIFIC PLAYERS
-                            CommunicationAPI.sendMessageToClient("updateMovePositions", moves);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves);
                         }
                         else
                         {
@@ -291,20 +296,20 @@ class GameController
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
                         }
                         else
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
+                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
 
                             if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
                             {
                                 this.currentPlayer.addToDiscardPile(new BulletCard());
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                                 //TO ALL PLAYERS
-                                CommunicationAPI.sendMessageToClient("moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
                             }
                         }
                         break;
@@ -321,7 +326,7 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO SPECIFIC PLAYER
-                            CommunicationAPI.sendMessageToClient("updatePossTarget", possTargets);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", possTargets);
                         }
                         break;
                     }
@@ -332,7 +337,7 @@ class GameController
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
                         //TO SPECIFIC PLAYER
-                        CommunicationAPI.sendMessageToClient("updateLootAtLocation", atLocation);
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", atLocation);
                         break;
                     }
                 case ActionKind.Marshal:
@@ -347,7 +352,7 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient("updateMovePositions", possPosition);
+                            CommunicationAPI.sendMessageToClient(null, "updateMovePositions", possPosition);
 
                         }
                         break;
@@ -359,7 +364,7 @@ class GameController
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
                         //TO SPECIFIC PLAYER
-                        CommunicationAPI.sendMessageToClient("updatePossTarget", atLocation);
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", atLocation);
                         break;
                     }
             }
@@ -379,7 +384,7 @@ class GameController
         if (this.currentPlayer.isGetsAnotherAction())
         {
             //TO SPECIFIC PLAYER
-            CommunicationAPI.sendMessageToClient("updateHasAnotherAction", currentPlayerIndex, true);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
             this.currentPlayer.setGetsAnotherAction(false);
         }
 
@@ -387,7 +392,7 @@ class GameController
         {
             this.currentPlayer.setWaitingForInput(false);
             //TO SPECIFIC PLAYER 
-            CommunicationAPI.sendMessageToClient("updateWaitingForInput", currentPlayerIndex, false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayerIndex, false);
 
             //if this is not the last turn of the round
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
@@ -400,7 +405,7 @@ class GameController
                     this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
                 }
                 //otherwise, it is the next player in the list 
                 else
@@ -408,7 +413,7 @@ class GameController
                     this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient("updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
                 }
 
                 //if the turn is Speeding up, the next player has another action 
@@ -425,10 +430,10 @@ class GameController
                 {
                     p.moveCardsToDiscard();
                     //NEED MESSAGE HERE
-                    p.setWaitingForInput(true);
+                    // p.setWaitingForInput(true);
                     this.aGameStatus = GameStatus.Stealin;
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient("updateGameStatus", false);
+                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", false);
                 }
             }
         }
@@ -439,7 +444,7 @@ class GameController
         Card c = this.currentRound.getTopOfPlayedCards();
         this.currentPlayer.addToDiscardPile(c);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("removeTopCard", c);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard", c);
 
         //if all cards in the pile have been played 
         if (this.currentRound.getPlayedCards().Count == 0)
@@ -456,21 +461,21 @@ class GameController
                 this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                 this.currentTurn = this.currentRound.getTurns()[0];
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient("updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
                 //setting the next player and game status of the game 
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
                 this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient("updateCurrentPlayer", this.currentPlayerIndex);
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
 
                 this.currentPlayer.setWaitingForInput(true);
                 //TO SPECIFIC PLAYER
-                CommunicationAPI.sendMessageToClient("updateWaitingForInput", this.currentPlayerIndex, true);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayerIndex, true);
                 
                 this.aGameStatus = GameStatus.Schemin;
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient("updateGameStatus", true);
+                CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
 
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)
@@ -489,7 +494,7 @@ class GameController
                     }
                     //NEED TO SEE WITH CRISTINA
                     //TO SPECIFIC PLAYER
-                    CommunicationAPI.sendMessageToClient("updatePlayerHand", currentPlayerIndex, cardsToAdd);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
                 }
             }
         }
@@ -516,7 +521,7 @@ class GameController
         myList.Sort((pair1,pair2) => pair1.Value.CompareTo(pair2.Value));
 
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient("finalGameScore", myList);
+        CommunicationAPI.sendMessageToClient(null, "finalGameScore", myList);
         
         this.endOfGame = true;
     }
@@ -683,6 +688,10 @@ class GameController
 
         }
         return possPos;
+    }
+
+    public Boolean getEndOfGame() {
+        return this.endOfGame;
     }
 
     private List<Player> getPossibleShootTarget(Player p)
