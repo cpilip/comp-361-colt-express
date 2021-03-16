@@ -11,12 +11,35 @@ using PositionSpace;
 using RoundSpace;
 using System.Collections.Generic;
 
+            // Enter the listening loop.
+            // Loop here waiting for input from Lobby Service
+            // Obtain all the IPs from client directly !!!
+            // building Dictionary of IP's and stream
+            // Here is where each IP gets a TCP client
+
+            // while loop to wait for all the player to call chosenCharacters 
+            // When last player chose his character, initialization of the game state 
+
+            // Main while loop 
+
+                // for each player, wait for client response to play his turn (either playCard() or drawCards())
+                // endOfTurn() is called and current player is changed to the next one. 
+                // repeat for all turns of the round, move to Stealin phase 
+
+                // call readyForNextMove() 
+                // for each card is the playedCard pile, call corresponding client for neccessary information
+                // send game state to all clients, endOfCard() is called
+                // repeat until there are no cards in the pile
+                // if it is the last round, calculateGameScore() and exit the loop. 
+            
+            // End of Game, send all clients to GameScore scene 
+
 class MyTcpListener
 {
     public static TcpClient currentClient;
     public static Dictionary<TcpClient, string> clients = new Dictionary<TcpClient, string>();
     public static Dictionary<TcpClient, NetworkStream> clientStreams = new Dictionary<TcpClient, NetworkStream>();
-
+    public static Dictionary<Player, TcpClient> players = new Dictionary<Player, TcpClient>();
     public static Byte[] bytes = new Byte[256];
 
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
@@ -42,35 +65,14 @@ class MyTcpListener
             // Enter the listening loop for all clients to connect
             Console.WriteLine("Waiting for connections... ");
 
+
             while (haveAllConnections == false)
-            // Enter the listening loop.
-            // Loop here waiting for input from Lobby Service
-            // Obtain all the IPs from client directly !!!
-            // building Dictionary of IP's and stream
-            // Here is where each IP gets a TCP client
-
-            // while loop to wait for all the player to call chosenCharacters 
-            // When last player chose his character, initialization of the game state 
-
-            // Main while loop 
-
-                // for each player, wait for client response to play his turn (either playCard() or drawCards())
-                // endOfTurn() is called and current player is changed to the next one. 
-                // repeat for all turns of the round, move to Stealin phase 
-
-                // call readyForNextMove() 
-                // for each card is the playedCard pile, call corresponding client for neccessary information
-                // send game state to all clients, endOfCard() is called
-                // repeat until there are no cards in the pile
-                // if it is the last round, calculateGameScore() and exit the loop. 
-            
-            // End of Game, send all clients to GameScore scene 
-
 
             while (true)
             {
                 //Open a stream for each client
                 TcpClient client = server.AcceptTcpClient();
+
                 IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
                 NetworkStream currentClientStream = client.GetStream();
 
@@ -93,9 +95,14 @@ class MyTcpListener
             //Main game loop
             while (true)
             {
-
+                GameController aController = GameController.getInstance();
+                
                 Character c = JsonConvert.DeserializeObject<Character>(getFromClient());
-                GameController.getInstance().chosenCharacter(c);
+                aController.chosenCharacter(c);
+
+                Player p = aController.getPlayerByCharacter(c);
+                players.Add(Player, )
+
                 break;
 
             }
@@ -119,6 +126,10 @@ class MyTcpListener
             Console.Read();
         }
     }
+
+
+
+
 
     public static void sendToClient(string data)
     {

@@ -57,7 +57,10 @@ class GameController
     {
 
         //adding a new player to the list of players 
-        this.players.Add(new Player(aChar));
+        Player tmp = new Player(aChar);
+        this.players.Add(tmp);
+
+
 
         Console.WriteLine("A player picked a character.");
         //if all players are here 
@@ -113,6 +116,14 @@ class GameController
         }
     }
 
+    public Player getPlayerByCharacter(Character aChar){
+        foreach (Player p in players){
+            if (p.getBandit().Equals(aChar)){
+                return p;
+            }
+        }
+        return null;
+    }
     public void playActionCard(ActionCard c)
     {
         

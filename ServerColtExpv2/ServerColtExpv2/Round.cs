@@ -86,13 +86,19 @@ namespace RoundSpace {
             return this.playedCards.Peek();
         }
 
-
         public void intializeTurn(int nbOfPlayer){
-            
+
+            this.turns.Add(new Turn (TurnType.Standard));
+            this.turns.Add(new Turn (TurnType.Tunnel));
+            this.turns.Add(new Turn (TurnType.SpeedingUp));
+            this.turns.Add(new Turn (TurnType.Switching));
+
+            /*
             Random rnd = new Random ();
             int rand = rnd.Next(0,7);
 
             //if there are 5-6 players 
+
             if (nbOfPlayer>4){
                 
                 switch (rand)
@@ -200,10 +206,9 @@ namespace RoundSpace {
                     }
                 }
 
-            }
+            }*/
 
         }
-
 
         public Boolean getIsLastRound(){
             return this.isLastRound;
