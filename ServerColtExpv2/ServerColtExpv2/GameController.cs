@@ -85,7 +85,7 @@ class GameController
             initializeLoot();
 
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient("updateTrai", myTrain);
+            CommunicationAPI.sendMessageToClient("updateTrain", myTrain);
 
             intializeRounds();
 
