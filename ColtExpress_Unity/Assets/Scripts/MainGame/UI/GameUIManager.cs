@@ -38,6 +38,16 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        numPlayers = 4;
+        for (int i = 0; i < 10; i++)
+        {
+            trainCarPositions.Add(i, trainLocation.transform.GetChild(i).gameObject);
+            Debug.Log(i + " " +  trainLocation.transform.GetChild(i).gameObject.name);
+        }
+    }
+
     public GameObject getCharacterObject(Character c)
     {
         GameObject requestedPlayer = null;
@@ -50,7 +60,6 @@ public class GameUIManager : MonoBehaviour
         GameObject newPlayer = Instantiate(characterPrefab);
         newPlayer.GetComponent<getMainCharacter>().setSprite(c); 
         characters.Add(c, newPlayer);
-        numPlayers++;
         return newPlayer;
     }
     public GameObject getPlayerProfileObject(Character c)
@@ -104,27 +113,6 @@ public class GameUIManager : MonoBehaviour
         GameObject trainCarPosition = null;
         trainCarPositions.TryGetValue(index, out trainCarPosition);
         return trainCarPosition;
-    }
-
-    public void createTrainCarObject(int index)
-    {
-        GameObject newTrainCar;
-
-        //Make the roof
-        newTrainCar = Instantiate(trainCarPrefab);
-        newTrainCar.transform.SetParent(trainLocation.transform);
-        newTrainCar.transform.SetSiblingIndex(index);
-        trainCarPositions.Add(index, newTrainCar);
-
-        int carIndex = (index == 0) ? index + numPlayers: index + numPlayers;
-
-        //Make the car
-        newTrainCar = Instantiate(trainCarPrefab);
-        newTrainCar.transform.SetParent(trainLocation.transform);
-        newTrainCar.transform.SetSiblingIndex(carIndex);
-        trainCarPositions.Add(carIndex, newTrainCar);
-
-        //return newTrainCar;
     }
 
     void Awake()

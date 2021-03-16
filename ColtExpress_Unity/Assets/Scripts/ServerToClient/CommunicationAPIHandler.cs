@@ -42,17 +42,19 @@ public class CommunicationAPIHandler : MonoBehaviour
     //Get JSON from server and figure out what event to trigger
     public static void getMessageFromServer(string data)
     {
-        
+
         //action, all the objects
-        Debug.Log("e");
+        Debug.Log(data);
         JObject o = JObject.Parse(data);
         string eventName = o.SelectToken("eventName").ToString();
 
-        
+
+        Debug.Log(eventName);
         EventManager.TriggerEvent(eventName, data);
 
 
     }
+
 }
 
 

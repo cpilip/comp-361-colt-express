@@ -27,30 +27,36 @@ public class getMainCharacter : MonoBehaviour
         {
             case 1:
                 player.sprite = Tuco;
+                NamedClient.c = Character.Tuco;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco);
         	    Debug.Log("Tuco");
                 break;
             case 2:
                 player.sprite = Django;
+                NamedClient.c = Character.Django;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django);
                 Debug.Log("Tuco");
                 break;
             case 3:
                 player.sprite = Ghost;
+                NamedClient.c = Character.Ghost;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost);
                 Debug.Log("Ghost");
                 break;
             case 4:
                 player.sprite = Doc;
+                NamedClient.c = Character.Doc;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Doc);
                 Debug.Log("Doc");
                 break;
             case 5:
+                NamedClient.c = Character.Cheyenne;
                 player.sprite = Che;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne);
                 Debug.Log("Che");
                 break;
             case 6:
+                NamedClient.c = Character.Belle;
                 player.sprite = Belle;
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle);
                 Debug.Log("Bella");

@@ -22,12 +22,19 @@ public class Phase1Action : MonoBehaviour
     private int displayedSubdeckNum;
     private GameObject playedCardsZone;
 
+    private List<GameObject> cards = new List<GameObject>();
+
     void Start()
     {
         displayedSubdeckNum = 1;
         PlayerPrefs.SetInt("clickTimes", 0);
         lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
         playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
+
+        for (int i = 0; i < 6; i++)
+        {
+            cards.Add(deck.transform.GetChild(i).gameObject);
+        }
     }
 
     // Draw and add three cards to the deck
@@ -135,34 +142,17 @@ public class Phase1Action : MonoBehaviour
                     Debug.Log("Card was played");
 
                     CardSpace.ActionCard cardToSend = null;
+                    int i = cards.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
+                    Debug.Log(i);
 
-                    switch(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject.name)
+
+                    var definition = new
                     {
-                        case ("move1"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.Move);
-                            break;
-                        case ("punch"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.Punch);
-                            break;
-                        case ("Marshal"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.Marshal);
-                            break;
-                        case ("changeFloor1"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.ChangeFloor);
-                            break;
-                        case ("shoot1"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.Shoot);
-                            break;
-                        case ("rob1"):
-                            cardToSend = new CardSpace.ActionCard(CardSpace.ActionKind.Rob);
-                            break;
-                        default:
-                            break;
-                    }
+                        eventName = "CardMessage",
+                        index = i
+                    };
 
-                    //Debug.Log(cardToSend.getKind());
-
-                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(cardToSend);
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 if (timedOut)

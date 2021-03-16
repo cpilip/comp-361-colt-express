@@ -84,11 +84,11 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
-        public List<GameItem> getUnits_items()
+        public List<ItemType> getUnits_items()
         {
-            List<GameItem> l = new List<GameItem>();
+            List<ItemType> l = new List<ItemType>();
             this.units.OfType<GameItem>().ToList()
-                .ForEach(i => l.Add(i));
+                .ForEach(i => l.Add(i.getType()));
             return l;
         }
 

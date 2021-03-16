@@ -3,13 +3,19 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
+using GameUnitSpace;
 
 public class NamedClient : MonoBehaviour
 {
+    public static Character c;
+
     private static TcpClient thisClient;
     private static NetworkStream stream;
     public string server;
     public int port;
+
+    private static string buffer = "";
 
     void Start()
     {
@@ -88,22 +94,51 @@ public class NamedClient : MonoBehaviour
         Byte[] bytes = new Byte[256];
         // Loop to receive all the data sent by the client.
 
-       // Debug.Log("Getting from server.");
+        // Debug.Log("Getting from server.");
 
-        //i = number of bytes read
-        while (stream.DataAvailable) 
+        
+        while (stream.DataAvailable)
         {
             i = stream.Read(bytes, 0, bytes.Length);
             // Translate data bytes to a ASCII string.
-            data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+            string message = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+            //Debug.Log(buffer);
 
-            CommunicationAPIHandler.getMessageFromServer(data);
-
+            buffer += message;
 
             Debug.Log("Received.");
         }
 
-       // Debug.Log("No message.");
+        while (!buffer.Equals("")) 
+        {
+            Regex splitBuffer = new Regex("\\{\"eventName\".*?\\{\"eventName\"(.*)", RegexOptions.IgnoreCase);
+
+            if (splitBuffer.Match(buffer).Groups[0].Success)
+            {
+                string restOfBuffer = "{" + "\"eventName\"" + splitBuffer.Match(buffer).Groups[1].Value.ToString();
+
+                //Debug.Log("REST" + restOfBuffer);
+
+                int index = buffer.IndexOf(restOfBuffer);
+                data = (index < 0)
+                    ? buffer
+                    : buffer.Remove(index, restOfBuffer.Length);
+                buffer = restOfBuffer;
+
+                //Debug.Log("CLEANED" + data);
+            }
+            else
+            {
+                data = buffer;
+                buffer = "";
+            }
+            Debug.Log("DEBUG: " + buffer);
+            CommunicationAPIHandler.getMessageFromServer(data);
+        }
+        
+
+
+        // Debug.Log("No message.");
 
         return data;
 

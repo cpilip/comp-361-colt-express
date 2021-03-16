@@ -60,15 +60,30 @@ namespace ClientCommunicationAPI
 
             //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
 
-
-            //Serialize parameters as list
-            string data = JsonConvert.SerializeObject((Character)args[0], settings);
+            string data = JsonConvert.SerializeObject(args[0], settings);
 
             //Send to server
 
             //Debug.Log(data);
             EventManager.EventManagerInstance.GetComponent<NamedClient>().SendMessageToServer(data);
         }
+        public static void sendMessageToServer(Character c)
+        {
+            //List<System.Object> objectsToSerialize = new List<System.Object>();
+            //objectsToSerialize.AddRange(args);
+
+            //var testType = args[0].GetType().MakeGenericType();
+
+            //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
+
+            string data = JsonConvert.SerializeObject(c, settings);
+
+            //Send to server
+
+            //Debug.Log(data);
+            EventManager.EventManagerInstance.GetComponent<NamedClient>().SendMessageToServer(data);
+        }
+
     }
 
 
