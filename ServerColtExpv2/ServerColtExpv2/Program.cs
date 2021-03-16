@@ -10,29 +10,33 @@ using Newtonsoft.Json;
 using PositionSpace;
 using RoundSpace;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
-            // Enter the listening loop.
-            // Loop here waiting for input from Lobby Service
-            // Obtain all the IPs from client directly !!!
-            // building Dictionary of IP's and stream
-            // Here is where each IP gets a TCP client
 
-            // while loop to wait for all the player to call chosenCharacters 
-            // When last player chose his character, initialization of the game state 
+// Enter the listening loop.
+// Loop here waiting for input from Lobby Service
+// Obtain all the IPs from client directly !!!
+// building Dictionary of IP's and stream
+// Here is where each IP gets a TCP client
 
-            // Main while loop 
+// while loop to wait for all the player to call chosenCharacters 
+// When last player chose his character, initialization of the game state 
 
-                // for each player, wait for client response to play his turn (either playCard() or drawCards())
-                // endOfTurn() is called and current player is changed to the next one. 
-                // repeat for all turns of the round, move to Stealin phase 
+// Main while loop 
 
-                // call readyForNextMove() 
-                // for each card is the playedCard pile, call corresponding client for neccessary information
-                // send game state to all clients, endOfCard() is called
-                // repeat until there are no cards in the pile
-                // if it is the last round, calculateGameScore() and exit the loop. 
-            
-            // End of Game, send all clients to GameScore scene 
+// for each player, wait for client response to play his turn (either playCard() or drawCards())
+// endOfTurn() is called and current player is changed to the next one. 
+// repeat for all turns of the round, move to Stealin phase 
+
+// call readyForNextMove() 
+// for each card is the playedCard pile, call corresponding client for neccessary information
+// send game state to all clients, endOfCard() is called
+// repeat until there are no cards in the pile
+// if it is the last round, calculateGameScore() and exit the loop. 
+
+// End of Game, send all clients to GameScore scene 
 
 class MyTcpListener
 {
@@ -68,37 +72,38 @@ class MyTcpListener
 
             while (haveAllConnections == false)
 
-            while (true)
-            {
-                //Open a stream for each client
-                TcpClient client = server.AcceptTcpClient();
-
-                IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                NetworkStream currentClientStream = client.GetStream();
-
-                //Add each client mapped to IP address
-                clients.Add(client, "" + remoteIpEndPoint.Address);
-                clientStreams.Add(client, currentClientStream);
-
-                currentClient = client;
-
-
-                //Verify against lobby service
-                if (clients.Count == 1)
+                while (true)
                 {
-                    haveAllConnections = true;
+                    //Open a stream for each client
+                    TcpClient client = server.AcceptTcpClient();
+
+                    IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
+                    NetworkStream currentClientStream = client.GetStream();
+
+                    //Add each client mapped to IP address
+                    clients.Add(client, "" + remoteIpEndPoint.Address);
+                    clientStreams.Add(client, currentClientStream);
+
+                    currentClient = client;
+
+
+                    //Verify against lobby service
+                    if (clients.Count == 1)
+                    {
+                        haveAllConnections = true;
+                    }
                 }
-            }
 
             Console.WriteLine("All clients successfully connected.");
 
             //MAIN GAME STARTS HERE
-                           
+
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
-            
+
             // Listen to all players for their character selection
-            foreach (TcpClient cli in clientStreams.Keys) { 
+            foreach (TcpClient cli in clientStreams.Keys)
+            {
                 Character c = JsonConvert.DeserializeObject<Character>(getFromClient(cli));
                 aController.chosenCharacter(c);
 
@@ -106,16 +111,69 @@ class MyTcpListener
                 players.Add(p, cli);
             }
 
-            while (!aController.getEndOfGame()) {
+            while (!aController.getEndOfGame())
+            {
                 // Wait for first move of first player
                 string res = getFromClient(players[aController.getCurrentPlayer()]);
                 // Need to parse res and call the right GameController method.
+                JObject o = JObject.Parse(res);
+                string eventName = o.SelectToken("eventName").ToString();
+
+                if (eventName.Equals("RobMessage"))
+                {
+                    // Get item
+                    ItemType type = o.selectToken("item").ToObject<ItemType>();
+                    GameItem it = aController.getItemFromTypePosition(type);
+
+                    aController.chosenLoot(it);
+                }
+                else if (eventName.Equals("ShootMessage"))
+                {
+                    // Get player
+                    Character ch = o.selectToken("target").ToObject<Character>();
+                    Player pl = aController.getPlayerByCharacter(ch);
+
+                    aController.chosenShootTarget(pl);
+                }
+                else if (eventName.Equals("PunchMessage"))
+                {
+                    // Get character
+                    Character ch = o.selectToken("target").ToObject<Character>();
+                    Player pl = aController.getPlayerByCharacter(ch);
+
+                    // Get item
+                    ItemType type = o.selectToken("item").ToObject<ItemType>();
+                    GameItem it = aController.getItemfromTypePossession(type);
+
+                    // Get position
+                    int index = (int)o.selectToken("index").ToString();
+                    Boolean inside = o.selectToken("inside").ToObject<Boolean>();// ???????????
+                    Position pos = aController.getPositionByIndex(index, inside);
+
+                    aController.chosenPunchTarget(pl, it, pos);
+                }
+                else if (eventName.Equals("MoveMessage"))
+                {
+                    // Get position
+                    int index = (int)o.selectToken("index").ToString();
+                    Boolean inside = o.selectToken("inside").ToObject<Boolean>();// ???????????
+                    Position pos = aController.getPositionByIndex(index, inside);
+
+                    aController.chosenPosition(pos);
+                }
+                else if (eventName.Equals("CardMessage"))
+                {
+                    int index = (int)o.selectToken("index").ToString();
+                    ActionCard crd = aController.getCardByIndex(index);
+
+                    aController.playActionCard(crd);
+                }
+                else if (eventName.Equals("DrawMessage"))
+                {
+                    aController.drawCards();
+                }
+
             }
-
-                        
-
-            break;
-
 
         }
         catch (SocketException e)
@@ -137,7 +195,8 @@ class MyTcpListener
         }
     }
 
-    public static TcpClient getClientByPlayer(Player p) { 
+    public static TcpClient getClientByPlayer(Player p)
+    {
         return players[p];
     }
 
@@ -161,8 +220,10 @@ class MyTcpListener
     }
 
     // Send a message to all clients
-    public static void sendToAllClients(string data) {
-        foreach (TcpClient cli in clientStreams.Keys) {
+    public static void sendToAllClients(string data)
+    {
+        foreach (TcpClient cli in clientStreams.Keys)
+        {
             sendToClient(cli, data);
         }
     }
@@ -190,7 +251,7 @@ class MyTcpListener
         } while (streamToReadFrom.DataAvailable);
 
         clients.TryGetValue(currentClient, out string fromClientatIP);
-        
+
         Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
@@ -218,11 +279,11 @@ class MyTcpListener
         } while (streamToReadFrom.DataAvailable);
 
         clients.TryGetValue(currentClient, out string fromClientatIP);
-        
+
         Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
     }
 
-    
+
 }
