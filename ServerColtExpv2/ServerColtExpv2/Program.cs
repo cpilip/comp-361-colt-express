@@ -257,7 +257,9 @@ class MyTcpListener
 
         clients.TryGetValue(currentClient, out string fromClientatIP);
 
-        Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+        Console.WriteLine("Received {0} from {1}", data, "client");
+
+        // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
     }
@@ -285,7 +287,8 @@ class MyTcpListener
 
         clients.TryGetValue(currentClient, out string fromClientatIP);
 
-        Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+        Console.WriteLine("Received {0} from {1}", data, "client");
+        // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
     }
