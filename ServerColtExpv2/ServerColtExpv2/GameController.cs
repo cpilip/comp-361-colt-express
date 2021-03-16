@@ -63,8 +63,9 @@ class GameController
         this.players.Add(tmp);
 
         Console.WriteLine("A player picked a character.");
-        //if all players are here 
-        if (players.Count == totalPlayer)
+        
+        //if all players are here (HARD CODED, usually is players.Count == totalPlayers )
+        if (players.Count == 4)
         {
 
             initializeGameBoard();
@@ -81,8 +82,8 @@ class GameController
                     myTrain[myTrain.Count - 1].moveInsideCar(players[i]);
                 }
             }
-            //Send all Player objects
 
+            //Send all Player objects
             CommunicationAPI.sendMessageToClient(null, "updatePlayers", players);
 
             initializeLoot();
@@ -97,7 +98,7 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
 
             this.currentRound = rounds[0];
-            //TO CHECK, do we send all rounds ?
+            
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", currentRound);
 
@@ -134,7 +135,6 @@ class GameController
     }
     public void playActionCard(ActionCard c)
     {
-
         //adding the action card to the playedCard pile and removind it from player's hand
         this.currentRound.addToPlayedCards(c);
         this.currentPlayer.hand.Remove(c);
@@ -338,7 +338,7 @@ class GameController
                     }
                 case ActionKind.Rob:
                     {
-                        //TODO Do we need to check if there is olny one loot ?
+                        
                         List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
@@ -365,7 +365,7 @@ class GameController
                     }
                 case ActionKind.Punch:
                     {
-                        //TODO Do we need to check if there is olny one player ?
+                        
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
@@ -498,7 +498,7 @@ class GameController
                         cardsToAdd.Add(aCard);
                         p.discardPile.Remove(aCard);
                     }
-                    //NEED TO SEE WITH CRISTINA
+                    //TODO NEED TO SEE WITH CRISTINA
                     //TO SPECIFIC PLAYER
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
                    
