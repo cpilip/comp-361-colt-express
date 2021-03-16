@@ -6,7 +6,7 @@ namespace PositionSpace
 {
     class TrainCar
     {
-        [JsonProperty]
+        //[JsonProperty]
         private readonly bool isLocomotive;
         [JsonProperty]
         private Position inside;

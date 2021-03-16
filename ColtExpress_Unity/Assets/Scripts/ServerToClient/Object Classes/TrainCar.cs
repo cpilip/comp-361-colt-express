@@ -6,12 +6,12 @@ namespace PositionSpace
 {
     class TrainCar
     {
+        //[JsonProperty]
+        private bool isLocomotive { get; set; }
         [JsonProperty]
-        private readonly bool isLocomotive;
+        private Position inside { get; set; }
         [JsonProperty]
-        private Position inside;
-        [JsonProperty]
-        private Position roof;
+        private Position roof { get; set; }
 
         public TrainCar(bool isLocomotive)
         {

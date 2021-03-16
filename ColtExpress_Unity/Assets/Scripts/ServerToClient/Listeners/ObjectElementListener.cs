@@ -17,5 +17,7 @@ public class ObjectElementListener : UIEventListenable
         Debug.Log(deserializedProduct.Length);
 
         Debug.Log(deserializedProduct[0].GetType());
+
+
     }
 }

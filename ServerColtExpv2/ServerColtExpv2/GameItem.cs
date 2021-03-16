@@ -13,6 +13,7 @@ namespace GameUnitSpace
     
     class GameItem : GameUnit 
     {
+        
         [JsonProperty]
         private int aValue;
         [JsonProperty]

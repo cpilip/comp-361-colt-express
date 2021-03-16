@@ -37,6 +37,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
+        totalPlayer = 1;
     }
 
     public static GameController getInstance()
@@ -55,6 +56,7 @@ class GameController
         //adding a new player to the list of players 
         this.players.Add(new Player(aChar));
 
+        Console.WriteLine("A player picked a character.");
         //if all players are here 
         if (players.Count == totalPlayer)
         {
@@ -62,7 +64,7 @@ class GameController
             initializeGameBoard();
 
             //setting players' positions
-            for (int i = 0; i < myTrain.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 if (i%2 == 0)
                 {
@@ -74,20 +76,32 @@ class GameController
                 }
 
             }
+            //Send all Player objects
+
+            CommunicationAPI.sendMessageToClient("updatePlayers", players);
 
             initializeLoot();
+
+            CommunicationAPI.sendMessageToClient("updateTrain", myTrain);
+            //Send Train object
+            return;
 
             intializeRounds();
 
             this.aGameStatus = GameStatus.Schemin;
 
             this.currentRound = rounds[0];
+            //Send the current Round object
 
             this.currentTurn = currentRound.getTurns()[0];
+            //Send the current Turn as index
 
             players[0].setWaitingForInput(true);
 
             this.currentPlayer = players[0];
+
+            Console.WriteLine("Finished initialization.");
+            //Send the current player as index and value for waiting for input for that index/player
         }
     }
 
@@ -161,13 +175,6 @@ class GameController
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
 
-        //if the marshal is at position dest, bullet card in deck + sent to the roof 
-        if (dest.hasMarshal(aMarshal))
-        {
-            BulletCard b = new BulletCard();
-            victim.discardPile.Add(b);
-            dest.getTrainCar().moveRoofCar(victim);
-        }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
@@ -260,6 +267,7 @@ class GameController
     {
 
         this.currentPlayer.discardPile.Add(this.currentRound.topOfPlayedCards());
+        //Send message to remove top
 
         //if all cards in the pile have been played 
         if (this.currentRound.getPlayedCards().Count == 0)

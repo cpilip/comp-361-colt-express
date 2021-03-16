@@ -25,3 +25,4 @@ E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerCol
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.genruntimeconfig.cache
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.csproj.CopyComplete
+E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\bin\Debug\netcoreapp3.1\JsonSubTypes.dll

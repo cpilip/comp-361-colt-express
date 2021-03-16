@@ -91,4 +91,9 @@ public class Switch : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
     }
+    public void getCharacter()
+    {
+        SceneManager.LoadScene("ChooseCharacter");
+    }
+
 }
