@@ -40,7 +40,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
-        totalPlayer = 3;
+        totalPlayer = 4;
         this.endOfGame = false;
     }
 
@@ -67,7 +67,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
         
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 3)
+        if (players.Count == 4)
         {
 
             initializeGameBoard();
