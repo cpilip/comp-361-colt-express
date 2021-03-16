@@ -134,7 +134,7 @@ class GameController
                 }
                 //TODO NEED TO SEE WITH CRISTINA
                 //TO SPECIFIC PLAYER
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", currentPlayerIndex, cardsToAdd);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), cardsToAdd);
                  
             }
         }
