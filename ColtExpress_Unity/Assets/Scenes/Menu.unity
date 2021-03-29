@@ -1844,7 +1844,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1842673473}
   - component: {fileID: 1842673475}
-  - component: {fileID: 1842673474}
   - component: {fileID: 1842673476}
   m_Layer: 0
   m_Name: EventManager
@@ -1867,19 +1866,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1842673474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842673472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e484bcdc379b5d44ad52dcec8cd1a14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventName: testJSON
 --- !u!114 &1842673475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1905,8 +1891,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84db5f1c6150e441980a6122c1ef2745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  server: 168.61.46.213
-  port: 80
+  server: 127.0.0.1
+  port: 13000
 --- !u!1 &1845792869
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,13 +14,17 @@ namespace ClientCommunicationAPI
 {
 
     /* Author: Christina Pilip
-     * Usage: Client to server communications
+     * Usage: Client to server communications.
      * 
-     * Call CommunicationAPI.sendMessageToServer(event, var args). List each object, primitive, or enum you want to send as a new parameter.
-     * Transmit the resulting string to the client.
+     * The only important part is to call sendMessageToServer(var anonymous class). Each anonymous class should be defined in the appropriate listener calling sendMessageToServer in this format:
+     * 
+     * var definition = 
+     * { eventName = "myEventName",
+     * propertyName = ...
+     * }
+     * 
      */
 
-    
     public class CommunicationAPI
     {
         private static KnownTypesBinder knownTypesBinder = new KnownTypesBinder
@@ -49,44 +53,20 @@ namespace ClientCommunicationAPI
             SerializationBinder = knownTypesBinder
         };
 
-        //action is the action you wish to execute on the client (list will be provided)
-        //Then add each object for the message as a parameter (e.g. wanting to send a Turn t and a Round r, so we do sendTocClient(doSomething, t, r) and so on)
+        //Serialize the provided arguments and send to the server
         public static void sendMessageToServer(params object[] args)
         {
-            //List<System.Object> objectsToSerialize = new List<System.Object>();
-            //objectsToSerialize.AddRange(args);
-
-            //var testType = args[0].GetType().MakeGenericType();
-
-            //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
-
             string data = JsonConvert.SerializeObject(args[0], settings);
-
-            //Send to server
-
-            //Debug.Log(data);
-            EventManager.EventManagerInstance.GetComponent<NamedClient>().SendMessageToServer(data);
+            EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }
+
         public static void sendMessageToServer(Character c)
         {
-            //List<System.Object> objectsToSerialize = new List<System.Object>();
-            //objectsToSerialize.AddRange(args);
-
-            //var testType = args[0].GetType().MakeGenericType();
-
-            //dynamic type = args[0].GetType().GetProperty("Value").GetValue(args[0], null);
-
             string data = JsonConvert.SerializeObject(c, settings);
-
-            //Send to server
-
-            //Debug.Log(data);
-            EventManager.EventManagerInstance.GetComponent<NamedClient>().SendMessageToServer(data);
+            EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }
 
     }
-
-
 
     //Clean up type formatting
     public class KnownTypesBinder : ISerializationBinder

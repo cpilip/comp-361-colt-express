@@ -87,7 +87,7 @@ class MyTcpListener
 
 
                     //Verify against lobby service
-                    if (clients.Count == 4)
+                    if (clients.Count == 1)
                     {
                         haveAllConnections = true;
                     }

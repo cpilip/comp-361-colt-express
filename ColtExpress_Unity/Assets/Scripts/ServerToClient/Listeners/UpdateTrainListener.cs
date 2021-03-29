@@ -8,83 +8,94 @@ using UnityEngine;
 
 public class UpdateTrainListener : UIEventListenable
 {
-    public GameObject diamondPrefab;
+    public GameObject rubyPrefab;
     public GameObject strongboxPrefab;
     public GameObject bagPrefab;
     public GameObject characterPrefab;
+
+    private Vector3 scale = new Vector3(1f, 1f, 1f);
     public override void updateElement(string data)
     {
-        Debug.Log("MAKING TRAIN");
-        //PRE: data = TrainCar
-
-        /* var definition = new {
-                    eventName = action,
-                    indexofCar = i,
-                    i_items = n.getInside().getUnits_items(),
-                    i_players = n.getInside().getUnits_players(),
-                    r_items = n.getRoof().getUnits_items(),
-                    r_players = n.getRoof().getUnits_players(),
-                };*/
+        /* PRE: data
+        * 
+            {
+                    eventName = "updateTrain",
+                    indexofCar = int,
+                    i_items = item types (interior),
+                    i_players = characters (interior),
+                    r_items = item types (roof),
+                    r_players = characters (roof),
+                };
+        */
 
         JObject o = JObject.Parse(data);
-        //List<GameItem> items = o.SelectToken("i_items").ToObject<<List<GameItem>>();
         int i = o.SelectToken("indexofCar").ToObject<int>();
 
-        //GameUIManager.gameControllerInstance.createTrainCarObject(, );
+        //This line makes sure the train cars are correctly ordered
+        GameUIManager.gameUIManagerInstance.initializeTrainCar(i);
 
-        int carIndex = i + 5;
+        //Retrieve the roof and interior for this train car
+        GameObject trainCarRoof = GameUIManager.gameUIManagerInstance.getTrainCarPosition(i, true);
+        GameObject trainCarInterior = GameUIManager.gameUIManagerInstance.getTrainCarPosition(i, false);
 
-        //Create train car prefab
-
-        GameObject roof = GameUIManager.gameControllerInstance.getTrainCarPosition(i);
-        Debug.Log(roof);
-        GameObject inter = GameUIManager.gameControllerInstance.getTrainCarPosition(carIndex);
-        Debug.Log(inter);
         List<Character> r_P = o.SelectToken("r_players").ToObject<List<Character>>();
         List<ItemType> r_I = o.SelectToken("r_items").ToObject<List<ItemType>>();
 
+        //Roof initialization
         foreach (Character c in r_P)
         {
-            GameUIManager.gameControllerInstance.createCharacterObject(c).transform.SetParent(roof.transform);
+            GameObject character = GameUIManager.gameUIManagerInstance.createCharacterObject(c);
+            character.transform.SetParent(trainCarRoof.transform);
+            character.transform.localScale = scale;
         }
         foreach (ItemType m in r_I)
         {
+            GameObject item = null;
             if (m == ItemType.Purse)
             {
-                Instantiate(bagPrefab).transform.SetParent(roof.transform);
+                item = Instantiate(bagPrefab);
             }
             if (m == ItemType.Strongbox)
             {
-                Instantiate(strongboxPrefab).transform.SetParent(roof.transform);
+                item = Instantiate(strongboxPrefab);
             }
             if (m == ItemType.Ruby)
             {
-                Instantiate(diamondPrefab).transform.SetParent(roof.transform);
+                item = Instantiate(rubyPrefab);
             }
+            item.transform.SetParent(trainCarRoof.transform);
+            item.transform.localScale = scale;
         }
 
         r_P = o.SelectToken("i_players").ToObject<List<Character>>();
         r_I = o.SelectToken("i_items").ToObject<List<ItemType>>();
 
+        //Interior initialization
         foreach (Character c in r_P)
         {
-            GameUIManager.gameControllerInstance.createCharacterObject(c).transform.SetParent(inter.transform);
+            GameObject character = GameUIManager.gameUIManagerInstance.createCharacterObject(c);
+            character.transform.SetParent(trainCarInterior.transform);
+            character.transform.localScale = scale;
         }
         foreach (ItemType m in r_I)
         {
+            GameObject item = null;
             if (m == ItemType.Purse)
             {
-                Instantiate(bagPrefab).transform.SetParent(inter.transform);
+                item = Instantiate(bagPrefab);
             }
             if (m == ItemType.Strongbox)
             {
-                Debug.Log("Making s");
-                Instantiate(strongboxPrefab).transform.SetParent(inter.transform);
+                item = Instantiate(strongboxPrefab);
             }
             if (m == ItemType.Ruby)
             {
-                Instantiate(diamondPrefab).transform.SetParent(inter.transform);
+                item = Instantiate(rubyPrefab);
             }
+            item.transform.SetParent(trainCarInterior.transform);
+            item.transform.localScale = scale;
         }
+
+        Debug.Log("[UpdateTrainListener] Train car " + i + " initialized.");
     }
 }

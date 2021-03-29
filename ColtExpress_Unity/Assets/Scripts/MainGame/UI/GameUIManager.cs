@@ -1,4 +1,5 @@
-﻿using GameUnitSpace;
+﻿using CardSpace;
+using GameUnitSpace;
 using PositionSpace;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,14 +8,25 @@ using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
 {
+    //Game object locations for major scripts
     public GameObject gameControllerLocation;
-    public GameObject trainLocation;
     public GameObject playerProfileLocation;
-    
-    public GameObject characterPrefab;
-    public GameObject trainCarPrefab;
-    public GameObject playerProfilePrefab;
+    public GameObject trainLocation;
+    public GameObject deck;
+    public GameObject discardPile;
 
+    //Menus
+    public GameObject turnMenu;
+    public GameObject actionMenu;
+    public GameObject boardBlocker;
+
+    //Prefabs
+    public GameObject characterPrefab;
+    public GameObject playerProfilePrefab;
+    public GameObject actionCardPrefab;
+    public GameObject bulletCardPrefab;
+
+    //Character sprites
     public Sprite Tuco;
     public Sprite Django;
     public Sprite Ghost;
@@ -22,32 +34,33 @@ public class GameUIManager : MonoBehaviour
     public Sprite Che;
     public Sprite Belle;
 
+    //We treat a player's bandit (which is unique) as the corresponding player
+    //Player : in-game character object map
+    //Player profile : in-game character object map
+    //Train car index : train car map
     int numPlayers = 0;
     private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
-    private Dictionary<int, GameObject> trainCarPositions = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
 
-    //EventManager instance
-    private static GameUIManager gameController;
+    //EventManager instance, game status
+    private static GameUIManager gameUIManager;
+    public bool gameStatus;
 
-    public static GameUIManager gameControllerInstance
+    //Loaded sprites
+    public static Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
+
+    private Vector3 scale = new Vector3(1f, 1f, 1f);
+
+    public static GameUIManager gameUIManagerInstance
     {
         get
         {
-            return gameController;
+            return gameUIManager;
         }
     }
 
-    void Start()
-    {
-        numPlayers = 4;
-        for (int i = 0; i < 10; i++)
-        {
-            trainCarPositions.Add(i, trainLocation.transform.GetChild(i).gameObject);
-            Debug.Log(i + " " +  trainLocation.transform.GetChild(i).gameObject.name);
-        }
-    }
-
+    //Get corresponding in-game character object to a player
     public GameObject getCharacterObject(Character c)
     {
         GameObject requestedPlayer = null;
@@ -55,6 +68,7 @@ public class GameUIManager : MonoBehaviour
         return requestedPlayer;
     }
 
+    //Create a new in-game character object
     public GameObject createCharacterObject(Character c)
     {
         GameObject newPlayer = Instantiate(characterPrefab);
@@ -85,9 +99,14 @@ public class GameUIManager : MonoBehaviour
 
         }
 
+        //Fixing the scale
+        newPlayer.transform.localScale = scale;
+
         characters.Add(c, newPlayer);
         return newPlayer;
     }
+
+    //Get corresponding player profile to a player
     public GameObject getPlayerProfileObject(Character c)
     {
         GameObject requestedPlayer = null;
@@ -95,10 +114,10 @@ public class GameUIManager : MonoBehaviour
         return requestedPlayer;
     }
 
+    //Create a new player profile
     public GameObject createPlayerProfileObject(Character c)
     {
         GameObject newPlayerProfile = Instantiate(playerProfilePrefab);
-        
 
         switch (c)
         {
@@ -126,40 +145,192 @@ public class GameUIManager : MonoBehaviour
 
         }
 
+        //Making sure to parent the profile under the profile list and fixing the scale
         newPlayerProfile.transform.SetParent(playerProfileLocation.transform);
+        newPlayerProfile.transform.localScale = scale;
 
         playerProfiles.Add(c, newPlayerProfile);
         numPlayers++;
         return newPlayerProfile;
     }
 
-
-    public GameObject getTrainCarPosition(int index)
+    //Initialize the train - we make sure the last index mapped is set to the caboose and the caboose's position is updated
+    public GameObject initializeTrainCar(int index)
     {
-        GameObject trainCarPosition = null;
-        trainCarPositions.TryGetValue(index, out trainCarPosition);
-        return trainCarPosition;
+        GameObject trainCar = null;
+        trainCars.TryGetValue(index, out trainCar);
+
+        if (index == numPlayers)
+        {
+            //Retrieve the caboose
+            GameObject caboose = null;
+            trainCars.TryGetValue(6, out caboose);
+
+            //Change the caboose coordinates to be the new end of the train
+            Vector3 lastTrainCarCoordinates = trainCar.transform.position;
+            caboose.transform.position = lastTrainCarCoordinates;
+
+            //Disable the rest of the cars and remove them from the map
+            for (int i = index; i <= 5; i++)
+            {
+                trainCars.TryGetValue(i, out trainCar);
+                trainCar.SetActive(false);
+                trainCars.Remove(i);
+            }
+
+            //Remove the caboose mapping without disabling it
+            trainCars.Remove(6);
+            //Replace the last train car's index with the caboose in the map
+            trainCars.Add(index, caboose);
+        }
+
+        //Re-retrieve train car (in case caboose was updated)
+        trainCars.TryGetValue(index, out trainCar);
+        return trainCar;
+    }
+
+    //Get a train car
+    public GameObject getTrainCar(int index)
+    {
+        GameObject trainCar = null;
+        trainCars.TryGetValue(index, out trainCar);
+        return trainCar;
+    }
+
+    //Get a train car's position - true for its roof, false for its interior
+    public GameObject getTrainCarPosition(int index, bool isRoof)
+    {
+        GameObject trainCar = null;
+        trainCars.TryGetValue(index, out trainCar);
+
+        if (isRoof)
+        {
+            return trainCar.transform.GetChild(1).gameObject;
+        } else
+        {
+            return trainCar.transform.GetChild(2).gameObject;
+        }
+
+    }
+
+    //Create a new in-game Action card object - true for in the deck, or false for the discard pile
+    public GameObject createCardObject(Character c, ActionKind k, bool inDeck)
+    {
+        GameObject newCard = null;
+        Sprite newCardSprite = null;
+        newCard = Instantiate(actionCardPrefab);
+
+        switch (k)
+        {
+            case ActionKind.Move:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_move", out newCardSprite);
+                break;
+            case ActionKind.Shoot:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_shoot", out newCardSprite);
+                break;
+            case ActionKind.Rob:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_rob", out newCardSprite);
+                break;
+            case ActionKind.Marshal:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_marshal", out newCardSprite);
+                break;
+            case ActionKind.Punch:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_punch", out newCardSprite);
+                break;
+            case ActionKind.ChangeFloor:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_floor", out newCardSprite);
+                break;
+            default:
+                break;
+        }
+
+        newCard.GetComponent<Image>().sprite = newCardSprite;
+
+        //Making sure to parent the card under the hand/deck or discard pile and fixing the scale
+        if (inDeck)
+        {
+            newCard.transform.SetParent(deck.transform);
+        } else
+        {
+            newCard.transform.SetParent(discardPile.transform);
+        }
+        newCard.transform.localScale = scale;
+
+        return newCard;
+    }
+
+    //Create a new in-game Bullet card object 
+    /*
+    public GameObject createCardObject(Character c, int k)
+    {
+        GameObject newCard = Instantiate(bulletCardPrefab);
+
+
+        //Fixing the scale
+        newPlayer.transform.localScale = scale;
+
+        characters.Add(c, newPlayer);
+        return newPlayer;
+    }
+    */
+
+    public void unlockTurnMenu()
+    {
+        if (turnMenu != null)
+        {
+            turnMenu.SetActive(true);
+        }
+    }
+
+    public void unlockActionMenu()
+    {
+        if (actionMenu != null)
+        {
+            actionMenu.SetActive(true);
+        }
+    }
+
+    public void unlockBoard()
+    {
+        if (boardBlocker != null)
+        {
+            boardBlocker.SetActive(false);
+        }
+    } 
+
+    void Start()
+    {
+        int i = 0;
+        foreach (Transform t in trainLocation.transform)
+        {
+            //Debug.Log("Index added " + i);
+            trainCars.Add(i, t.gameObject);
+            i++;
+        }
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites");
+
+        foreach (Sprite s in sprites) {
+            loadedSprites.Add(s.name, s);
+        }
     }
 
     void Awake()
     {
-        if (!gameController)
+        if (!gameUIManager)
         {
             //Obtain the EventManager instance
-            gameController = FindObjectOfType(typeof(GameUIManager)) as GameUIManager;
+            gameUIManager = FindObjectOfType(typeof(GameUIManager)) as GameUIManager;
 
             //Initialize the EventManager
-            if (gameController == null)
+            if (gameUIManager == null)
             {
                 Debug.LogError("GameController failed to initialize.");
             }
-            else
-            {
-                characters = new Dictionary<Character, GameObject>();
-            }
+          
         }
 
-        DontDestroyOnLoad(gameController);
+        DontDestroyOnLoad(gameUIManager);
     }
 
 }

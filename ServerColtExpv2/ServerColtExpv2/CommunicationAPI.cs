@@ -55,6 +55,7 @@ public class CommunicationAPI
 
         if (action == "updateTrain")
         {
+            //On one client: "updateTrain" triggers the initialization of the train
             List<TrainCar> t = (List<TrainCar>)args[0];
             
             int i = 0;
@@ -83,6 +84,8 @@ public class CommunicationAPI
             }
         } else if (action == "updatePlayers")
         {
+            //On one client: "updatePlayers" triggers creation of player profiles for every player in the list provided;
+            //if the current player in the list is the player of the client, initialize their hand, discard pile, and remaining bullets additionally
             List<Player> t = (List<Player>)args[0];
 
             foreach (Player n in t)
@@ -95,6 +98,7 @@ public class CommunicationAPI
                     d_ActionCards = n.getDiscard_actionCards(),
                     d_BulletCards = n.getDiscard_bulletCards()
                 };
+
                 if (cli == null)
                 {
                     //Serialize parameters as a array with first element being the action
@@ -110,16 +114,17 @@ public class CommunicationAPI
         }
         else if (action == "updatePlayerHand")
         {
-            int i = (int)args[0];
-            List<Card> c = (List<Card>)args[1];
+            //On one client: "updatePlayerHand" updates the hand of the player sent
+            Character c = (Character)args[0];
+            List<Card> cards = (List<Card>)args[1];
             List<ActionKind> l  = new List<ActionKind>();
 
-            c.OfType<ActionCard>().ToList().ForEach(t => l.Add(t.getKind()));
+            cards.OfType<ActionCard>().ToList().ForEach(t => l.Add(t.getKind()));
 
             var definition = new
             {
                 eventName = "updatePlayerHand",
-                currentPlayerIndex = i,
+                player = c,
                 cardsToAdd = l 
             };
             if (cli == null)
@@ -135,6 +140,7 @@ public class CommunicationAPI
             }
         } else if (action == "updateGameStatus")
         {
+            //One one client: "updateGameStatus" triggers either the Schemin or Stealin' phase
             var definition = new
             {
                 eventName = "updateGameStatus",
@@ -154,6 +160,7 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentRound")
         {
+            //One one client: "updateCurrentRound" visually updates the current round
             Round r = (Round)args[0];
             List<TurnType> l = new List<TurnType>();
 
@@ -162,7 +169,6 @@ public class CommunicationAPI
             var definition = new
             {
                 eventName = "updateCurrentRound",
-                //anEvent = r.getEvent();
                 isLastRound = r.getIsLastRound(),
                 turns = l
             };
@@ -180,6 +186,7 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentTurn")
         {
+            //One one client: "updateCurrentTurn" visually updates the current turn
             int i = (int)args[0];
 
             var definition = new
@@ -201,8 +208,11 @@ public class CommunicationAPI
             }
 
         } else if (action == "updateWaitingForInput")
-            {
-                Character c = (Character)args[0];
+        //"updateWaitingForInput" unlocks the UI for the current player
+        //If the game status is Schemin', the turn menu is unlocked - expect the player to be able to play a card or draw cards
+        //If the game status is Stealin', the board is unlocked
+        {
+            Character c = (Character)args[0];
 
             var definition = new
             {

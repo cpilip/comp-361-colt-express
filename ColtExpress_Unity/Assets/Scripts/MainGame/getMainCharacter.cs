@@ -6,10 +6,7 @@ using UnityEngine.UI;
 
 public class getMainCharacter : MonoBehaviour
 {
-    //GameObject myCharacter;
-    //GameObject clone;
     int getCharacter;
-    //Debug.Log("I'm here");
     public Sprite Tuco;
     public Sprite Django;
     public Sprite Ghost;
@@ -28,41 +25,47 @@ public class getMainCharacter : MonoBehaviour
             case 1:
                 player.sprite = Tuco;
                 NamedClient.c = Character.Tuco;
+
+                Debug.Log("[GetCharacter] You selected Tuco.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco);
-        	    Debug.Log("Tuco");
                 break;
             case 2:
                 player.sprite = Django;
                 NamedClient.c = Character.Django;
+
+                Debug.Log("[GetCharacter] You selected Django.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django);
-                Debug.Log("Tuco");
                 break;
             case 3:
                 player.sprite = Ghost;
                 NamedClient.c = Character.Ghost;
+
+                Debug.Log("[GetCharacter] You selected Ghost.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost);
-                Debug.Log("Ghost");
                 break;
             case 4:
                 player.sprite = Doc;
                 NamedClient.c = Character.Doc;
+
+                Debug.Log("[GetCharacter] You selected Doc.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Doc);
-                Debug.Log("Doc");
                 break;
             case 5:
                 NamedClient.c = Character.Cheyenne;
                 player.sprite = Che;
+
+                Debug.Log("[GetCharacter] You selected Cheyenne.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne);
-                Debug.Log("Che");
                 break;
             case 6:
                 NamedClient.c = Character.Belle;
                 player.sprite = Belle;
+
+                Debug.Log("[GetCharacter] You selected Belle.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle);
-                Debug.Log("Bella");
                 break;
             default:
-                player.sprite = Belle;
+                Debug.LogError("[GetCharacter] No character selected. Something went wrong!");
                 break;
 
         }

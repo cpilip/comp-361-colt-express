@@ -147,16 +147,22 @@ namespace GameUnitSpace {
             return this.numOfBulletsShot;
         }
 
-        public List<ActionCard> getHand_actionCards()
+        //For sending Action cards from the hand as a list of enumerations of ActionKind
+        public List<ActionKind> getHand_actionCards()
         {
-            return this.hand.OfType<ActionCard>().ToList();
+            List<ActionKind> l = new List<ActionKind>();
+            this.hand.OfType<ActionCard>().ToList()
+                .ForEach(i => l.Add(i.getKind()));
+            return l;
         }
 
-        public List<BulletCard> getHand_bulletCards()
+        //For sending the number of Bullet cards
+        public int getHand_bulletCards()
         {
-            return this.hand.OfType<BulletCard>().ToList();
+            return this.hand.OfType<BulletCard>().ToList().Count;
         }
 
+        //Discard pile variants
         public List<ActionKind> getDiscard_actionCards()
         {
             List<ActionKind> l = new List<ActionKind>();
