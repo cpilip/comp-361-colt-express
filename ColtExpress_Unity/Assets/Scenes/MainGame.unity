@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 21246615}
   - component: {fileID: 21246616}
   m_Layer: 5
-  m_Name: Draw Card
+  m_Name: Card Iterator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1955542923}
+      - m_Target: {fileID: 0}
         m_MethodName: nextSubdeck
         m_Mode: 1
         m_Arguments:
@@ -2891,7 +2891,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1955542923}
+      - m_Target: {fileID: 0}
         m_MethodName: drawCard
         m_Mode: 1
         m_Arguments:
@@ -5359,6 +5359,7 @@ GameObject:
   - component: {fileID: 718402313}
   - component: {fileID: 718402312}
   - component: {fileID: 718402314}
+  - component: {fileID: 718402315}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5490,6 +5491,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updateWaitingForInput
+--- !u!114 &718402315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718402308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292173592e4141540a54d39cc531d40b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deck: {fileID: 288253714}
+  cardPrefab: {fileID: 0}
+  subdeckPrefab: {fileID: 0}
+  turnMenu: {fileID: 1094513322}
+  timer: {fileID: 576392534}
+  handBlocker: {fileID: 1480477228}
+  discard: {fileID: 1496608278}
 --- !u!1 &727441901
 GameObject:
   m_ObjectHideFlags: 0
@@ -10286,7 +10306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1797818465
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11649,7 +11669,6 @@ GameObject:
   - component: {fileID: 1955542920}
   - component: {fileID: 1955542922}
   - component: {fileID: 1955542921}
-  - component: {fileID: 1955542923}
   - component: {fileID: 1955542924}
   m_Layer: 5
   m_Name: Hanging Board
@@ -11716,27 +11735,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1955542919}
   m_CullTransparentMesh: 0
---- !u!114 &1955542923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1955542919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 292173592e4141540a54d39cc531d40b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deck: {fileID: 288253714}
-  cardPrefab: {fileID: 5513559504549008609, guid: 8b727dd535cc502458cbb575eb80e4d5,
-    type: 3}
-  subdeckPrefab: {fileID: 6938658848625266529, guid: 27adb10f74b76594fb8674e51bab6d49,
-    type: 3}
-  turnMenu: {fileID: 1094513322}
-  timer: {fileID: 963653845}
-  handBlocker: {fileID: 1480477228}
-  discard: {fileID: 98892707}
 --- !u!114 &1955542924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12147,7 +12145,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1955542923}
+      - m_Target: {fileID: 0}
         m_MethodName: playCard
         m_Mode: 1
         m_Arguments:

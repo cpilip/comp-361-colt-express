@@ -260,13 +260,15 @@ public class GameUIManager : MonoBehaviour
 
         newCard.GetComponent<Image>().sprite = newCardSprite;
 
-        //Making sure to parent the card under the hand/deck or discard pile and fixing the scale
+        //Making sure to parent the card under the hand/deck or discard pile, updating the client collection of cards in the hand/deck or discard pile, and fixing the scale
         if (inDeck)
         {
             newCard.transform.SetParent(deck.transform);
+            ScheminPhaseManager.clientHand.Add(newCard);
         } else
         {
             newCard.transform.SetParent(discardPile.transform);
+            ScheminPhaseManager.clientDiscardPile.Add(newCard);
         }
         newCard.transform.localScale = scale;
 

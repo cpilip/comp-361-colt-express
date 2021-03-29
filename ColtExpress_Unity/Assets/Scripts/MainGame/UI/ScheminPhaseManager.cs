@@ -8,7 +8,7 @@ using ClientCommunicationAPI;
  */
 
 // TODO: Unfinished, more for an initial implementation.
-public class Phase1Action : MonoBehaviour
+public class ScheminPhaseManager : MonoBehaviour
 {
     public GameObject deck;
     public GameObject cardPrefab;
@@ -22,26 +22,17 @@ public class Phase1Action : MonoBehaviour
     private int displayedSubdeckNum;
     private GameObject playedCardsZone;
 
-    private List<GameObject> cards = new List<GameObject>();
+    public static List<GameObject> clientHand = new List<GameObject>();
+    public static List<GameObject> clientDiscardPile = new List<GameObject>();
 
     void Start()
     {
-        displayedSubdeckNum = 1;
-        PlayerPrefs.SetInt("clickTimes", 0);
-        lastSubdeck = deck.transform.GetChild(deck.transform.childCount - 1);
         playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
-
-        for (int i = 0; i < 6; i++)
-        {
-            cards.Add(deck.transform.GetChild(i).gameObject);
-        }
     }
 
     // Draw and add three cards to the deck
     public void drawCard()
     {
-        int temp = PlayerPrefs.GetInt("clickTimes") + 1;
-        PlayerPrefs.SetInt("clickTimes", temp);
         if (deck != null)
         {
             for (int i = 0; i < 3; i++)
@@ -97,8 +88,6 @@ public class Phase1Action : MonoBehaviour
 
     public void playCard()
     {
-        int temp = PlayerPrefs.GetInt("clickTimes") + 1;
-        PlayerPrefs.SetInt("clickTimes", temp);
         if (handBlocker != null)
         {
             handBlocker.SetActive(!handBlocker.activeSelf);
@@ -117,8 +106,6 @@ public class Phase1Action : MonoBehaviour
         playedCardsZone.GetComponent<OnChildrenUpdated>().notifyChildWasChanged += cardWasPlayed;
 
         StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
-
-        
 
         while (timedOut == false || cardPlayed == false)
         {
@@ -142,7 +129,7 @@ public class Phase1Action : MonoBehaviour
                     Debug.Log("Card was played");
 
                     CardSpace.ActionCard cardToSend = null;
-                    int i = cards.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
+                    int i = clientHand.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
                     Debug.Log(i);
 
 
