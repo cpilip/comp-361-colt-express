@@ -50,7 +50,6 @@ public class UpdatePlayerListener : UIEventListenable
             //  child 2 > Inventory
             //  child 0 > Whiskey group
             //  child 1 > Whiskey text
-            GameUIManager.gameUIManagerInstance.getPlayerProfileObject(player).transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "x06";
 
             //TODO: Bullet cards?
 

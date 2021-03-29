@@ -1837,7 +1837,7 @@ PrefabInstance:
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
@@ -3120,11 +3120,11 @@ RectTransform:
   m_Children:
   - {fileID: 1172874684}
   - {fileID: 694654323}
-  - {fileID: 999645375}
   - {fileID: 497757608}
   - {fileID: 2075967511}
   - {fileID: 1081922052}
   - {fileID: 1657886039}
+  - {fileID: 999645375}
   m_Father: {fileID: 173019962}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3183,7 +3183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updateTrain
-  rubyPrefab: {fileID: 0}
+  rubyPrefab: {fileID: 673638456844600783, guid: 7f859642fdfbae745a1e8c908dd93481,
+    type: 3}
   strongboxPrefab: {fileID: 6053284020196611345, guid: 729278601167e9f45a68dbde677e90af,
     type: 3}
   bagPrefab: {fileID: 7295611684108046188, guid: 94178393ec813d24c9c1b5a5ccef3c0c,
@@ -3365,7 +3366,7 @@ PrefabInstance:
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
@@ -6502,7 +6503,7 @@ RectTransform:
   - {fileID: 1332562757}
   - {fileID: 35810728}
   m_Father: {fileID: 337841794}
-  m_RootOrder: 2
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -11471,7 +11472,7 @@ PrefabInstance:
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
@@ -12966,7 +12967,7 @@ PrefabInstance:
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 68109697007506798, guid: 774fcd066903fb248ad72d6eb8fbb2b4,
         type: 3}

@@ -1212,6 +1212,11 @@ PrefabInstance:
       propertyPath: m_PreserveAspect
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1519484301024907555, guid: 0eb573f237904e04c9f344b6759d7b2a,
+        type: 3}
+      propertyPath: m_text
+      value: x06
+      objectReference: {fileID: 0}
     - target: {fileID: 1519484301400565314, guid: 0eb573f237904e04c9f344b6759d7b2a,
         type: 3}
       propertyPath: m_Name

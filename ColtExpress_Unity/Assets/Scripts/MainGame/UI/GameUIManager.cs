@@ -166,9 +166,16 @@ public class GameUIManager : MonoBehaviour
             GameObject caboose = null;
             trainCars.TryGetValue(6, out caboose);
 
+            Debug.Log(caboose.name);
+
             //Change the caboose coordinates to be the new end of the train
             Vector3 lastTrainCarCoordinates = trainCar.transform.position;
+
+            Debug.Log(caboose.name + " previously at " + caboose.transform.position);
+
             caboose.transform.position = lastTrainCarCoordinates;
+
+            Debug.Log(caboose.name + " now at " + lastTrainCarCoordinates);
 
             //Disable the rest of the cars and remove them from the map
             for (int i = index; i <= 5; i++)
@@ -176,12 +183,19 @@ public class GameUIManager : MonoBehaviour
                 trainCars.TryGetValue(i, out trainCar);
                 trainCar.SetActive(false);
                 trainCars.Remove(i);
+
+                Debug.Log("Removed " + trainCar.name + " at " + i);
             }
 
             //Remove the caboose mapping without disabling it
             trainCars.Remove(6);
+
+            Debug.Log("Removed " + caboose.name + " at " + 6);
+
             //Replace the last train car's index with the caboose in the map
             trainCars.Add(index, caboose);
+            Debug.Log("Added " + caboose.name + " at " + index);
+
         }
 
         //Re-retrieve train car (in case caboose was updated)
@@ -303,7 +317,7 @@ public class GameUIManager : MonoBehaviour
         int i = 0;
         foreach (Transform t in trainLocation.transform)
         {
-            //Debug.Log("Index added " + i);
+            Debug.Log("Index added " + i);
             trainCars.Add(i, t.gameObject);
             i++;
         }
