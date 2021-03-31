@@ -421,7 +421,7 @@ class GameController
         {
             this.currentPlayer.setWaitingForInput(false);
             //TO SPECIFIC PLAYER 
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayerIndex, false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
 
             //if this is not the last turn of the round
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
@@ -498,13 +498,13 @@ class GameController
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
 
-                this.currentPlayer.setWaitingForInput(true);
-                //TO SPECIFIC PLAYER
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayerIndex, true);
-
                 this.aGameStatus = GameStatus.Schemin;
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
+
+                this.currentPlayer.setWaitingForInput(true);
+                //TO SPECIFIC PLAYER
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
 
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)

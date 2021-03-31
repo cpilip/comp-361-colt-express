@@ -163,6 +163,7 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("CardMessage"))
                 {
+                    // Get index; -1 if player timed out
                     int index = Int32.Parse(o.SelectToken("index").ToString());
                     ActionCard crd = aController.getCardByIndex(index);
 

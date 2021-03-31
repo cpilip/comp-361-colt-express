@@ -187,13 +187,11 @@ public class CommunicationAPI
         else if (action == "updateCurrentTurn")
         {
             //One one client: "updateCurrentTurn" visually updates the current turn
-            int i = (int)args[0];
-
             var definition = new
             {
                 eventName = "updateCurrentTurn",
-                currentTurn = i
-            };
+                currentTurn = (int)args[0]
+        };
 
             if (cli == null)
             {
@@ -212,12 +210,11 @@ public class CommunicationAPI
         //If the game status is Schemin', the turn menu is unlocked - expect the player to be able to play a card or draw cards
         //If the game status is Stealin', the board is unlocked
         {
-            Character c = (Character)args[0];
-
             var definition = new
             {
                 eventName = "updateWaitingForInput",
-                currentPlayer = c
+                currentPlayer = (Character)args[0],
+                waitingForInput = (bool)args[1],
             };
 
 

@@ -17,8 +17,8 @@ public class GameUIManager : MonoBehaviour
 
     //Menus
     public GameObject turnMenu;
-    public GameObject actionMenu;
     public GameObject boardBlocker;
+    public GameObject handBlocker;
 
     //Prefabs
     public GameObject characterPrefab;
@@ -290,7 +290,8 @@ public class GameUIManager : MonoBehaviour
     }
     */
 
-    public void unlockTurnMenu()
+    //Enable the turn menu (true for visible, false for invisible)
+    public void toggleTurnMenu(bool isVisible)
     {
         if (turnMenu != null)
         {
@@ -298,21 +299,41 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    public void unlockActionMenu()
-    {
-        if (actionMenu != null)
-        {
-            actionMenu.SetActive(true);
-        }
-    }
-
+    //Unlock the board (user can interact with trains, horses, etc.)
     public void unlockBoard()
     {
         if (boardBlocker != null)
         {
             boardBlocker.SetActive(false);
         }
-    } 
+    }
+
+    //Lock the board (user cannot interact with train, horses, etc.)
+    public void lockBoard()
+    {
+        if (boardBlocker != null)
+        {
+            boardBlocker.SetActive(true);
+        }
+    }
+
+    //Lock the hand (played card zone, deck - card iterator is always allowed)
+    public void unlockHand()
+    {
+        if (boardBlocker != null)
+        {
+            boardBlocker.SetActive(false);
+        }
+    }
+
+    //Unlock the hand (played card zone, deck - card iterator is always allowed)
+    public void lockHand()
+    {
+        if (boardBlocker != null)
+        {
+            boardBlocker.SetActive(true);
+        }
+    }
 
     void Start()
     {

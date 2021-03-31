@@ -13,27 +13,33 @@ public class UpdateWaitingForInputListener : UIEventListenable
         *
             {
                 eventName = "updateWaitingForInput",
-                currentPlayer = c
+                currentPlayer = character,
+                waitingForInput = bool,
             };
         */
         JObject o = JObject.Parse(data);
         Character player = o.SelectToken("currentPlayer").ToObject<Character>();
+        bool waitingForInput = o.SelectToken("waitingForInput").ToObject<bool>();
 
         if (NamedClient.c == player)
         {
             //If SCHEMIN, unlock the turn menu
             if (GameUIManager.gameUIManagerInstance.gameStatus)
             {
-                GameUIManager.gameUIManagerInstance.unlockTurnMenu();
+                if (waitingForInput) { 
+                    GameUIManager.gameUIManagerInstance.toggleTurnMenu(true);
+                Debug.Log("[UpdateWaitingForInputListener] SCHEMING, TRUE: Turn menu visible for player " + player + ".");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+                    GameUIManager.gameUIManagerInstance.lockHand();
+                    Debug.Log("[UpdateWaitingForInputListener] SCHEMIN, FALSE: Turn menu hidden for player and hand locked for " + player + ".");
+                }
 
-
-                Debug.Log("[UpdateWaitingForInputListener] Turn menu unlocked for player " + player + ".");
             } else
             {
-                //GameUIManager.gameUIManagerInstance.unlockTurnMenu();
-
-
-                Debug.Log("[UpdateWaitingForInputListener] Board unlocked for player " + player + ".");
+                Debug.Log("[UpdateWaitingForInputListener] STEALIN.");
             }
         }
         

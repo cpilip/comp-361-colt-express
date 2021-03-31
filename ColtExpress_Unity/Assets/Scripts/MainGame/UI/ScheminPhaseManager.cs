@@ -11,15 +11,9 @@ using ClientCommunicationAPI;
 public class ScheminPhaseManager : MonoBehaviour
 {
     public GameObject deck;
-    public GameObject cardPrefab;
-    public GameObject subdeckPrefab;
-    public GameObject turnMenu;
     public GameObject timer;
-    public GameObject handBlocker;
-    public GameObject discard;
+    public GameObject discardPile;
 
-    private Transform lastSubdeck;
-    private int displayedSubdeckNum;
     private GameObject playedCardsZone;
 
     public static List<GameObject> clientHand = new List<GameObject>();
@@ -35,6 +29,7 @@ public class ScheminPhaseManager : MonoBehaviour
     {
         if (deck != null)
         {
+            /*
             for (int i = 0; i < 3; i++)
             {
                 // Create a new subdeck if the last one is full
@@ -61,11 +56,11 @@ public class ScheminPhaseManager : MonoBehaviour
 
                 // Put the card in the last subdeck
 
-                if (discard.transform.childCount == 0)
+                if (discardPile.transform.childCount == 0)
                 {
                     break;
                 }
-                Transform newCard = discard.transform.GetChild(0);
+                Transform newCard = discardPile.transform.GetChild(0);
 
                 newCard.SetParent(lastSubdeck.transform);
                 //newCard.localScale = new Vector3(1, 1, 1);
@@ -78,20 +73,16 @@ public class ScheminPhaseManager : MonoBehaviour
             deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(true);
 
         }
-
-        //Disable the turn menu
-        toggleTurnMenu();
+            */
+        }
+        //Hide the turn menu and lock the hand
+        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+        GameUIManager.gameUIManagerInstance.lockHand();
     }
-
-
-    //TODO: Figure out how to update subdecks
 
     public void playCard()
     {
-        if (handBlocker != null)
-        {
-            handBlocker.SetActive(!handBlocker.activeSelf);
-        }
+        GameUIManager.gameUIManagerInstance.unlockHand();
 
         StartCoroutine("playingCard");
     }
@@ -112,26 +103,19 @@ public class ScheminPhaseManager : MonoBehaviour
             
             if (timedOut || cardPlayed)
             {
-                Debug.Log("Player timed out or played a card.");
-                toggleTurnMenu();
-
-                if (handBlocker != null)
-                {
-                    handBlocker.SetActive(!handBlocker.activeSelf);
-                }
+                //Hide turn menu and lock the hand
+                GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+                GameUIManager.gameUIManagerInstance.lockHand();
 
                 timer.GetComponent<Timer>().resetTimer();
 
-                // Do not do StopAllCoroutines(). Learned that the hard way.
-                
+                //Do not do StopAllCoroutines(). Learned that the hard way.
                 if (cardPlayed)
                 {
-                    Debug.Log("Card was played");
+                    Debug.Log("[ScheminPhaseManager] You played a card.");
 
-                    CardSpace.ActionCard cardToSend = null;
                     int i = clientHand.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
                     Debug.Log(i);
-
 
                     var definition = new
                     {
@@ -144,7 +128,15 @@ public class ScheminPhaseManager : MonoBehaviour
 
                 if (timedOut)
                 {
-                    //ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(null);
+                    Debug.Log("[ScheminPhaseManager] You timed out.");
+
+                    var definition = new
+                    {
+                        eventName = "CardMessage",
+                        index = -1
+                    };
+
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 yield break;
@@ -154,33 +146,10 @@ public class ScheminPhaseManager : MonoBehaviour
             }
         }
 
-        Debug.LogError("Coroutine playingCard was terminated - execution was unsuccessful (The player did not play a card *and* timed out. This should not happen.).");
+        Debug.LogError("[ScheminPhaseManager] Coroutine playingCard execution was borked (The player did not play a card *and* timed out. This should not happen!).");
 
         yield break;
 
     }
 
-    public void nextSubdeck()
-    {
-        // Correct the currently displayed subdeck for proper indexing
-        displayedSubdeckNum--;
-
-
-        // Display the next subdeck
-        deck.transform.GetChild(displayedSubdeckNum).gameObject.SetActive(false);
-        deck.transform.GetChild((displayedSubdeckNum + 1) % deck.transform.childCount).gameObject.SetActive(true);
-
-
-        // Revert the index change
-        displayedSubdeckNum = (displayedSubdeckNum + 1) % deck.transform.childCount + 1;
-    }
-
-    // Toggle turn menu
-    private void toggleTurnMenu()
-    {
-        if (turnMenu != null)
-        {
-            turnMenu.SetActive(!turnMenu.activeSelf);
-        }
-    }
 }
