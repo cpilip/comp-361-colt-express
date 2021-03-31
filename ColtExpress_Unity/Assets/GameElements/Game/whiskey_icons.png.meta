@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: 31a39cd6dcd12cf4e958387ed907d4c9
+guid: a1669f19a79ccd34c894d940ef07a304
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2258755098361695858
-    second: portraits_0
+      213: 3115765955167654911
+    second: normal_whiskey
   - first:
-      213: -36922474833775500
-    second: portraits_1
-  - first:
-      213: 2697042648937513654
-    second: portraits_2
-  - first:
-      213: -4997933481127096468
-    second: portraits_3
-  - first:
-      213: -1256737262489365552
-    second: portraits_4
-  - first:
-      213: -8022940852688207594
-    second: portraits_5
+      213: -4826735784721573285
+    second: old_whiskey
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -105,13 +93,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: portraits_0
+      name: normal_whiskey
       rect:
         serializedVersion: 2
-        x: 24
-        y: 603
-        width: 415
-        height: 558
+        x: 15
+        y: 9
+        width: 174
+        height: 231
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -119,20 +107,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e817c87943a47a0e0800000000000000
-      internalID: -2258755098361695858
+      spriteID: ff31601d0ac6d3b20800000000000000
+      internalID: 3115765955167654911
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: portraits_1
+      name: old_whiskey
       rect:
         serializedVersion: 2
-        x: 454
-        y: 603
-        width: 415
-        height: 558
+        x: 204
+        y: 9
+        width: 173
+        height: 231
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,92 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 474fd4b6433dc7ff0800000000000000
-      internalID: -36922474833775500
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: portraits_2
-      rect:
-        serializedVersion: 2
-        x: 884
-        y: 603
-        width: 415
-        height: 558
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6b2cff9eff1dd6520800000000000000
-      internalID: 2697042648937513654
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: portraits_3
-      rect:
-        serializedVersion: 2
-        x: 24
-        y: 28
-        width: 415
-        height: 558
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c6f4366aaf5c3aab0800000000000000
-      internalID: -4997933481127096468
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: portraits_4
-      rect:
-        serializedVersion: 2
-        x: 454
-        y: 28
-        width: 415
-        height: 558
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0d313554e1c2f8ee0800000000000000
-      internalID: -1256737262489365552
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: portraits_5
-      rect:
-        serializedVersion: 2
-        x: 884
-        y: 28
-        width: 415
-        height: 558
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 611cc854dc9c8a090800000000000000
-      internalID: -8022940852688207594
+      spriteID: b5a110f706df30db0800000000000000
+      internalID: -4826735784721573285
       vertices: []
       indices: 
       edges: []

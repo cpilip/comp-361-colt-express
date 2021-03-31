@@ -7,10 +7,14 @@ using UnityEngine;
  */
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-  public Transform parentToReturnTo;
+    public Transform parentToReturnTo;
+    public int originalIndex;
 
     public void OnBeginDrag(PointerEventData eventdata)
-  {
+    {
+        // Retrieve the Draggable's sibling index
+        originalIndex = this.transform.GetSiblingIndex();
+
         // Remember the Draggable's parent panel
         parentToReturnTo = this.transform.parent;
         // Set the Draggable's parent to the "master" parent
@@ -18,24 +22,21 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         // Disable raycasting on Draggable so onDrop() will work
         GetComponent<CanvasGroup>().blocksRaycasts = false;
-  }
-  public void OnDrag(PointerEventData eventData)
-  {
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
         // Draggable follows mouse
         this.transform.position = Input.mousePosition;
 
     }
 
-
     public void OnEndDrag(PointerEventData eventData)
-  {
+    {
         // If not dropped on a Drop Zone, return the Draggable to the parent panel
         this.transform.SetParent(parentToReturnTo);
 
         // Re-enable raycasting 
         GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
-
-    
 
 }

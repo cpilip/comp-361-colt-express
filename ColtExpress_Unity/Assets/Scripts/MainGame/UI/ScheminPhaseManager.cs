@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ClientCommunicationAPI;
+using UnityEngine.UI;
 
 /* Author: Christina Pilip
  * Usage: Defines behaviour of the Phase 1 Turn Menu. 
@@ -12,6 +13,10 @@ public class ScheminPhaseManager : MonoBehaviour
     public GameObject deck;
     public GameObject timer;
     public GameObject discardPile;
+
+    public GameObject fullWhiskey;
+    public GameObject normalWhiskey;
+    public GameObject oldWhiskey;
 
     private GameObject playedCardsZone;
 
@@ -26,7 +31,6 @@ public class ScheminPhaseManager : MonoBehaviour
         alreadyInFirst = true;
         playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
     }
-
 
     public void iterateCards()
     {
@@ -104,6 +108,80 @@ public class ScheminPhaseManager : MonoBehaviour
     }
 
 
+
+    // Use a whiskey
+    public void useWhiskey()
+    {
+        //Unlock sidebar and hide turn menu
+        GameUIManager.gameUIManagerInstance.unlockSidebar();
+        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+
+        StartCoroutine("usingWhiskey");
+    }
+    private IEnumerator usingWhiskey()
+    {
+        // Fancy lambda logic for figuring out when the timer coroutine finishes and the player has timed out their turn
+        bool timedOut = false;
+        bool whiskeyUsed = false;
+
+        OnWhiskeyUsed.wasWhiskeyUsed whiskeyWasUsed = delegate () { whiskeyUsed = true; };
+
+        fullWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+        normalWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+        oldWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+
+        StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
+
+        while (timedOut == false || whiskeyUsed == false)
+        {
+
+            if (timedOut || whiskeyUsed)
+            {
+                //Lock sidebar
+                GameUIManager.gameUIManagerInstance.lockSidebar();
+
+                timer.GetComponent<Timer>().resetTimer();
+
+                if (whiskeyUsed)
+                {
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey.");
+
+                    var definition = new
+                    {
+                        eventName = "WhiskeyMessage",
+                        index = 0
+                    };
+
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                }
+
+                if (timedOut)
+                {
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You timed out.");
+
+                    var definition = new
+                    {
+                        eventName = "WhiskeyMessage",
+                        index = -1
+                    };
+
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                }
+
+                yield break;
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+
+        Debug.LogError("[ScheminPhaseManager] Coroutine playingCard execution was borked (The player did not play a card *and* timed out. This should not happen!).");
+
+        yield break;
+
+    }
+
     // Draw and add three cards to the deck
     public void drawCard()
     {
@@ -124,6 +202,7 @@ public class ScheminPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.lockHand();
     }
 
+    //Play a card
     public void playCard()
     {
         //Unlock hand and hide turn menu
@@ -141,7 +220,6 @@ public class ScheminPhaseManager : MonoBehaviour
 
         OnChildrenUpdated.wasChildChanged cardWasPlayed = delegate () { cardPlayed = true; };
         playedCardsZone.GetComponent<OnChildrenUpdated>().notifyChildWasChanged += cardWasPlayed;
-        
 
         StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
 
@@ -158,15 +236,14 @@ public class ScheminPhaseManager : MonoBehaviour
                 //Do not do StopAllCoroutines(). Learned that the hard way.
                 if (cardPlayed)
                 {
-                    Debug.Log("[ScheminPhaseManager - PlayCard] You played a card.");
 
-                    //int i = clientHand.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
-                    //Debug.Log(i);
+                    int i = playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject.GetComponent<Draggable>().originalIndex;
 
+                    Debug.Log("[ScheminPhaseManager - PlayCard] You played card " + i + ".");
                     var definition = new
                     {
                         eventName = "CardMessage",
-                        index = 0
+                        index = i
                     };
 
                     ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);

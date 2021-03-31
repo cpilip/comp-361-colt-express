@@ -17,8 +17,11 @@ public class GameUIManager : MonoBehaviour
 
     //Menus
     public GameObject turnMenu;
+
+    //Blockers
     public GameObject boardBlocker;
     public GameObject handBlocker;
+    public GameObject sidebarBlocker;
 
     //Prefabs
     public GameObject characterPrefab;
@@ -52,7 +55,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    //Get corresponding in-game character object to a player
+    //Get corresponding in-game character object to a character
     public GameObject getCharacterObject(Character c)
     {
         GameObject requestedPlayer = null;
@@ -265,7 +268,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    //Lock the hand (played card zone, deck - card iterator is always allowed)
+    //Unlock the hand (played card zone, deck - card iterator is always allowed)
     public void unlockHand()
     {
         if (handBlocker != null)
@@ -274,7 +277,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    //Unlock the hand (played card zone, deck - card iterator is always allowed)
+    //Lock the hand (played card zone, deck - card iterator is always allowed)
     public void lockHand()
     {
         if (handBlocker != null)
@@ -283,9 +286,28 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    //Unlock the sidebar (use whiskey buttons)
+    public void unlockSidebar()
+    {
+        if (sidebarBlocker != null)
+        {
+            sidebarBlocker.SetActive(false);
+        }
+    }
+
+    //Lock the sidebar (use whiskey buttons)
+    public void lockSidebar()
+    {
+        if (sidebarBlocker != null)
+        {
+            sidebarBlocker.SetActive(true);
+        }
+    }
+
     void Start()
     {
         int i = 0;
+        //Add train cars
         foreach (Transform t in trainLocation.transform)
         {
             //Debug.Log("Index added " + i);
@@ -293,6 +315,7 @@ public class GameUIManager : MonoBehaviour
             i++;
         }
 
+        //Load all sprites in Resources/Sprites
         Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites");
 
         foreach (Sprite s in sprites) {
