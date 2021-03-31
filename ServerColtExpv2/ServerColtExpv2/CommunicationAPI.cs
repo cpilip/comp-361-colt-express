@@ -123,7 +123,7 @@ public class CommunicationAPI
 
             var definition = new
             {
-                eventName = "updatePlayerHand",
+                eventName = action,
                 player = c,
                 cardsToAdd = l 
             };
@@ -143,7 +143,7 @@ public class CommunicationAPI
             //One one client: "updateGameStatus" triggers either the Schemin or Stealin' phase
             var definition = new
             {
-                eventName = "updateGameStatus",
+                eventName = action,
                 statusIs = (bool)args[0],
             };
             if (cli == null)
@@ -168,7 +168,7 @@ public class CommunicationAPI
 
             var definition = new
             {
-                eventName = "updateCurrentRound",
+                eventName = action,
                 isLastRound = r.getIsLastRound(),
                 turns = l
             };
@@ -189,7 +189,7 @@ public class CommunicationAPI
             //One one client: "updateCurrentTurn" visually updates the current turn
             var definition = new
             {
-                eventName = "updateCurrentTurn",
+                eventName = action,
                 currentTurn = (int)args[0]
         };
 
@@ -212,7 +212,7 @@ public class CommunicationAPI
         {
             var definition = new
             {
-                eventName = "updateWaitingForInput",
+                eventName = action,
                 currentPlayer = (Character)args[0],
                 waitingForInput = (bool)args[1],
             };
@@ -229,7 +229,31 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-        } 
+        }
+        else if (action == "addCards")
+        //"addCards" adds c1, c2, c3 to the player's hand
+        {
+            //Bullet cards?
+            var definition = new
+            {
+                eventName = action,
+                c1 = args[0],
+                c2 = args[1],
+                c3 = args[2]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);
