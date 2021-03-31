@@ -264,11 +264,9 @@ public class GameUIManager : MonoBehaviour
         if (inDeck)
         {
             newCard.transform.SetParent(deck.transform);
-            ScheminPhaseManager.clientHand.Add(newCard);
         } else
         {
             newCard.transform.SetParent(discardPile.transform);
-            ScheminPhaseManager.clientDiscardPile.Add(newCard);
         }
         newCard.transform.localScale = scale;
 
@@ -340,7 +338,7 @@ public class GameUIManager : MonoBehaviour
         int i = 0;
         foreach (Transform t in trainLocation.transform)
         {
-            Debug.Log("Index added " + i);
+            //Debug.Log("Index added " + i);
             trainCars.Add(i, t.gameObject);
             i++;
         }

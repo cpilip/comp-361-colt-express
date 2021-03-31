@@ -28,6 +28,10 @@ public class UpdatePlayerHandListener : UIEventListenable
             foreach (ActionKind a in h_cards)
             {
                 GameUIManager.gameUIManagerInstance.createCardObject(player, a, true);
+                foreach (Transform c in GameUIManager.gameUIManagerInstance.deck.transform)
+                {
+                    c.gameObject.SetActive(true);
+                }
             }
 
             Debug.Log("[UpdatePlayerHandListener] Player hand updated for " + player + ".");

@@ -289,8 +289,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: nextSubdeck
+      - m_Target: {fileID: 718402315}
+        m_MethodName: iterateCards
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5450,8 +5450,8 @@ MonoBehaviour:
   deck: {fileID: 288253714}
   discardPile: {fileID: 98892707}
   turnMenu: {fileID: 1094513322}
-  actionMenu: {fileID: 0}
   boardBlocker: {fileID: 1496608278}
+  handBlocker: {fileID: 0}
   characterPrefab: {fileID: 3790544590098909438, guid: eef6daf0e7055634da79bef826197501,
     type: 3}
   playerProfilePrefab: {fileID: 2759939372631045168, guid: 98c666098008c7c4a89be4db2176e26e,
@@ -5504,12 +5504,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: {fileID: 288253714}
-  cardPrefab: {fileID: 0}
-  subdeckPrefab: {fileID: 0}
-  turnMenu: {fileID: 1094513322}
   timer: {fileID: 576392534}
-  handBlocker: {fileID: 1480477228}
-  discard: {fileID: 1496608278}
+  discardPile: {fileID: 98892707}
 --- !u!1 &727441901
 GameObject:
   m_ObjectHideFlags: 0
@@ -8413,7 +8409,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -66.1, y: -195.18222}
+  m_AnchoredPosition: {x: -63.3, y: -216.7}
   m_SizeDelta: {x: 540.2685, y: 105.118774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1480477230
