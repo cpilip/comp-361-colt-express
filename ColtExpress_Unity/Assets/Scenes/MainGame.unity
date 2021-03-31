@@ -2891,7 +2891,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 718402315}
         m_MethodName: drawCard
         m_Mode: 1
         m_Arguments:
@@ -5451,7 +5451,7 @@ MonoBehaviour:
   discardPile: {fileID: 98892707}
   turnMenu: {fileID: 1094513322}
   boardBlocker: {fileID: 1496608278}
-  handBlocker: {fileID: 0}
+  handBlocker: {fileID: 1480477228}
   characterPrefab: {fileID: 3790544590098909438, guid: eef6daf0e7055634da79bef826197501,
     type: 3}
   playerProfilePrefab: {fileID: 2759939372631045168, guid: 98c666098008c7c4a89be4db2176e26e,
@@ -5504,7 +5504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: {fileID: 288253714}
-  timer: {fileID: 576392534}
+  timer: {fileID: 963653845}
   discardPile: {fileID: 98892707}
 --- !u!1 &727441901
 GameObject:
@@ -12141,7 +12141,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 718402315}
         m_MethodName: playCard
         m_Mode: 1
         m_Arguments:

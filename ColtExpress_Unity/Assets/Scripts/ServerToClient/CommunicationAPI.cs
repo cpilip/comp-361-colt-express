@@ -56,7 +56,7 @@ namespace ClientCommunicationAPI
         //Serialize the provided arguments and send to the server
         public static void sendMessageToServer(params object[] args)
         {
-            string data = JsonConvert.SerializeObject(args[0], settings);
+            string data = JsonConvert.SerializeObject(args[0]);
             EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }
 

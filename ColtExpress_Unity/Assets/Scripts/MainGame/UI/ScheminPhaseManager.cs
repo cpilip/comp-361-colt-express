@@ -109,51 +109,15 @@ public class ScheminPhaseManager : MonoBehaviour
     {
         if (deck != null)
         {
-            /*
-            for (int i = 0; i < 3; i++)
+            
+            var definition = new
             {
-                // Create a new subdeck if the last one is full
-                if (lastSubdeck.childCount >= 6)
-                {
-                    GameObject newSubdeck = Instantiate(subdeckPrefab);
-                    // Set properties
-                    newSubdeck.transform.SetParent(deck.transform);
-                    newSubdeck.transform.position = lastSubdeck.transform.position;
-                    newSubdeck.transform.localScale = new Vector3(1, 1, 1);
+                eventName = "DrawMessage"
+            };
 
-
-                    // Disable view of the currently displayed subdeck
-                    deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(false);
-
-                    // Display and update to the new subdeck
-                    lastSubdeck = newSubdeck.transform;
-                    displayedSubdeckNum = deck.transform.childCount;
-                }
-
-                // Create a new card; no other values are changed, and the card prefab will definitely be altered at a later
-                // date when we model low-level implementation
-                //GameObject newCard = Instantiate(cardPrefab);
-
-                // Put the card in the last subdeck
-
-                if (discardPile.transform.childCount == 0)
-                {
-                    break;
-                }
-                Transform newCard = discardPile.transform.GetChild(0);
-
-                newCard.SetParent(lastSubdeck.transform);
-                //newCard.localScale = new Vector3(1, 1, 1);
-
-            }
-
-            // Display and update the currently displayed subdeck
-            deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(false);
-            displayedSubdeckNum = deck.transform.childCount;
-            deck.transform.GetChild(displayedSubdeckNum - 1).gameObject.SetActive(true);
-
-        }
-            */
+            ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+            Debug.Log("[ScheminPhaseManager - DrawCard] Requested cards from server.");
+            
         }
         //Hide the turn menu and lock the hand
         GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
@@ -162,7 +126,9 @@ public class ScheminPhaseManager : MonoBehaviour
 
     public void playCard()
     {
+        //Unlock hand and hide turn menu
         GameUIManager.gameUIManagerInstance.unlockHand();
+        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
 
         StartCoroutine("playingCard");
     }
@@ -175,6 +141,7 @@ public class ScheminPhaseManager : MonoBehaviour
 
         OnChildrenUpdated.wasChildChanged cardWasPlayed = delegate () { cardPlayed = true; };
         playedCardsZone.GetComponent<OnChildrenUpdated>().notifyChildWasChanged += cardWasPlayed;
+        
 
         StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
 
@@ -183,8 +150,7 @@ public class ScheminPhaseManager : MonoBehaviour
             
             if (timedOut || cardPlayed)
             {
-                //Hide turn menu and lock the hand
-                GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+                //Lock hand
                 GameUIManager.gameUIManagerInstance.lockHand();
 
                 timer.GetComponent<Timer>().resetTimer();
@@ -192,7 +158,7 @@ public class ScheminPhaseManager : MonoBehaviour
                 //Do not do StopAllCoroutines(). Learned that the hard way.
                 if (cardPlayed)
                 {
-                    Debug.Log("[ScheminPhaseManager] You played a card.");
+                    Debug.Log("[ScheminPhaseManager - PlayCard] You played a card.");
 
                     //int i = clientHand.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
                     //Debug.Log(i);
@@ -208,7 +174,7 @@ public class ScheminPhaseManager : MonoBehaviour
 
                 if (timedOut)
                 {
-                    Debug.Log("[ScheminPhaseManager] You timed out.");
+                    Debug.Log("[ScheminPhaseManager - PlayCard] You timed out.");
 
                     var definition = new
                     {

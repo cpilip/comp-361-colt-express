@@ -293,7 +293,7 @@ public class GameUIManager : MonoBehaviour
     {
         if (turnMenu != null)
         {
-            turnMenu.SetActive(true);
+            turnMenu.SetActive(isVisible);
         }
     }
 
@@ -318,18 +318,18 @@ public class GameUIManager : MonoBehaviour
     //Lock the hand (played card zone, deck - card iterator is always allowed)
     public void unlockHand()
     {
-        if (boardBlocker != null)
+        if (handBlocker != null)
         {
-            boardBlocker.SetActive(false);
+            handBlocker.SetActive(false);
         }
     }
 
     //Unlock the hand (played card zone, deck - card iterator is always allowed)
     public void lockHand()
     {
-        if (boardBlocker != null)
+        if (handBlocker != null)
         {
-            boardBlocker.SetActive(true);
+            handBlocker.SetActive(true);
         }
     }
 
