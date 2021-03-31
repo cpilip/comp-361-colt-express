@@ -16,7 +16,8 @@ namespace GameUnitSpace
         Cheyenne,
         Belle,
         Django,
-        Tuco
+        Tuco,
+        Marshal
     }
 
     class Player : GameUnit

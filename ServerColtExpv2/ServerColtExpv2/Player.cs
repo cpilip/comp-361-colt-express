@@ -54,8 +54,8 @@ namespace GameUnitSpace {
         private void initializeCards() {
             // Create and add 6 bullet cards
             bullets = new List<BulletCard>();
-            for (int i = 0 ; i < 6 ;i++) {
-                bullets.Add(new BulletCard());
+            for (int i = 1 ; i <= 6 ;i++) {
+                bullets.Add(new BulletCard(i));
             }
             discardPile = new List<Card>();
             hand = new List<Card>();

@@ -26,14 +26,6 @@ public class GameUIManager : MonoBehaviour
     public GameObject actionCardPrefab;
     public GameObject bulletCardPrefab;
 
-    //Character sprites
-    public Sprite Tuco;
-    public Sprite Django;
-    public Sprite Ghost;
-    public Sprite Doc;
-    public Sprite Che;
-    public Sprite Belle;
-
     //We treat a player's bandit (which is unique) as the corresponding player
     //Player : in-game character object map
     //Player profile : in-game character object map
@@ -72,32 +64,11 @@ public class GameUIManager : MonoBehaviour
     public GameObject createCharacterObject(Character c)
     {
         GameObject newPlayer = Instantiate(characterPrefab);
+        Sprite newPlayerSprite = null;
 
-        switch (c)
-        {
-            case Character.Tuco:
-                newPlayer.GetComponent<Image>().sprite = Tuco;
-                break;
-            case Character.Django:
-                newPlayer.GetComponent<Image>().sprite = Django;
-                break;
-            case Character.Ghost:
-                newPlayer.GetComponent<Image>().sprite = Ghost;
-                break;
-            case Character.Doc:
-                newPlayer.GetComponent<Image>().sprite = Doc;
-                break;
-            case Character.Cheyenne:
-                newPlayer.GetComponent<Image>().sprite = Che;
-                break;
-            case Character.Belle:
-                newPlayer.GetComponent<Image>().sprite = Belle;
-                break;
-            default:
-                newPlayer.GetComponent<Image>().sprite = Belle;
-                break;
-
-        }
+        //Get the right character sprite
+        loadedSprites.TryGetValue(c.ToString().ToLower() + "_character", out newPlayerSprite);
+        newPlayer.GetComponent<Image>().sprite = newPlayerSprite;
 
         //Fixing the scale
         newPlayer.transform.localScale = scale;
@@ -118,32 +89,11 @@ public class GameUIManager : MonoBehaviour
     public GameObject createPlayerProfileObject(Character c)
     {
         GameObject newPlayerProfile = Instantiate(playerProfilePrefab);
+        Sprite newPlayerProfilePortrait = null;
 
-        switch (c)
-        {
-            case Character.Tuco:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Tuco;
-                break;
-            case Character.Django:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Django;
-                break;
-            case Character.Ghost:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Ghost;
-                break;
-            case Character.Doc:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Doc;
-                break;
-            case Character.Cheyenne:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Che;
-                break;
-            case Character.Belle:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Belle;
-                break;
-            default:
-                newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = Belle;
-                break;
-
-        }
+        //Get the right portrait
+        loadedSprites.TryGetValue(c.ToString().ToLower() + "_portrait", out newPlayerProfilePortrait);
+        newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = newPlayerProfilePortrait;
 
         //Making sure to parent the profile under the profile list and fixing the scale
         newPlayerProfile.transform.SetParent(playerProfileLocation.transform);

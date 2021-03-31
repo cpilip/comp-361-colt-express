@@ -40,7 +40,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
-        totalPlayer = 3;
+        totalPlayer = 1;
         this.endOfGame = false;
     }
 
@@ -67,7 +67,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
         
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 3)
+        if (players.Count == 1)
         {
 
             initializeGameBoard();
@@ -204,7 +204,7 @@ class GameController
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
             {
-                BulletCard b = new BulletCard();
+                BulletCard b = new BulletCard(-1);
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
 
@@ -223,7 +223,7 @@ class GameController
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
             {
-                BulletCard b = new BulletCard();
+                BulletCard b = new BulletCard(-1);
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
@@ -253,7 +253,7 @@ class GameController
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
-            BulletCard b = new BulletCard();
+            BulletCard b = new BulletCard(-1);
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
             //TO ALL PLAYERS
@@ -335,7 +335,7 @@ class GameController
 
                             if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
                             {
-                                this.currentPlayer.addToDiscardPile(new BulletCard());
+                                this.currentPlayer.addToDiscardPile(new BulletCard(-1));
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                                 //TO ALL PLAYERS
                                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());

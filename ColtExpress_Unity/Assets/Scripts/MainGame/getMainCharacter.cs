@@ -23,28 +23,28 @@ public class getMainCharacter : MonoBehaviour
         switch (getCharacter)
         {
             case 1:
-                player.sprite = Tuco;
+                //player.sprite = Tuco;
                 NamedClient.c = Character.Tuco;
 
                 Debug.Log("[GetCharacter] You selected Tuco.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco);
                 break;
             case 2:
-                player.sprite = Django;
+                //player.sprite = Django;
                 NamedClient.c = Character.Django;
 
                 Debug.Log("[GetCharacter] You selected Django.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django);
                 break;
             case 3:
-                player.sprite = Ghost;
+                //player.sprite = Ghost;
                 NamedClient.c = Character.Ghost;
 
                 Debug.Log("[GetCharacter] You selected Ghost.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost);
                 break;
             case 4:
-                player.sprite = Doc;
+                //player.sprite = Doc;
                 NamedClient.c = Character.Doc;
 
                 Debug.Log("[GetCharacter] You selected Doc.");
@@ -52,14 +52,14 @@ public class getMainCharacter : MonoBehaviour
                 break;
             case 5:
                 NamedClient.c = Character.Cheyenne;
-                player.sprite = Che;
+               // player.sprite = Che;
 
                 Debug.Log("[GetCharacter] You selected Cheyenne.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne);
                 break;
             case 6:
                 NamedClient.c = Character.Belle;
-                player.sprite = Belle;
+                //player.sprite = Belle;
 
                 Debug.Log("[GetCharacter] You selected Belle.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle);
@@ -71,37 +71,4 @@ public class getMainCharacter : MonoBehaviour
         }
 
     }
-
-    public void setSprite(Character c)
-    {
-        switch (c)
-        {
-            case Character.Tuco:
-                player.sprite = Tuco;
-                break;
-            case Character.Django:
-                player.sprite = Django;
-                break;
-            case Character.Ghost:
-                player.sprite = Ghost;
-                break;
-            case Character.Doc:
-                player.sprite = Doc;
-                break;
-            case Character.Cheyenne:
-                player.sprite = Che;
-                break;
-            case Character.Belle:
-                player.sprite = Belle;
-                break;
-            default:
-                player.sprite = Belle;
-                break;
-
-        }
-    }
-
-
-
-
 }

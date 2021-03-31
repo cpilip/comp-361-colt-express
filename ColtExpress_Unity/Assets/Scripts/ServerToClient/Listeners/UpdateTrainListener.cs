@@ -22,9 +22,11 @@ public class UpdateTrainListener : UIEventListenable
                     eventName = "updateTrain",
                     indexofCar = int,
                     i_items = item types (interior),
+                    i_hasMarshal = true if yes,
                     i_players = characters (interior),
                     r_items = item types (roof),
-                    r_players = characters (roof),
+                    r_players = n.getRoof().getUnits_players(),
+                    r_hasMarshal = true if yes
                 };
         */
 
@@ -40,6 +42,8 @@ public class UpdateTrainListener : UIEventListenable
 
         List<Character> r_P = o.SelectToken("r_players").ToObject<List<Character>>();
         List<ItemType> r_I = o.SelectToken("r_items").ToObject<List<ItemType>>();
+
+        bool r_m = o.SelectToken("r_hasMarshal").ToObject<bool>();
 
         //Roof initialization
         foreach (Character c in r_P)
@@ -67,8 +71,17 @@ public class UpdateTrainListener : UIEventListenable
             item.transform.localScale = scale;
         }
 
+        if (r_m)
+        {
+            GameObject character = GameUIManager.gameUIManagerInstance.createCharacterObject(GameUnitSpace.Character.Marshal);
+            character.transform.SetParent(trainCarRoof.transform);
+            character.transform.localScale = scale;
+        }
+
         r_P = o.SelectToken("i_players").ToObject<List<Character>>();
         r_I = o.SelectToken("i_items").ToObject<List<ItemType>>();
+        
+        r_m = o.SelectToken("i_hasMarshal").ToObject<bool>();
 
         //Interior initialization
         foreach (Character c in r_P)
@@ -94,6 +107,13 @@ public class UpdateTrainListener : UIEventListenable
             }
             item.transform.SetParent(trainCarInterior.transform);
             item.transform.localScale = scale;
+        }
+
+        if (r_m)
+        {
+            GameObject character = GameUIManager.gameUIManagerInstance.createCharacterObject(GameUnitSpace.Character.Marshal);
+            character.transform.SetParent(trainCarInterior.transform);
+            character.transform.localScale = scale;
         }
 
         Debug.Log("[UpdateTrainListener] Train car " + i + " initialized.");

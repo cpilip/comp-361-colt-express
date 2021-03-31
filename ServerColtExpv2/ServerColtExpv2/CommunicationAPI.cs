@@ -66,8 +66,10 @@ public class CommunicationAPI
                     indexofCar = i,
                     i_items = n.getInside().getUnits_items(),
                     i_players = n.getInside().getUnits_players(),
+                    i_hasMarshal = n.getInside().hasMarshal(Marshal.getInstance()),
                     r_items = n.getRoof().getUnits_items(),
                     r_players = n.getRoof().getUnits_players(),
+                    r_hasMarshal = n.getRoof().hasMarshal(Marshal.getInstance())
                 };
                 i++;
                 if (cli == null)
