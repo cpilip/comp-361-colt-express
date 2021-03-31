@@ -11,12 +11,16 @@ public class OnWhiskeyUsed : MonoBehaviour
     public delegate void wasWhiskeyUsed();
     public event wasWhiskeyUsed notifyWhiskeyWasUsed;
 
+    public bool thisWhiskeyTypeUsed = false;
+
     void Start()
     {
         this.GetComponent<Button>().onClick.AddListener(TaskOnClick);
+        
     }
     public void TaskOnClick()
     {
+        thisWhiskeyTypeUsed = true;
         notifyWhiskeyWasUsed?.Invoke();
     }
 

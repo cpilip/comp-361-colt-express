@@ -14,9 +14,9 @@ public class ScheminPhaseManager : MonoBehaviour
     public GameObject timer;
     public GameObject discardPile;
 
-    public GameObject fullWhiskey;
-    public GameObject normalWhiskey;
-    public GameObject oldWhiskey;
+    public Button fullWhiskey;
+    public Button normalWhiskey;
+    public Button oldWhiskey;
 
     private GameObject playedCardsZone;
 
@@ -124,6 +124,12 @@ public class ScheminPhaseManager : MonoBehaviour
         bool timedOut = false;
         bool whiskeyUsed = false;
 
+        //Retrieves Usables of player profile
+        Transform usables = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c).transform.GetChild(3);
+        fullWhiskey = usables.GetChild(0).GetComponent<Button>();
+        normalWhiskey = usables.GetChild(1).GetComponent<Button>();
+        oldWhiskey = usables.GetChild(2).GetComponent<Button>();
+
         OnWhiskeyUsed.wasWhiskeyUsed whiskeyWasUsed = delegate () { whiskeyUsed = true; };
 
         fullWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
@@ -144,15 +150,35 @@ public class ScheminPhaseManager : MonoBehaviour
 
                 if (whiskeyUsed)
                 {
-                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey.");
+                    string whiskey = "";
+                    //WhiskeyType t; 
+                    if (fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        // t = WhiskeyType.Full;
+                        whiskey = "full";
+                    } else if (normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        // t = WhiskeyType.Normal;
+                        whiskey = "normal";
+                    }
+                    else if (oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        // t = WhiskeyType.Old;
+                        whiskey = "old";
+                    }
+
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + whiskey + "].");
 
                     var definition = new
                     {
                         eventName = "WhiskeyMessage",
-                        index = 0
+                        whiskeyType = 1 //t
                     };
 
-                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                    //ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 if (timedOut)
@@ -165,7 +191,7 @@ public class ScheminPhaseManager : MonoBehaviour
                         index = -1
                     };
 
-                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                    //ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 yield break;

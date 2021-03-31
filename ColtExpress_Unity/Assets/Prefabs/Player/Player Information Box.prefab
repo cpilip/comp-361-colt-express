@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &7367800765235178772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990626221554314197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e827bceee1c794fa159ae1ecf7825c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisWhiskeyTypeUsed: 0
 --- !u!1 &2759939372631045168
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +437,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 0}
+--- !u!114 &8764245412443083401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3700565637140762437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e827bceee1c794fa159ae1ecf7825c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisWhiskeyTypeUsed: 0
 --- !u!1 &6922475814828036141
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +552,19 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 3
+--- !u!114 &3499375380777969797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8806625356883421538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e827bceee1c794fa159ae1ecf7825c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisWhiskeyTypeUsed: 0
 --- !u!1001 &165926938385464249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -641,7 +680,7 @@ PrefabInstance:
     - target: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
         type: 3}
       propertyPath: m_Name
-      value: Normal Whiskey Icon
+      value: Normal Whiskey
       objectReference: {fileID: 0}
     - target: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
         type: 3}
@@ -656,6 +695,12 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 008452020061a1a41bb3b954ce9d8534, type: 3}
+--- !u!1 &8806625356883421538 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
+    type: 3}
+  m_PrefabInstance: {fileID: 165926938385464249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8806625356883421549 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8681276183856927444, guid: 008452020061a1a41bb3b954ce9d8534,
@@ -1406,10 +1451,16 @@ PrefabInstance:
     - target: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
         type: 3}
       propertyPath: m_Name
-      value: Whiskey Icon
+      value: Full Whiskey
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 008452020061a1a41bb3b954ce9d8534, type: 3}
+--- !u!1 &3700565637140762437 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
+    type: 3}
+  m_PrefabInstance: {fileID: 5413637255452630430}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3700565637140762442 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8681276183856927444, guid: 008452020061a1a41bb3b954ce9d8534,
@@ -1531,7 +1582,7 @@ PrefabInstance:
     - target: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
         type: 3}
       propertyPath: m_Name
-      value: Old Whiskey Icon
+      value: Old Whiskey
       objectReference: {fileID: 0}
     - target: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
         type: 3}
@@ -1546,6 +1597,12 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 008452020061a1a41bb3b954ce9d8534, type: 3}
+--- !u!1 &990626221554314197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8681276183856927451, guid: 008452020061a1a41bb3b954ce9d8534,
+    type: 3}
+  m_PrefabInstance: {fileID: 8486329798916274446}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &990626221554314202 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8681276183856927444, guid: 008452020061a1a41bb3b954ce9d8534,
