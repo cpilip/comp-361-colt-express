@@ -4,7 +4,7 @@ namespace CardSpace
 {
     class BulletCard : Card
     {
-        private readonly int numBullets;
+        private int numBullets;
 
         public BulletCard(int num)
         {

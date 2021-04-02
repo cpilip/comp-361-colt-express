@@ -2,7 +2,6 @@ using System;
 using GameUnitSpace;
 
 namespace CardSpace {
-
     abstract class  Card {
 
         public readonly Player myPlayer;
