@@ -87,7 +87,7 @@ class MyTcpListener
 
 
                     //Verify against lobby service
-                    if (clients.Count == 4)
+                    if (clients.Count == 3)
                     {
                         haveAllConnections = true;
                     }
@@ -163,6 +163,7 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("CardMessage"))
                 {
+                    // Get index; -1 if player timed out
                     int index = Int32.Parse(o.SelectToken("index").ToString());
                     ActionCard crd = aController.getCardByIndex(index);
 

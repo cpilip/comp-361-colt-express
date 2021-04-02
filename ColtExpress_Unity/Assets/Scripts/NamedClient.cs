@@ -22,21 +22,11 @@ public class NamedClient : MonoBehaviour
         //Open a connection to the server automatically upon uponing the game executable
         try
         {
-            // Create a TcpClient.
-            // Note, for this client to work you need to have a TcpServer
-            // connected to the same address as specified by the server, port
-            // combination.
+            //Create a TcpClient; "server" must be an IP running the corresponding server executable
             thisClient = new TcpClient(server, port);
+            //Obtain the corresponding stream
             stream = thisClient.GetStream();
-            
-
-            //Byte[] data = System.Text.Encoding.ASCII.GetBytes("Hey");
-
-            // Get a client stream for reading and writing.
-
-            
-            // Send the message to the connected TcpServer.
-            //stream.Write(data, 0, data.Length);
+           
         }
         catch (ArgumentNullException e)
         {
@@ -51,64 +41,54 @@ public class NamedClient : MonoBehaviour
 
     void Update()
     {
+        //Listen for messages from the server
         getFromServer();
     }
 
-    public void SendMessageToServer(string message)
+    public void sendToServer(string message)
     {
-        Debug.Log("Message sent");
-        TransmitMessage(server, port, message);
-        Debug.Log("Received");
-    }
+        Debug.Log("[ClientToServer] Data transmitted: " + message);
 
-    void TransmitMessage(string server, int port, string message)
-    {
-        try { 
-
+        try
+        {
             // Translate the passed message into ASCII and store it as a Byte array.
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
             // Get a client stream for reading and writing.
-   
+
 
             // Send the message to the connected TcpServer.
             stream.Write(data, 0, data.Length);
-          
+
         }
         catch (ArgumentNullException e)
         {
-        Console.WriteLine("ArgumentNullException: {0}", e);
+            Console.WriteLine("ArgumentNullException: {0}", e);
         }
         catch (SocketException e)
         {
-        Console.WriteLine("SocketException: {0}", e);
+            Console.WriteLine("SocketException: {0}", e);
         }
-
     }
-
     public static string getFromServer()
     {
-        
         int i;
         string data = null;
         Byte[] bytes = new Byte[256];
-        // Loop to receive all the data sent by the client.
-
-        // Debug.Log("Getting from server.");
-
         
+        //While there is data on the stream, add it to the buffer
         while (stream.DataAvailable)
         {
             i = stream.Read(bytes, 0, bytes.Length);
             // Translate data bytes to a ASCII string.
             string message = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-            //Debug.Log(buffer);
 
             buffer += message;
 
-            Debug.Log("Received.");
+            Debug.Log("[ServerToClient] Data buffered.");
         }
 
+        //If the buffer is not empty, continually extract the first event message and execute it
         while (!buffer.Equals("")) 
         {
             Regex splitBuffer = new Regex("\\{\"eventName\".*?\\{\"eventName\"(.*)", RegexOptions.IgnoreCase);
@@ -117,7 +97,7 @@ public class NamedClient : MonoBehaviour
             {
                 string restOfBuffer = "{" + "\"eventName\"" + splitBuffer.Match(buffer).Groups[1].Value.ToString();
 
-                //Debug.Log("REST" + restOfBuffer);
+                //Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
                 data = (index < 0)
@@ -125,20 +105,16 @@ public class NamedClient : MonoBehaviour
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
 
-                //Debug.Log("CLEANED" + data);
+                //Debug.Log("[ServerToClient] CURRENT: " + data);
             }
             else
             {
                 data = buffer;
                 buffer = "";
             }
-            Debug.Log("DEBUG: " + buffer);
-            CommunicationAPIHandler.getMessageFromServer(data);
+
+            ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
         }
-        
-
-
-        // Debug.Log("No message.");
 
         return data;
 

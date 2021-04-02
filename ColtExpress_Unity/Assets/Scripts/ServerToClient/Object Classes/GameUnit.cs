@@ -4,7 +4,7 @@ using PositionSpace;
 
 namespace GameUnitSpace
 {
-    [JsonConverter(typeof(BaseConverter))]
+    
     abstract class GameUnit
     {
         //[JsonProperty]
