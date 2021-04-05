@@ -55,8 +55,7 @@ public class CommunicationAPI
 
         if (action == "updatePlayers")
         {
-            //"updatePlayers" triggers creation of player profiles for every player in the list provided;
-            //if the current player in the list is the player of the client, initialize their hand, discard pile, and remaining bullets additionally
+        //"updatePlayers" triggers creation of player profiles for every player in the list provided;
             List<Player> t = (List<Player>)args[0];
 
             foreach (Player n in t)
@@ -83,7 +82,7 @@ public class CommunicationAPI
         }
         else if (action == "updateTrain")
         {
-            //"updateTrain" triggers the initialization of the train
+        //"updateTrain" triggers the initialization of the train
             List<TrainCar> t = (List<TrainCar>)args[0];
 
             int i = 0;
@@ -119,7 +118,7 @@ public class CommunicationAPI
         }
         else if (action == "updatePlayerHand")
         {
-            //"updatePlayerHand" updates the hand of the player sent
+        //"updatePlayerHand" updates the hand of the player sent
             var definition = new
             {
                 eventName = action,
@@ -141,7 +140,7 @@ public class CommunicationAPI
         }
         else if (action == "updateGameStatus")
         {
-            //"updateGameStatus" triggers either the Schemin or Stealin' phase
+        //"updateGameStatus" triggers either the Schemin or Stealin' phase
             var definition = new
             {
                 eventName = action,
@@ -161,7 +160,7 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentRound")
         {
-            //"updateCurrentRound" visually updates the current round
+        //"updateCurrentRound" visually updates the current round
             Round r = (Round)args[0];
             List<TurnType> l = new List<TurnType>();
 
@@ -187,7 +186,7 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentTurn")
         {
-            //"updateCurrentTurn" visually updates the current turn
+        //"updateCurrentTurn" visually updates the current turn
             var definition = new
             {
                 eventName = action,
@@ -230,15 +229,36 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-        } else if (action == "addCards")
-        //"updateWaitingForInput" unlocks the UI for the current player
-        //If the game status is Schemin', the turn menu is unlocked - expect the player to be able to play a card or draw cards
-        //If the game status is Stealin', the board is unlocked
+        } 
+        else if (action == "addCards")
+        //"addCards" adds cards for the current player
         {
             var definition = new
             {
                 eventName = action,
                 cardsToAdd = (List<Card>)args[0]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+
+        }
+        else if (action == "updateCurrentPlayer")
+        //"updateCurrentPlayer"  visually updates the current player
+        {
+            var definition = new
+            {
+                eventName = action,
+                currentPlayer = (Character)args[0]
             };
 
             if (cli == null)

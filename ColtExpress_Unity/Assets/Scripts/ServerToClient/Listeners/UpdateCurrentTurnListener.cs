@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UpdateCurrentTurnListener : UIEventListenable
 {
-
+    private static int previousTurn = 0;
     public override void updateElement(string data)
     {
         /* PRE: data 
@@ -26,6 +26,7 @@ public class UpdateCurrentTurnListener : UIEventListenable
         Debug.Log("[UpdateCurrentTurnListener] Turn: " + t);
 
         t = (t == 0) ? (this.transform.childCount - 1) : t - 1;
+        previousTurn = t;
 
         this.transform.GetChild(t).GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 1f);
 

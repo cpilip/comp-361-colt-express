@@ -40,7 +40,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
-        totalPlayer = 1;
+        totalPlayer = 2;
         this.endOfGame = false;
     }
 
@@ -67,7 +67,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
         
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 1)
+        if (players.Count == 2)
         {
 
             initializeGameBoard();
@@ -111,8 +111,10 @@ class GameController
             players[0].setWaitingForInput(true);
 
             this.currentPlayer = players[0];
+
             //TO ALL PLAYERS
-            //Send the current player as index and value for waiting for input for that index/player
+            //Send the current player to all clients and value for waiting for input for that player
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
             Console.WriteLine("Finished initialization.");
@@ -287,7 +289,7 @@ class GameController
     {
         ActionCard top = this.currentRound.seeTopOfPlayedCards();
         this.currentPlayer = top.belongsTo();
-        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
+        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
 
         this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
@@ -438,7 +440,7 @@ class GameController
                     this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
                 }
                 //otherwise, it is the next player in the list 
                 else
@@ -446,7 +448,7 @@ class GameController
                     this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
                 }
 
                 //if the turn is Speeding up, the next player has another action 
@@ -500,7 +502,7 @@ class GameController
                 this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
                 this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
 
                 this.aGameStatus = GameStatus.Schemin;
                 //TO ALL PLAYERS
