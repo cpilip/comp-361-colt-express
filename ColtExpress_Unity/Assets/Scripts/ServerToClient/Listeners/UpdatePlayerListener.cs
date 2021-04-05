@@ -29,7 +29,7 @@ public class UpdatePlayerListener : UIEventListenable
         GameUIManager.gameUIManagerInstance.createPlayerProfileObject(player);
 
         //Update profile with correct number of bullets (2 - Inventory, 0 - Bullets, 1 - Text)
-        GameUIManager.gameUIManagerInstance.getPlayerProfileObject(player).transform.GetChild(2).GetChild(0).GetChild(1).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "x0" + numOfBullets;
+        GameUIManager.gameUIManagerInstance.getPlayerProfileObject(player).transform.GetChild(2).GetChild(0).GetChild(1).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "x" + numOfBullets;
 
     }
 }

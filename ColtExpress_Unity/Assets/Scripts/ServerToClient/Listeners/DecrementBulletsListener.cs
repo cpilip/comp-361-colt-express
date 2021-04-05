@@ -21,7 +21,7 @@ public class DecrementBulletsListener : UIEventListenable
 
         GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c);
         //2 - Inventory, 0 - Bullets, 1 - Text
-        playerProfile.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x0{0}", n);
+        playerProfile.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", n);
 
         Debug.Log("[DecrementBulletListener] Decremented bullets.");
 
