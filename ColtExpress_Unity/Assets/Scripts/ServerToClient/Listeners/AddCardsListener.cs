@@ -1,4 +1,5 @@
 ﻿using CardSpace;
+using Coffee.UIEffects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 public class AddCardsListener : UIEventListenable
 {
+    public GameObject cardIterator;
     public override void updateElement(string data)
     {
         /* PRE: data 
@@ -16,6 +18,11 @@ public class AddCardsListener : UIEventListenable
                     cardsToAdd = (List<Card>)args[0]
                 };
         */
+
+        if (cardIterator != null)
+        {
+            cardIterator.GetComponent<UIShiny>().Play();
+        }
 
         JObject o = JObject.Parse(data);
         

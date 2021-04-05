@@ -40,7 +40,7 @@ class GameController
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
-        totalPlayer = 2;
+        totalPlayer = 1;
         this.endOfGame = false;
     }
 
@@ -67,7 +67,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
         
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 2)
+        if (players.Count == 1)
         {
 
             initializeGameBoard();
@@ -441,6 +441,7 @@ class GameController
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
+
                 }
                 //otherwise, it is the next player in the list 
                 else
@@ -449,6 +450,7 @@ class GameController
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
+
                 }
 
                 //if the turn is Speeding up, the next player has another action 
