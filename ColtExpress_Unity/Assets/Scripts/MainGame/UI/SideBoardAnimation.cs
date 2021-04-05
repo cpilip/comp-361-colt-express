@@ -14,7 +14,7 @@ public class SideBoardAnimation : MonoBehaviour
                 animator.SetBool("showBoard", !isOpen);
             }
 
-            bool isEnabled = sideboardBlocker.active;
+            bool isEnabled = sideboardBlocker.activeSelf;
             if (isEnabled)
             {
                 sideboardBlocker.SetActive(false);

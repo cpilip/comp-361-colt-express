@@ -5480,7 +5480,8 @@ MonoBehaviour:
     type: 3}
   actionCardPrefab: {fileID: 5513559504549008609, guid: 8b727dd535cc502458cbb575eb80e4d5,
     type: 3}
-  bulletCardPrefab: {fileID: 0}
+  bulletCardPrefab: {fileID: 8373409327896376393, guid: 7447abde901c7a641aaa07ed48a89f89,
+    type: 3}
   gameStatus: 0
 --- !u!114 &718402313
 MonoBehaviour:
@@ -5897,7 +5898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 343.04572, y: -12.357091}
+  m_AnchoredPosition: {x: 343.04572, y: -12.357117}
   m_SizeDelta: {x: -683.6845, y: -41.547485}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &764131689
@@ -14041,6 +14042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SideBoard: {fileID: 6600991086092993943}
+  sideboardBlocker: {fileID: 764131687}
 --- !u!95 &6600991086092993947
 Animator:
   serializedVersion: 3
