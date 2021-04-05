@@ -1,5 +1,6 @@
 ﻿using CardSpace;
 using GameUnitSpace;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,17 +22,34 @@ public class UpdatePlayerHandListener : UIEventListenable
         JObject o = JObject.Parse(data);
         Character player = o.SelectToken("player").ToObject<Character>();
 
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.Converters.Add(new ClientCommunicationAPIHandler.CardConverter());
+
         if (player == NamedClient.c)
         {
-            List<ActionKind> h_cards = o.SelectToken("cardsToAdd").ToObject<List<ActionKind>>();
-
-            foreach (ActionKind a in h_cards)
+            //Clear the old hand
+            foreach (GameObject c in GameUIManager.gameUIManagerInstance.deck.transform)
             {
-                GameUIManager.gameUIManagerInstance.createCardObject(player, a, true);
-                foreach (Transform c in GameUIManager.gameUIManagerInstance.deck.transform)
-                {
-                    c.gameObject.SetActive(true);
-                }
+                Destroy(c);
+            }
+
+            //Get list of JSON cards
+            IEnumerable listOfCardTokens = o.SelectToken("cardsToAdd").Children();
+
+            foreach (JToken c in listOfCardTokens)
+            {
+                //Deserialize each JSON card to an ActionCard or BulletCard
+                Card card = c.ToObject<Card>(serializer);
+                
+                //Call the appropriate card object function
+                GameUIManager.gameUIManagerInstance.createCardObject(player, ((ActionCard)card).getKind(), true);
+
+            }
+
+            //Activate the six cards
+            for (int i = 0; i < 6; i++) 
+            {
+                GameUIManager.gameUIManagerInstance.deck.transform.GetChild(i).gameObject.SetActive(true);
             }
 
             Debug.Log("[UpdatePlayerHandListener] Player hand updated for " + player + ".");

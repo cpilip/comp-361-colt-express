@@ -63,7 +63,7 @@ namespace GameUnitSpace
             bullets = new List<BulletCard>();
             for (int i = 0; i < 6; i++)
             {
-                bullets.Add(new BulletCard());
+                bullets.Add(new BulletCard(-1));
             }
             discardPile = new List<System.Object>();
             hand = new List<System.Object>();

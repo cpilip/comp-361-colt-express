@@ -84,7 +84,7 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
-        public List<ItemType> getUnits_items()
+        public List<ItemType> getUnits_Items()
         {
             List<ItemType> l = new List<ItemType>();
             this.units.OfType<GameItem>().ToList()
@@ -92,7 +92,7 @@ namespace PositionSpace
             return l;
         }
 
-        public List<Character> getUnits_players()
+        public List<Character> getUnits_Players()
         {
             List<Character> l = new List<Character>();
             this.units.OfType<Player>().ToList()

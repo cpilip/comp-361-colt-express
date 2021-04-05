@@ -74,6 +74,38 @@ namespace ClientCommunicationAPIHandler
         }
     }
 
+    public class CardConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(Card));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jo = JObject.Load(reader);
+            if (jo["$type"].Value<string>() == "ActionCard")
+                return jo.ToObject<ActionCard>(serializer);
+
+            if (jo["$type"].Value<string>() == "BulletCard")
+                return jo.ToObject<BulletCard>(serializer);
+
+            return null;
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+    }
+
 }
 
 public enum GameStatus

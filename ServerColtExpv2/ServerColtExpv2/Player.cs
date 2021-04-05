@@ -162,20 +162,6 @@ namespace GameUnitSpace {
             return this.hand.OfType<BulletCard>().ToList().Count;
         }
 
-        //Discard pile variants
-        public List<ActionKind> getDiscard_actionCards()
-        {
-            List<ActionKind> l = new List<ActionKind>();
-            this.discardPile.OfType<ActionCard>().ToList()
-                .ForEach(i => l.Add(i.getKind()));
-            return l;
-        }
-
-        public int getDiscard_bulletCards()
-        {
-            return this.discardPile.OfType<BulletCard>().ToList().Count;
-        }
-
     }
 
 }

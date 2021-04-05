@@ -14,46 +14,22 @@ public class UpdatePlayerListener : UIEventListenable
         /* PRE: data
         *
             {
-                eventName = "updatePlayer",
-                player = Character c,
-                h_ActionCards = List<ActionKind>
-                h_BulletCards = int,
-                d_ActionCards = List<ActionKind>,
-                d_BulletCards = int
+                    eventName = "updatePlayer",
+                    player = n.getBandit(),
+                    numOfBullets = 6 - n.getNumOfBulletsShot()
             };
         */
         JObject o = JObject.Parse(data);
         Character player = o.SelectToken("player").ToObject<Character>();
+        int numOfBullets = o.SelectToken("numOfBullets").ToObject<int>();
 
         Debug.Log("[UpdatePlayerListener] Player profile created for " + player + ".");
+        
+        //Create profile
         GameUIManager.gameUIManagerInstance.createPlayerProfileObject(player);
 
-        if (player == NamedClient.c)
-        {
-            Debug.Log("[UpdatePlayerListener] Player hand, discard pile, and remaining bullets initialized for " + player + ".");
-
-            List<ActionKind> h_a = o.SelectToken("h_ActionCards").ToObject<List<ActionKind>>();
-
-            foreach (ActionKind a in h_a)
-            {
-                GameUIManager.gameUIManagerInstance.createCardObject(player, a, true);    
-            }
-
-            List<ActionKind> d_a = o.SelectToken("d_ActionCards").ToObject<List<ActionKind>>();
-
-            foreach (ActionKind a in d_a)
-            {
-                GameUIManager.gameUIManagerInstance.createCardObject(player, a, false);
-            }
-
-            //Player profile prefab:
-            //  child 2 > Inventory
-            //  child 0 > Whiskey group
-            //  child 1 > Whiskey text
-
-            //TODO: Bullet cards?
-
-        }
+        //Update profile with correct number of bullets (2 - Inventory, 0 - Bullets, 1 - Text)
+        GameUIManager.gameUIManagerInstance.getPlayerProfileObject(player).transform.GetChild(2).GetChild(0).GetChild(1).gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "x0" + numOfBullets;
 
     }
 }

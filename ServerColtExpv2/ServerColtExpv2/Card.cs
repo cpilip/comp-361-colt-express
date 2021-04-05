@@ -1,9 +1,10 @@
 using System;
 using GameUnitSpace;
+using Newtonsoft.Json;
 
 namespace CardSpace {
 
-    abstract class  Card {
+    abstract class Card {
 
         public readonly Player myPlayer;
 

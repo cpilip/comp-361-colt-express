@@ -9259,6 +9259,7 @@ GameObject:
   - component: {fileID: 1573264383}
   - component: {fileID: 1573264382}
   - component: {fileID: 1573264384}
+  - component: {fileID: 1573264385}
   m_Layer: 5
   m_Name: Hand
   m_TagString: Untagged
@@ -9338,6 +9339,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updatePlayerHand
+--- !u!114 &1573264385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573264380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 917f985453fbf3846adce2ba997b04fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: addCards
 --- !u!1 &1594952566
 GameObject:
   m_ObjectHideFlags: 0
