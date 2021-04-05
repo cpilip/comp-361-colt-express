@@ -30,7 +30,7 @@ namespace RoundSpace {
         [JsonProperty]
         private Boolean isLastRound;
         [JsonProperty]
-        private Queue <ActionCard> playedCards;
+        private Queue <ActionCard> playedCards = new Queue<ActionCard>();
         [JsonProperty]
         private List<Turn> turns;
 

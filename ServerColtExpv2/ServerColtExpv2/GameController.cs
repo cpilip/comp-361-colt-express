@@ -170,22 +170,25 @@ class GameController
         Random rnd = new Random();
 
         //taking three random cards from player's discardPile and adding them to the player's hand
+        List<Card> cardsToAdd = new List<Card>();
 
         int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
         Card c = this.currentPlayer.discardPile[rand];
         this.currentPlayer.moveFromDiscardToHand(c);
+        cardsToAdd.Add(c);
 
         rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
         Card c1 = this.currentPlayer.discardPile[rand];
         this.currentPlayer.moveFromDiscardToHand(c);
+        cardsToAdd.Add(c1);
 
         rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
         Card c2 = this.currentPlayer.discardPile[rand];
         this.currentPlayer.moveFromDiscardToHand(c);
-
+        cardsToAdd.Add(c2);
 
         //TO SPECIFIC PLAYER 
-        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", c, c1, c2);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", cardsToAdd);
 
         endOfTurn();
     }
@@ -423,10 +426,11 @@ class GameController
             //TO SPECIFIC PLAYER 
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
 
+            
+
             //if this is not the last turn of the round
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
             {
-
                 //determining the next player 
                 //if the turn is Switching, order of players is reversed, so next player is previous in the list
                 if (this.currentTurn.getType() == TurnType.Switching)

@@ -55,7 +55,7 @@ public class CommunicationAPI
 
         if (action == "updateTrain")
         {
-            //On one client: "updateTrain" triggers the initialization of the train
+            //"updateTrain" triggers the initialization of the train
             List<TrainCar> t = (List<TrainCar>)args[0];
             
             int i = 0;
@@ -67,11 +67,14 @@ public class CommunicationAPI
                     i_items = n.getInside().getUnits_items(),
                     i_players = n.getInside().getUnits_players(),
                     i_hasMarshal = n.getInside().hasMarshal(Marshal.getInstance()),
+
                     r_items = n.getRoof().getUnits_items(),
                     r_players = n.getRoof().getUnits_players(),
                     r_hasMarshal = n.getRoof().hasMarshal(Marshal.getInstance())
                 };
+
                 i++;
+
                 if (cli == null)
                 {
                     //Serialize parameters as a array with first element being the action
@@ -86,7 +89,7 @@ public class CommunicationAPI
             }
         } else if (action == "updatePlayers")
         {
-            //On one client: "updatePlayers" triggers creation of player profiles for every player in the list provided;
+            //"updatePlayers" triggers creation of player profiles for every player in the list provided;
             //if the current player in the list is the player of the client, initialize their hand, discard pile, and remaining bullets additionally
             List<Player> t = (List<Player>)args[0];
 
@@ -116,7 +119,7 @@ public class CommunicationAPI
         }
         else if (action == "updatePlayerHand")
         {
-            //On one client: "updatePlayerHand" updates the hand of the player sent
+            //"updatePlayerHand" updates the hand of the player sent
             Character c = (Character)args[0];
             List<Card> cards = (List<Card>)args[1];
             List<ActionKind> l  = new List<ActionKind>();
@@ -129,6 +132,7 @@ public class CommunicationAPI
                 player = c,
                 cardsToAdd = l 
             };
+
             if (cli == null)
             {
                 //Serialize parameters as a array with first element being the action
@@ -142,7 +146,7 @@ public class CommunicationAPI
             }
         } else if (action == "updateGameStatus")
         {
-            //One one client: "updateGameStatus" triggers either the Schemin or Stealin' phase
+            //"updateGameStatus" triggers either the Schemin or Stealin' phase
             var definition = new
             {
                 eventName = action,
@@ -162,7 +166,7 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentRound")
         {
-            //One one client: "updateCurrentRound" visually updates the current round
+            //"updateCurrentRound" visually updates the current round
             Round r = (Round)args[0];
             List<TurnType> l = new List<TurnType>();
 
@@ -188,12 +192,12 @@ public class CommunicationAPI
         }
         else if (action == "updateCurrentTurn")
         {
-            //One one client: "updateCurrentTurn" visually updates the current turn
+            //"updateCurrentTurn" visually updates the current turn
             var definition = new
             {
                 eventName = action,
                 currentTurn = (int)args[0]
-        };
+            };
 
             if (cli == null)
             {
@@ -219,7 +223,6 @@ public class CommunicationAPI
                 waitingForInput = (bool)args[1],
             };
 
-
             if (cli == null)
             {
                 //Serialize parameters as a array with first element being the action
@@ -232,31 +235,7 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
-        else if (action == "addCards")
-        //"addCards" adds c1, c2, c3 to the player's hand
-        {
-            //Bullet cards?
-            var definition = new
-            {
-                eventName = action,
-                c1 = args[0],
-                c2 = args[1],
-                c3 = args[2]
-            };
-
-            if (cli == null)
-            {
-                //Serialize parameters as a array with first element being the action
-                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
-
-            }
-            else
-            {
-                //Serialize parameters as a array with first element being the action
-                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
-            }
-        }
-
+       
         List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);
         objectsToSerialize.AddRange(args);

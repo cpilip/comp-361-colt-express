@@ -10,10 +10,8 @@ using Newtonsoft.Json;
 using PositionSpace;
 using CardSpace;
 using RoundSpace;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
 
 
 // Enter the listening loop.
