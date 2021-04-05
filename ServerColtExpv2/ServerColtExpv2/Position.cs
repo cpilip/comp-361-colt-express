@@ -89,6 +89,11 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
+        public Boolean hasShotgun(Marshal m)
+        {
+            return units.Contains(m);
+        }
+
         public List<ItemType> getUnits_items()
         {
             List<ItemType> l = new List<ItemType>();

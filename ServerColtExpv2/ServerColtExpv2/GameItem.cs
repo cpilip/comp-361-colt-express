@@ -8,7 +8,8 @@ namespace GameUnitSpace
     {
         Purse,
         Strongbox,
-        Ruby
+        Ruby,
+        Whiskey
     }
     
     class GameItem : GameUnit 

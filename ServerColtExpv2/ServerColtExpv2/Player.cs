@@ -91,7 +91,6 @@ namespace GameUnitSpace {
             return this.bandit;
         }
         
-
         public void setCapturedHostage(Hostage h){
             capturedHostage = h;
         }
@@ -142,6 +141,7 @@ namespace GameUnitSpace {
         public void addToPossessions(GameItem anItem){
             this.possessions.Add(anItem);
         }
+       
         public void moveFromHandToDiscard(Card c) { 
             this.hand.Remove(c);
             this.discardPile.Add(c);
@@ -253,6 +253,23 @@ namespace GameUnitSpace {
             return this.discardPile.OfType<BulletCard>().ToList().Count;
         }
 
+        public Whiskey getAWhiskey(){
+           foreach (GameItem g in possessions){
+               if (g is Whiskey){
+                   return (Whiskey) g;
+               }
+           }
+           return null;
+
+        }
+
+        public void removeWhiskey(Whiskey aW){
+            possessions.Remove(aW);
+        }
+
+        public void addWhiskey(Whiskey aW){
+            possessions.Add(aW);
+        }
 
         /**
             Private helper functions to calculate the ransom price of each hostage 
@@ -265,7 +282,7 @@ namespace GameUnitSpace {
             }
             return false;
         }
-
+       
         private int getNumOfItem(ItemType anItemType){
             int counter = 0;
             foreach (GameItem t in possessions){
@@ -275,6 +292,7 @@ namespace GameUnitSpace {
             }
             return counter;
         } 
+      
         private int getNumOfEnemyBulletCard(){
             int counter = 0;
             foreach (Card c in discardPile){

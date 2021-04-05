@@ -14,5 +14,10 @@ namespace PositionSpace{
         public TrainCar getAdjacentCar(){
             return adjacentCar;
         }
+
+        public void setAdjacentCar(TrainCar aTC){
+            adjacentCar = aTC;
+        }
+
     }
 }

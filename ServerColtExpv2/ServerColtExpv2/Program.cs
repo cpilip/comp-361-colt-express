@@ -111,6 +111,8 @@ class MyTcpListener
                 //players.Add(p, cli);
             }
 
+            
+
             while (!aController.getEndOfGame())
             {
                 // Wait for first move of first player
