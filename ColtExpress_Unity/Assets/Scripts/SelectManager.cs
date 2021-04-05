@@ -20,6 +20,7 @@ public class SelectManager : MonoBehaviour
     private void Awake() {
         CharacterPosition = Bella.transform.position;
         OffScreen = Tuco.transform.position;
+        PlayerPrefs.SetInt(selectedCharacter, 6);
     }
 
     public void NextCharacter() {
