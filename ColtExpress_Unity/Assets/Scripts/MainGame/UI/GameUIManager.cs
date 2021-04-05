@@ -228,20 +228,34 @@ public class GameUIManager : MonoBehaviour
         return newCard;
     }
 
-    //Create a new in-game Bullet card object 
-    /*
-    public GameObject createCardObject(Character c, int k)
+    //Create a new in-game bullet card object - true for in the deck, or false for the discard pile
+    public GameObject createCardObject(Character c, int num, bool inDeck)
     {
-        GameObject newCard = Instantiate(bulletCardPrefab);
+        GameObject newCard = null;
+        Sprite newCardSprite = null;
+        newCard = Instantiate(bulletCardPrefab);
 
+        //Grab the corresponding bullet card sprite
+        loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_" + num, out newCardSprite);
 
-        //Fixing the scale
-        newPlayer.transform.localScale = scale;
+        newCard.GetComponent<Image>().sprite = newCardSprite;
+        newCard.GetComponent<CardID>().isBulletCard = true;
 
-        characters.Add(c, newPlayer);
-        return newPlayer;
+        //Making sure to parent the card under the hand/deck or discard pile, updating the client collection of cards in the hand/deck or discard pile, and fixing the scale
+        if (inDeck)
+        {
+            newCard.transform.SetParent(deck.transform);
+        }
+        else
+        {
+            newCard.transform.SetParent(discardPile.transform);
+        }
+        newCard.transform.localScale = scale;
+
+        newCard.SetActive(false);
+
+        return newCard;
     }
-    */
 
     //Enable the turn menu (true for visible, false for invisible)
     public void toggleTurnMenu(bool isVisible)

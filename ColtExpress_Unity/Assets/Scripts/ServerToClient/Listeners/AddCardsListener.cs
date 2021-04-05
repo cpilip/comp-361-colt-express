@@ -39,7 +39,15 @@ public class AddCardsListener : UIEventListenable
             Card card = c.ToObject<Card>(serializer);
 
             //Call the appropriate card object function
-            GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((ActionCard)card).getKind(), true);
+            if (card.GetType() == typeof(BulletCard))
+            {
+                //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
+                GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((BulletCard)card).getNumBullets(), true);
+            }
+            else
+            {
+                GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((ActionCard)card).getKind(), true);
+            }
 
         }
 

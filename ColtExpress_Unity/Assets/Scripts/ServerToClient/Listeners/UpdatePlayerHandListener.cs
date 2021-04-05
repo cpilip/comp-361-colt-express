@@ -42,8 +42,14 @@ public class UpdatePlayerHandListener : UIEventListenable
                 Card card = c.ToObject<Card>(serializer);
                 
                 //Call the appropriate card object function
-                GameUIManager.gameUIManagerInstance.createCardObject(player, ((ActionCard)card).getKind(), true);
-
+                if (card.GetType() == typeof(BulletCard))
+                {
+                    //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
+                    GameUIManager.gameUIManagerInstance.createCardObject(player, ((BulletCard)card).getNumBullets(), true);
+                } else
+                {
+                    GameUIManager.gameUIManagerInstance.createCardObject(player, ((ActionCard)card).getKind(), true);
+                }
             }
 
             //Activate the six cards
