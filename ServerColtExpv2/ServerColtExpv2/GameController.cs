@@ -273,7 +273,7 @@ class GameController
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.bullets);
+        CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.getNumOfBulletsShot());
     }
 
     public void chosenLoot(GameItem loot)

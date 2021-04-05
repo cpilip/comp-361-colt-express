@@ -274,6 +274,48 @@ public class CommunicationAPI
             }
 
         }
+        else if (action == "decrementLoot")
+        //"decrement" will decrement the visual icon in the player profile for the provided type of loot
+        {
+            var definition = new
+            {
+                eventName = action,
+                loot = ((GameItem)args[0]).getType()
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "decrementBullets")
+        //"decrement" will decrement the visual icon in the player profile for the provided type of loot
+        {
+            var definition = new
+            {
+                eventName = action,
+                numOfBullets = 6 - (int)args[0]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else
         {
             Console.WriteLine("Message " + action + " not implemented.");
