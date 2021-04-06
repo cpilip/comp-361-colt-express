@@ -10,7 +10,8 @@ namespace CardSpace {
         Shoot,
         Rob,
         Marshal,
-        Punch
+        Punch,
+        Ride
     }
 
     class ActionCard:Card {

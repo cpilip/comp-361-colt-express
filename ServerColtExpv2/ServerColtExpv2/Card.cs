@@ -3,7 +3,6 @@ using GameUnitSpace;
 using Newtonsoft.Json;
 
 namespace CardSpace {
-
     abstract class Card {
 
         public readonly Player myPlayer;

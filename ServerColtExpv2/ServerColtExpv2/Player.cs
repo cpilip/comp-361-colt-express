@@ -5,6 +5,7 @@ using PositionSpace;
 using CardSpace;
 using Newtonsoft.Json;
 using System.Linq;
+using HostageSpace;
 
 namespace GameUnitSpace {
 
@@ -30,6 +31,8 @@ namespace GameUnitSpace {
         public List <Card> discardPile;
         public List <BulletCard> bullets;
         public List<GameItem> possessions;
+        private Hostage capturedHostage;
+        private bool onAHorse;
 
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c) {
@@ -45,15 +48,21 @@ namespace GameUnitSpace {
             numOfBulletsShot = 0;
 
             possessions.Add(new GameItem(ItemType.Purse, 250));
+
+            capturedHostage = null;
+
+            //TODO may update this
+            onAHorse=true;
         }
 
-        /**
+        /** 
         * Private helper method
         */
 
         private void initializeCards() {
             // Create and add 6 bullet cards
             bullets = new List<BulletCard>();
+
             for (int i = 1 ; i <= 6 ;i++) {
                 bullets.Add(new BulletCard(i));
             }
@@ -70,6 +79,7 @@ namespace GameUnitSpace {
             discardPile.Add(new ActionCard(ActionKind.Rob));
             discardPile.Add(new ActionCard(ActionKind.Rob));
             discardPile.Add(new ActionCard(ActionKind.Marshal));
+            discardPile.Add(new ActionCard(ActionKind.Ride));
 
         }
 
@@ -80,6 +90,10 @@ namespace GameUnitSpace {
         /// Returns the type of the selected bandit
         public Character getBandit() {
             return this.bandit;
+        }
+        
+        public void setCapturedHostage(Hostage h){
+            capturedHostage = h;
         }
 
         /// Set the state of waiting for input flag.
@@ -95,6 +109,14 @@ namespace GameUnitSpace {
         /// Returns the current state of the gets another action flag.
         public Boolean isGetsAnotherAction() {
             return this.getsAnotherAction;
+        }
+
+        public void setOnAHorse(bool b){
+            onAHorse = b;
+        }
+
+        public bool isPlayerOnAHorse(){
+            return onAHorse;
         }
 
         /// Update the state of the get another action flag.
@@ -120,6 +142,7 @@ namespace GameUnitSpace {
         public void addToPossessions(GameItem anItem){
             this.possessions.Add(anItem);
         }
+       
         public void moveFromHandToDiscard(Card c) { 
             this.hand.Remove(c);
             this.discardPile.Add(c);
@@ -137,6 +160,61 @@ namespace GameUnitSpace {
                 total =  total + it.getValue();
             }
             return total;
+        }
+
+        public int getHostageValue(){
+            int val = 0;
+            switch (capturedHostage.getHostageChar())
+            {
+                case HostageChar.LadyPoodle:
+                {
+                    val += 1000;
+                    return val;
+                }
+                case HostageChar.Minister:
+                {
+                    val += 900;
+                    return val;
+                }
+                case HostageChar.Teacher:
+                {
+                    val += 800;
+                    return val;
+                }
+                case HostageChar.Zealot:
+                {
+                    val += 700;
+                    return val;
+                }
+                case HostageChar.Banker:
+                {
+                    if(this.hasStrongBox()){
+                        val += 900;
+                    }
+                    return val;
+                }
+                case HostageChar.OldLady:
+                {
+                    val += (this.getNumOfItem(ItemType.Ruby) * 500);
+                    return val;
+                }
+                case HostageChar.PokerPlayer:
+                {
+                    val += (this.getNumOfItem(ItemType.Purse) * 250);
+                    return val;
+                }
+                case HostageChar.Photographer:
+                {
+                    val += (this.getNumOfEnemyBulletCard() * 200);
+                    return val;
+                }
+                default :
+                {
+                    return val;
+                }
+
+            }
+            
         }
 
         public void shootBullet() {
@@ -162,6 +240,55 @@ namespace GameUnitSpace {
             return this.hand.OfType<BulletCard>().ToList().Count;
         }
 
+        public Whiskey getAWhiskey(){
+           foreach (GameItem g in possessions){
+               if (g is Whiskey){
+                   return (Whiskey) g;
+               }
+           }
+           return null;
+
+        }
+
+        public void removeWhiskey(Whiskey aW){
+            possessions.Remove(aW);
+        }
+
+        public void addWhiskey(Whiskey aW){
+            possessions.Add(aW);
+        }
+
+        /**
+            Private helper functions to calculate the ransom price of each hostage 
+        */
+        private Boolean hasStrongBox(){
+            foreach (GameItem t in possessions){
+                if(t.getType().Equals(ItemType.Strongbox)){
+                    return true;
+                }
+            }
+            return false;
+        }
+       
+        private int getNumOfItem(ItemType anItemType){
+            int counter = 0;
+            foreach (GameItem t in possessions){
+                if(t.getType().Equals(anItemType)){
+                    counter ++;
+                }
+            }
+            return counter;
+        } 
+      
+        private int getNumOfEnemyBulletCard(){
+            int counter = 0;
+            foreach (Card c in discardPile){
+                if(c.GetType().Equals(typeof(BulletCard))){
+                    counter ++;
+                }
+            }
+            return counter;
+        }
     }
 
 }

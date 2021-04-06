@@ -4,6 +4,8 @@ using System.Linq;
 using GameUnitSpace;
 using Newtonsoft.Json;
 
+
+
 namespace PositionSpace
 {
     public enum Floor
@@ -20,10 +22,13 @@ namespace PositionSpace
         //[JsonProperty]
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
 
+        /*
         public Position()
         {
 
         }
+        */
+
         public Position(TrainCar trainCar, Floor floor)
         {
             this.trainCar = trainCar;
@@ -84,6 +89,11 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
+        public Boolean hasShotgun(Marshal m)
+        {
+            return units.Contains(m);
+        }
+
         public List<ItemType> getUnits_Items()
         {
             List<ItemType> l = new List<ItemType>();
@@ -98,6 +108,15 @@ namespace PositionSpace
             this.units.OfType<Player>().ToList()
                 .ForEach(i => l.Add(i.getBandit()));
             return l;
+        }
+
+        public bool isInStageCoach(StageCoach aSC){
+            if (this.getTrainCar().Equals(aSC)){
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 }
