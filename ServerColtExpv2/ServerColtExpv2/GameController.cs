@@ -357,8 +357,10 @@ class GameController
     public void choseToPunchShootgun()
     {
         aShotGun.setPosition(myStageCoach.getAdjacentCar().getRoof());
+        //Move message
         aShotGun.hasBeenPunched();
         currentPlayer.addToPossessions(new GameItem(ItemType.Strongbox, 1000));
+        //decrement message
 
     }
     
