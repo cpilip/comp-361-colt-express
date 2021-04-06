@@ -253,7 +253,7 @@ class GameController
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrement", loot);
+        CommunicationAPI.sendMessageToClient(null, "decrementLoot", loot);
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
@@ -273,7 +273,7 @@ class GameController
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.getNumOfBulletsShot());
+        CommunicationAPI.sendMessageToClient(null, "decrementBullets", this.currentPlayer.getNumOfBulletsShot());
     }
 
     public void chosenLoot(GameItem loot)
