@@ -224,14 +224,12 @@ class GameController
         {
             CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), WhiskeyKind.Unknown);
 
-            //TESTING
-            Whiskey test = new Whiskey(WhiskeyKind.Normal);
-            this.currentPlayer.addWhiskey(test);
-
-
             //Retrieve the first full whiskey the player has and do the appropriate action depending on its kind
             Whiskey aW = currentPlayer.getAWhiskey();
             aW.drinkASip();
+
+            //Increment the whiskey
+            CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", this.currentPlayer.getBandit(), aW.getWhiskeyKind());
 
             if (aW.getWhiskeyKind().Equals(WhiskeyKind.Normal))
             {
@@ -395,6 +393,7 @@ class GameController
         victim.possessions.Remove(loot);
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
+        CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
@@ -437,7 +436,7 @@ class GameController
         loot.setPosition(null);
         currentPlayer.addToPossessions(loot);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "increment", loot);
+        CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
         currentPlayer.setWaitingForInput(false);
         this.endOfCards();
     }

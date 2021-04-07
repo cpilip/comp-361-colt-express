@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DecrementLootListener : UIEventListenable
+public class IncrementLootListener : UIEventListenable
 {
-    
+
     public override void updateElement(string data)
     {
         /* PRE: data 
@@ -26,7 +26,6 @@ public class DecrementLootListener : UIEventListenable
 
         GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c);
 
-        
         string value = "";
         int num = 0;
 
@@ -58,12 +57,12 @@ public class DecrementLootListener : UIEventListenable
 
                 var definition = new
                 {
-                    eventName = "decrementWhiskey",
+                    eventName = "incrementWhiskey",
                     player = c,
                     whiskey = ((Whiskey)l).getWhiskeyKind()
                 };
 
-                EventManager.TriggerEvent("decrementWhiskey", JsonConvert.SerializeObject(definition));
+                EventManager.TriggerEvent("incrementWhiskey", JsonConvert.SerializeObject(definition));
 
                 break;
             default:

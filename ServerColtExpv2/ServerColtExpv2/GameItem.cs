@@ -19,7 +19,6 @@ namespace GameUnitSpace
         private int aValue;
         [JsonProperty]
         private ItemType aItemType;
-        [JsonProperty]
         private Player myPlayer;
 
 

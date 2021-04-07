@@ -14028,6 +14028,7 @@ GameObject:
   - component: {fileID: 6600991086092993949}
   - component: {fileID: 6600991086092993948}
   - component: {fileID: 6600991086092993945}
+  - component: {fileID: 6600991086092993950}
   m_Layer: 5
   m_Name: Side Board
   m_TagString: Untagged
@@ -14120,6 +14121,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: decrementBullets
+--- !u!114 &6600991086092993950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600991086092993943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5314a004296614289e82a4bb3b98d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: incrementWhiskey
 --- !u!1001 &7066959815233111309
 PrefabInstance:
   m_ObjectHideFlags: 0

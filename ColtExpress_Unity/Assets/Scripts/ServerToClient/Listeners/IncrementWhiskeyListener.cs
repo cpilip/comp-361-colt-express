@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DecrementWhiskeyListener : UIEventListenable
+public class IncrementWhiskeyListener : UIEventListenable
 {
 
     public override void updateElement(string data)
@@ -34,53 +34,48 @@ public class DecrementWhiskeyListener : UIEventListenable
                 //3 - Usables, 0 - Full/Unknown, 2 - Text
                 value = playerProfile.transform.GetChild(3).GetChild(0).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
-
-                if (num <= 0)
-                {
-                    num = 0;
-                    playerProfile.transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
-                }
+                num++;
 
                 playerProfile.transform.GetChild(3).GetChild(0).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num >= 1)
+                {
+                    playerProfile.transform.GetChild(3).GetChild(0).gameObject.SetActive(true);
+                }
 
                 break;
             case WhiskeyKind.Normal:
                 //3 - Usables, 1 - Normal, 2 - Text
                 value = playerProfile.transform.GetChild(3).GetChild(1).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
-
-                if (num <= 0)
-                {
-                    num = 0;
-                    playerProfile.transform.GetChild(3).GetChild(1).gameObject.SetActive(false);
-                }
+                num++;
 
                 playerProfile.transform.GetChild(3).GetChild(1).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num >= 1)
+                {
+                    playerProfile.transform.GetChild(3).GetChild(1).gameObject.SetActive(true);
+                }
 
                 break;
             case WhiskeyKind.Old:
                 //3 - Usables, 2 - Old, 2 - Text
                 value = playerProfile.transform.GetChild(3).GetChild(2).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
-
-                
-                if (num <= 0)
-                {
-                    num = 0;
-                    playerProfile.transform.GetChild(3).GetChild(2).gameObject.SetActive(false);
-                }
+                num++;
 
                 playerProfile.transform.GetChild(3).GetChild(2).GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
 
+                if (num >= 1)
+                {
+                    playerProfile.transform.GetChild(3).GetChild(2).gameObject.SetActive(true);
+                }
                 break;
             default:
                 break;
         }
 
-        Debug.Log("[DecrementWhiskeyListener] Decremented " + w + " for player " + c + ".");
+        Debug.Log("[IncrementWhiskeyListener] Incremented " + w + " for player " + c + ".");
 
     }
 }

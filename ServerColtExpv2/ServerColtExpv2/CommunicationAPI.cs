@@ -281,7 +281,29 @@ public class CommunicationAPI
             {
                 eventName = action,
                 player = (Character)args[0],
-                loot = ((GameItem)args[1]).getType()
+                loot = (GameItem)args[1]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "incrementLoot")
+        //"decrement" will decrement the visual icon in the player profile for the provided type of loot
+        {
+            var definition = new
+            {
+                eventName = action,
+                player = (Character)args[0],
+                loot = (GameItem)args[1]
             };
 
             if (cli == null)
@@ -320,6 +342,28 @@ public class CommunicationAPI
         }
         else if (action == "decrementWhiskey")
         //"decrement" will decrement the visual icon in the player profile for the provided type of loot
+        {
+            var definition = new
+            {
+                eventName = action,
+                player = (Character)args[0],
+                whiskey = (WhiskeyKind)args[1]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "incrementWhiskey")
+        //"increment" will increment the visual icon in the player profile for the provided type of loot
         {
             var definition = new
             {
