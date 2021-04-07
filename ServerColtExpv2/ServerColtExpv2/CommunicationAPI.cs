@@ -276,7 +276,6 @@ public class CommunicationAPI
                 }
             }
             
-            
         }
 
         List<System.Object> objectsToSerialize = new List<System.Object>();

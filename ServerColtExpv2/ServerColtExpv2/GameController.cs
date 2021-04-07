@@ -604,13 +604,16 @@ class GameController
         // Check if all players have chosen a position where to stop
         if (this.horseAttackCounter == this.totalPlayers) {
             this.endHorseAttack = true;
+
             // Set all the players' positions in the train
             foreach (Player p in this.players) {
                 AttackPosition ap = this.getHAFromCharacter(p.getBandit());
                 p.setPosition(this.myTrain[ap.getPosition()].getInside();
             }
+
             // Update the train for all the players
             CommunicationAPI.sendMessageToClient(null, "updateTrain", myTrain);
+            
             // Set currentPlayer back to 0 and start the game
             // Set current player as next player
             this.currentPlayer = players[0];

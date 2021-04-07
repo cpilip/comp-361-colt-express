@@ -20,7 +20,8 @@ namespace AttackSpace {
         }
 
         public Boolean incrementPosition() {
-            if (this.position == maxPosition){
+            if (this.position == maxPosition - 1) {
+                this.onHorse = false;
                 return false;
             }
             this.position += 1;
