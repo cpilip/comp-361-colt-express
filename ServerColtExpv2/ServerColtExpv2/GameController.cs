@@ -584,6 +584,24 @@ class GameController
     /**
     *   Private helper methods
     */
+    private horseAttack() {
+        
+        // Initialize a List with an AttackPosition for each Player
+        List<AttackPosition> attPos = new List<>();
+        for(int i = 0 ; i < this.totalPlayers ; i++) {
+            attPos.Add(new AttackPosition(this.players[i].getBandit()));
+        }
+
+        // Go through each wagon
+        for (int i = 0 ; i < this.totalPlayers ; i++) {
+            // Go through each player and update attack position
+            for (int i = 0 ; i < this.totalPlayers ; i++) { 
+                // Send update on where everyone is
+                
+            }
+        }
+    }
+
     private void endOfTurn()
     {
         //if the player has another action, then the anotherAction flag is set to false
