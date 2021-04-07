@@ -39,6 +39,9 @@ class GameController
     private Marshal aMarshal;
     private Shotgun aShotGun;
     private List<Hostage> availableHostages;
+    private Boolean endHorseAttack;
+    private List<AttackPosition> attPos;
+    private int horseAttackCounter;
 
     private GameController()
     {
@@ -48,6 +51,8 @@ class GameController
         this.availableHostages = new List<Hostage>();
         totalPlayer = 3;
         this.endOfGame = false;
+        this.endHorseAttack = false;
+        this.horseAttackCounter = 0;
     }
 
     public static GameController getInstance()
@@ -126,14 +131,11 @@ class GameController
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), cardsToAdd);
             }
 
-            //Horse attack:
-            for (int i = 0; i < players.Count; i++)
-            {
-                playerPtrForStarting = players[i];
-                playerPtrForStarting.setWaitingForInput(true);
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(playerPtrForStarting), "chooseStartingPosition");
-
-                //Wait for the player to answer, chosenStartingPos will be called and then move to next player
+            // Initialize a List with an AttackPosition for each Player
+            this.attPos = new List<>();
+            int stopped_count = 0;
+            for(int i = 0 ; i < this.totalPlayers ; i++) {
+                attPos.Add(new AttackPosition(this.players[i].getBandit()), this.totalPlayers);
             }
 
             //intializing the first player 
@@ -219,6 +221,10 @@ class GameController
         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", c, c1, c2);
 
         endOfTurn();
+    }
+
+    public Boolean getEndHorseAttack() { 
+        return this.endHorseAttack;
     }
 
     public void chosenStartinPostion(Position p)
@@ -580,26 +586,60 @@ class GameController
         }
     }
 
+    public chosenHorseAttackAction(string haAction) {
+
+        // Update Horse Attack position object for current player
+        AttackPosition hap = this.getHAFromCharacter(this.currentPlayer.getBandit());
+        if (haAction.Equals("ride")) {
+            // Increment position of horse and update all players
+            if (!hap.incrementPosition()) {
+                this.horseAttackCounter++;
+            }
+        } else if (haAction.Equals("enter")) { 
+            // Set Off horse for current Player and update all the players
+            hap.getOffHorse();
+            this.horseAttackCounter++;
+        }
+
+        // Check if all players have chosen a position where to stop
+        if (this.horseAttackCounter == this.totalPlayers) {
+            this.endHorseAttack = true;
+            // Set all the players' positions in the train
+            foreach (Player p in this.players) {
+                AttackPosition ap = this.getHAFromCharacter(p.getBandit());
+                p.setPosition(this.myTrain[ap.getPosition()].getInside();
+            }
+            // Update the train for all the players
+            CommunicationAPI.sendMessageToClient(null, "updateTrain", myTrain);
+            // Set currentPlayer back to 0 and start the game
+            // Set current player as next player
+            this.currentPlayer = players[0];
+            currentPlayer.setWaitingForInput(true);
+            //Send the current player as index and value for waiting for input for that index/player
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+
+        } else {
+            // Update all the players
+            CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+            currentPlayer.setWaitingForInput(false);
+            this.currentPlayer = this.players[(this.players.IndexOf(this.currentPlayer) + 1) % this.totalPlayers];
+            currentPlayer.setWaitingForInput(true);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+        }
+    }
+
 
     /**
     *   Private helper methods
     */
-    private horseAttack() {
-        
-        // Initialize a List with an AttackPosition for each Player
-        List<AttackPosition> attPos = new List<>();
-        for(int i = 0 ; i < this.totalPlayers ; i++) {
-            attPos.Add(new AttackPosition(this.players[i].getBandit()));
-        }
-
-        // Go through each wagon
-        for (int i = 0 ; i < this.totalPlayers ; i++) {
-            // Go through each player and update attack position
-            for (int i = 0 ; i < this.totalPlayers ; i++) { 
-                // Send update on where everyone is
-                
+    private AttackPosition getHAFromCharacter(Character c) {
+        foreach (AttackPosition ha in this.attPos)
+        {
+            if (ha.getBandit == c) {
+                return ha;
             }
         }
+        return null;
     }
 
     private void endOfTurn()

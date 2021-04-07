@@ -10,19 +10,38 @@ namespace AttackSpace {
         private Boolean onHorse;
         [JsonProperty]
         private readonly Character character; 
+        private readonly int maxPosition;
 
-        public AttackPosition(Character c) { 
+        public AttackPosition(Character c, int maxPos) { 
             this.character = c;
             this.onHorse = true;
             this.position = 0;
+            this.maxPosition = maxPos;
         }
 
-        public void incrementPosition() {
+        public Boolean incrementPosition() {
+            if (this.position == maxPosition){
+                return false;
+            }
             this.position += 1;
+            return true;
+
         }
 
         public void getOffHorse() {
             this.onHorse = false;
+        }
+
+        public Boolean hasStopped() {
+            return this.onHorse;
+        }
+
+        public Character GetCharacter() {
+            return this.character;
+        }
+
+        public int getPosition() {
+            return this.position;
         }
     }
 }
