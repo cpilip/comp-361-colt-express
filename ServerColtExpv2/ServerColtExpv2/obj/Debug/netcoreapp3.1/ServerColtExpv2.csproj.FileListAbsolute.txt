@@ -40,3 +40,4 @@ E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerCol
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.dll
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.pdb
 E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.genruntimeconfig.cache
+E:\Github\comp-361-f2020-hexanome-12\f2020-hexanome-12\ServerColtExpv2\ServerColtExpv2\obj\Debug\netcoreapp3.1\ServerColtExpv2.csprojAssemblyReference.cache

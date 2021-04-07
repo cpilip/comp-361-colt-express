@@ -5379,6 +5379,7 @@ GameObject:
   - component: {fileID: 718402309}
   - component: {fileID: 718402313}
   - component: {fileID: 718402312}
+  - component: {fileID: 718402316}
   - component: {fileID: 718402314}
   - component: {fileID: 718402315}
   m_Layer: 0
@@ -5483,6 +5484,8 @@ MonoBehaviour:
   bulletCardPrefab: {fileID: 8373409327896376393, guid: 7447abde901c7a641aaa07ed48a89f89,
     type: 3}
   gameStatus: 0
+  isNormalTurn: 0
+  whiskeyWasUsed: 0
 --- !u!114 &718402313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5526,6 +5529,19 @@ MonoBehaviour:
   fullWhiskey: {fileID: 0}
   normalWhiskey: {fileID: 0}
   oldWhiskey: {fileID: 0}
+--- !u!114 &718402316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718402308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9818336046ab34bb028a395d06e951, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: updateHasAnotherAction
 --- !u!1 &727441901
 GameObject:
   m_ObjectHideFlags: 0
@@ -14009,6 +14025,9 @@ GameObject:
   - component: {fileID: 6600991086092993947}
   - component: {fileID: 6600991086092993946}
   - component: {fileID: 6600991086092993944}
+  - component: {fileID: 6600991086092993949}
+  - component: {fileID: 6600991086092993948}
+  - component: {fileID: 6600991086092993945}
   m_Layer: 5
   m_Name: Side Board
   m_TagString: Untagged
@@ -14029,6 +14048,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updateCurrentPlayer
+--- !u!114 &6600991086092993945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600991086092993943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 390507a768d659e48a874e28a2968f85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: decrementWhiskey
 --- !u!114 &6600991086092993946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14062,6 +14094,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6600991086092993948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600991086092993943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189663fbc8cadac42b542b3e1a8a95cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: decrementLoot
+--- !u!114 &6600991086092993949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600991086092993943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b6f3f53e33b89c42afb1f71acaad617, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: decrementBullets
 --- !u!1001 &7066959815233111309
 PrefabInstance:
   m_ObjectHideFlags: 0

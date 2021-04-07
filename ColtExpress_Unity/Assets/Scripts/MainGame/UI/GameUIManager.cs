@@ -38,9 +38,13 @@ public class GameUIManager : MonoBehaviour
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
 
-    //EventManager instance, game status
+    //EventManager instance, game status, has another action status
     private static GameUIManager gameUIManager;
     public bool gameStatus;
+
+    //Other important information
+    public bool isNormalTurn = false;
+    public bool whiskeyWasUsed = false;
 
     //Loaded sprites
     public static Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
@@ -263,6 +267,40 @@ public class GameUIManager : MonoBehaviour
         if (turnMenu != null)
         {
             turnMenu.SetActive(isVisible);
+
+            //Ensure all buttons are available (whiskey if it is a normal turn
+            turnMenu.transform.GetChild(1).gameObject.SetActive(true);
+            turnMenu.transform.GetChild(2).gameObject.SetActive(true);
+            turnMenu.transform.GetChild(3).gameObject.SetActive(isNormalTurn);
+            
+        }
+    }
+
+    //Enable the Play or Draw buttons or both on the turn menu - if this is called, it is because of hasAnotherAction
+    //hasAnotherAction is triggered by SpeedingUp turns or whiskey usage
+    public void toggleTurnMenuButtons(string buttons)
+    {
+        if (turnMenu != null)
+        {
+            //Disable whiskey button
+            turnMenu.transform.GetChild(3).gameObject.SetActive(false);
+
+            switch (buttons)
+            {
+                case "draw":
+                    turnMenu.transform.GetChild(1).gameObject.SetActive(true);
+                    turnMenu.transform.GetChild(2).gameObject.SetActive(false);
+                    break;
+                case "play":
+                    turnMenu.transform.GetChild(1).gameObject.SetActive(false);
+                    turnMenu.transform.GetChild(2).gameObject.SetActive(true);
+                    break;
+                case "both":
+                    turnMenu.transform.GetChild(1).gameObject.SetActive(true);
+                    turnMenu.transform.GetChild(2).gameObject.SetActive(true);
+                    break;
+            }
+                
         }
     }
 

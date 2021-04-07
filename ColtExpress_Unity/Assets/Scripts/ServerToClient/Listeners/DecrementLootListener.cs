@@ -14,14 +14,16 @@ public class DecrementLootListener : UIEventListenable
         *
             {
                 eventName = action,
-                loot = ((GameItem)args[0]).getType()
+                player = (Character)args[0],
+                loot = ((GameItem)args[1]).getType()
             };
         */
 
         JObject o = JObject.Parse(data);
+        Character c = o.SelectToken("player").ToObject<Character>();
         ItemType l = o.SelectToken("loot").ToObject<ItemType>();
 
-        GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c);
+        GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c);
 
         
         string value = "";
@@ -54,7 +56,7 @@ public class DecrementLootListener : UIEventListenable
                 break;
         }
 
-        Debug.Log("[DecrementLootListener] Decremented " + l + ".");
+        Debug.Log("[DecrementLootListener] Decremented " + l + "for player " + c + ".");
 
     }
 }

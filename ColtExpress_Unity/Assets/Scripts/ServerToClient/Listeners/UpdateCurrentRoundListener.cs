@@ -60,6 +60,7 @@ public class UpdateCurrentRoundListener : UIEventListenable
             if (turnPrefabs.TryGetValue(t, out retrievedPrefab))
             {
                 GameObject generatedTurn = Instantiate(retrievedPrefab);
+                generatedTurn.name = t.ToString();
                 generatedTurn.transform.parent = turnsLocation.transform;
                 generatedTurn.transform.localScale = scale;
             }

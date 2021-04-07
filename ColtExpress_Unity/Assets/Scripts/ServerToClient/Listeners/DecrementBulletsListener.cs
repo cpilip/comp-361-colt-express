@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using GameUnitSpace;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,18 +13,20 @@ public class DecrementBulletsListener : UIEventListenable
         *
             {
                 eventName = action,
-                numOfBullets = 6 - (int)args[0]
+                player = (Character)args[0],
+                numOfBullets = 6 - (int)args[1]
             };
         */
 
         JObject o = JObject.Parse(data);
+        Character c = o.SelectToken("player").ToObject<Character>();
         int n = o.SelectToken("loot").ToObject<int>();
 
-        GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c);
+        GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c);
         //2 - Inventory, 0 - Bullets, 1 - Text
         playerProfile.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", n);
 
-        Debug.Log("[DecrementBulletListener] Decremented bullets.");
+        Debug.Log("[DecrementBulletListener] Decremented bullets for player " + c + ".");
 
     }
 }

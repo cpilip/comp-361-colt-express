@@ -240,13 +240,32 @@ namespace GameUnitSpace {
             return this.hand.OfType<BulletCard>().ToList().Count;
         }
 
+        //Return the first full whiskey
         public Whiskey getAWhiskey(){
            foreach (GameItem g in possessions){
                if (g is Whiskey){
+                    if (((Whiskey)g).getWhiskeyStatus() == WhiskeyStatus.Full)
                    return (Whiskey) g;
                }
            }
            return null;
+
+        }
+
+        //Return the first whiskey of desired kind that is half
+        public Whiskey getAWhiskey(WhiskeyKind desiredKind)
+        {
+            foreach (GameItem g in possessions)
+            {
+                if (g is Whiskey)
+                {
+                    if (((Whiskey)g).getWhiskeyKind() == desiredKind && ((Whiskey)g).getWhiskeyStatus() == WhiskeyStatus.Half)
+                    {
+                        return (Whiskey)g;
+                    }
+                }
+            }
+            return null;
 
         }
 

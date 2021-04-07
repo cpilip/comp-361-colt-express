@@ -1,49 +1,61 @@
-
+﻿
 using Newtonsoft.Json;
 
-namespace GameUnitSpace {
+namespace GameUnitSpace
+{
 
-    public enum WhiskeyKind{
+    public enum WhiskeyKind
+    {
         Unknown,
         Old,
         Normal
     }
 
-    public enum WhiskeyStatus{
+    public enum WhiskeyStatus
+    {
         Full,
         Half,
         Empty
     }
-    class Whiskey : GameItem {
+    class Whiskey : GameItem
+    {
         [JsonProperty]
         private readonly WhiskeyKind aKind;
         [JsonProperty]
         private WhiskeyStatus aStatus;
 
-        public Whiskey (WhiskeyKind pKind) : base (ItemType.Whiskey, 0){
+        public Whiskey(WhiskeyKind pKind) : base(ItemType.Whiskey, 0)
+        {
             aKind = pKind;
             aStatus = WhiskeyStatus.Full;
         }
 
-        public WhiskeyKind getWhiskeyKind(){
+        public WhiskeyKind getWhiskeyKind()
+        {
             return aKind;
         }
 
-        public WhiskeyStatus getWhiskeyStatus(){
+        public WhiskeyStatus getWhiskeyStatus()
+        {
             return aStatus;
         }
 
-        public void drinkASip(){
-            if(aStatus == WhiskeyStatus.Full){
+        public void drinkASip()
+        {
+            if (aStatus == WhiskeyStatus.Full)
+            {
                 aStatus = WhiskeyStatus.Half;
             }
-            else if (aStatus == WhiskeyStatus.Half){
+            else if (aStatus == WhiskeyStatus.Half)
+            {
                 aStatus = WhiskeyStatus.Empty;
             }
         }
 
-        public bool isEmpty(){
-            if(this.aStatus.Equals(WhiskeyStatus.Empty)){
+        public bool isEmpty()
+        {
+            if (this.aStatus.Equals(WhiskeyStatus.Empty))
+            {
                 return true;
             }
             return false;

@@ -183,28 +183,69 @@ class GameController
         endOfTurn();
     }
 
-    public void useWhiskey(WhiskeyKind aKind){
-        
+    public void useWhiskey(WhiskeyKind? aKind){
+        if (aKind == null)
+        {
+            endOfTurn();
+        }
+
+        //If the kind is normal/old, such a whiskey of this kind must already exist in the player's possessions and is half
         if (aKind.Equals(WhiskeyKind.Normal)){
-           
-            Whiskey aW = currentPlayer.getAWhiskey();
+
+            CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), aKind);
+
+            Whiskey aW = currentPlayer.getAWhiskey(aKind.Value);
             aW.drinkASip();
             if(aW.isEmpty()) currentPlayer.removeWhiskey(aW);
             
             drawCards();
-            // TODO need to ask player to play a Card ?
+
+            //TO SPECIFIC PLAYER
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
+
         }
-        else {
-            Whiskey aW = currentPlayer.getAWhiskey();
+        else if (aKind.Equals(WhiskeyKind.Old))
+        {
+            CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), aKind);
+
+            Whiskey aW = currentPlayer.getAWhiskey(aKind.Value);
             aW.drinkASip();
             if(aW.isEmpty()) currentPlayer.removeWhiskey(aW);
 
             currentPlayer.setGetsAnotherAction(true);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
-            // TODO need to ask player to play a Card ?
+
+            //TO SPECIFIC PLAYER
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
 
         }
+        //If the kind is unknown, the player has at least one full whiskey
+        else
+        {
+            CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), WhiskeyKind.Unknown);
 
+            //TESTING
+            Whiskey test = new Whiskey(WhiskeyKind.Old);
+            this.currentPlayer.addWhiskey(test);
+
+
+            //Retrieve the first full whiskey the player has and do the appropriate action depending on its kind
+            Whiskey aW = currentPlayer.getAWhiskey();
+            aW.drinkASip();
+
+            if (aW.getWhiskeyKind().Equals(WhiskeyKind.Normal))
+            {
+                
+                drawCards();
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
+            }
+            else if (aW.getWhiskeyKind().Equals(WhiskeyKind.Old))
+            {
+                currentPlayer.setGetsAnotherAction(true);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
+
+            }
+        }
+        endOfTurn();
     }
 
     public void drawCards()
@@ -353,7 +394,7 @@ class GameController
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrementLoot", loot);
+        CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
@@ -385,7 +426,7 @@ class GameController
         target.addToDiscardPile(aBullet);
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrementBullets", this.currentPlayer.getNumOfBulletsShot());
+        CommunicationAPI.sendMessageToClient(null, "decrementBullets", this.currentPlayer.getBandit(), this.currentPlayer.getNumOfBulletsShot());
         currentPlayer.setWaitingForInput(false);
         this.endOfCards();
     }
@@ -576,8 +617,9 @@ class GameController
         if (this.currentPlayer.isGetsAnotherAction())
         {
             //TO SPECIFIC PLAYER
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "both");
             this.currentPlayer.setGetsAnotherAction(false);
+            //CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), false, "both");
         }
         else
         {

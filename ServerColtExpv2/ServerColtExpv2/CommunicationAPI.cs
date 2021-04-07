@@ -229,7 +229,7 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-        } 
+        }
         else if (action == "addCards")
         //"addCards" adds cards for the current player
         {
@@ -280,7 +280,8 @@ public class CommunicationAPI
             var definition = new
             {
                 eventName = action,
-                loot = ((GameItem)args[0]).getType()
+                player = (Character)args[0],
+                loot = ((GameItem)args[1]).getType()
             };
 
             if (cli == null)
@@ -301,7 +302,53 @@ public class CommunicationAPI
             var definition = new
             {
                 eventName = action,
-                numOfBullets = 6 - (int)args[0]
+                player = (Character)args[0],
+                numOfBullets = 6 - (int)args[1]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "decrementWhiskey")
+        //"decrement" will decrement the visual icon in the player profile for the provided type of loot
+        {
+            var definition = new
+            {
+                eventName = action,
+                player = (Character)args[0],
+                whiskey = (WhiskeyKind)args[1]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "updateHasAnotherAction")
+        //"updateHasAnotherAction" will 
+        {
+            var definition = new
+            {
+                eventName = action,
+                currentPlayer = (Character)args[0],
+                hasAnotherAction = (bool)args[1],
+                otherAction = (string)args[2]
             };
 
             if (cli == null)

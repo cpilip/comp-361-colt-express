@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ClientCommunicationAPI;
 using UnityEngine.UI;
+using GameUnitSpace;
 
 /* Author: Christina Pilip
  * Usage: Defines behaviour of the Phase 1 Turn Menu. 
@@ -150,35 +151,33 @@ public class ScheminPhaseManager : MonoBehaviour
 
                 if (whiskeyUsed)
                 {
-                    string whiskey = "";
-                    //WhiskeyType t; 
+                    WhiskeyKind w = WhiskeyKind.Unknown;
+
+                    //Find out which whiskey type was used
                     if (fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
                     {
                         fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
-                        // t = WhiskeyType.Full;
-                        whiskey = "full";
+                        w = WhiskeyKind.Unknown;
                     } else if (normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
                     {
                         normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
-                        // t = WhiskeyType.Normal;
-                        whiskey = "normal";
+                        w = WhiskeyKind.Normal;
                     }
                     else if (oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
                     {
                         oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
-                        // t = WhiskeyType.Old;
-                        whiskey = "old";
+                        w = WhiskeyKind.Old;
                     }
 
-                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + whiskey + "].");
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + w + "].");
 
                     var definition = new
                     {
                         eventName = "WhiskeyMessage",
-                        whiskeyType = 1 //t
+                        usedWhiskey = w
                     };
 
-                    //ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 if (timedOut)
@@ -188,10 +187,9 @@ public class ScheminPhaseManager : MonoBehaviour
                     var definition = new
                     {
                         eventName = "WhiskeyMessage",
-                        index = -1
                     };
 
-                    //ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
                 yield break;
@@ -223,7 +221,7 @@ public class ScheminPhaseManager : MonoBehaviour
             Debug.Log("[ScheminPhaseManager - DrawCard] Requested cards from server.");
             
         }
-        //Hide the turn menu and lock the hand
+        //Hide the turn/whiskey menu and lock the hand
         GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
         GameUIManager.gameUIManagerInstance.lockHand();
     }
