@@ -270,6 +270,7 @@ class GameController
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
+            bool flag = true;
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
@@ -279,11 +280,38 @@ class GameController
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
-            }
-            //TODO Same with Shotgun 
+            } 
 
+            //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
+            if (p.hasShotgun(aShotGun)){
+                BulletCard b = new BulletCard(-1);
+                currentPlayer.addToDiscardPile(b);
+                
+                //if the shotgun is on the last cabosse, player sent to adjacent car
+                if (p.getTrainCar().Equals(myTrain[myTrain.Count()-1])){
+                    Position pos = myTrain[myTrain.Count()-2].getRoof();
+                    currentPlayer.setPosition(pos);
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos);
+                }
+                //if not, the player must choose between the 2 positions 
+                else {
+                    List <Position> aL = new List<Position>();
+                    TrainCar currentTraincar = p.getTrainCar();
+                    
+                    Position p1 = myTrain[myTrain.IndexOf(currentTraincar)-1].getRoof();
+                    Position p2 = myTrain[myTrain.IndexOf(currentTraincar)+1].getRoof();
 
-            currentPlayer.setWaitingForInput(false);
+                    aL.Add(p1);
+                    aL.Add(p2);
+
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
+
+                    flag=false;
+                }
+            } 
+
+            if (flag) currentPlayer.setWaitingForInput(false);
+
             this.endOfCards();
         }
 

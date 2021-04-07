@@ -95,6 +95,10 @@ namespace GameUnitSpace {
             capturedHostage = h;
         }
 
+        public Hostage getHostage(){
+            return capturedHostage;
+        }
+        
         /// Set the state of waiting for input flag.
         public void setWaitingForInput(bool waitingForInput) {
             this.waitingForInput = waitingForInput;
