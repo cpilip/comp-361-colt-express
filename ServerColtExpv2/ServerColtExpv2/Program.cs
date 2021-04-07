@@ -176,16 +176,16 @@ class MyTcpListener
                 else if (eventName.Equals("WhiskeyMessage"))
                 {
                     // Get whiskey kind
-                    WhiskeyKind? whiskey = null;
                     try
                     {
-                        whiskey = o.SelectToken("usedWhiskey").ToObject<WhiskeyKind>();
+                        WhiskeyKind whiskey = o.SelectToken("usedWhiskey").ToObject<WhiskeyKind>();
                         aController.useWhiskey(whiskey);
                     } 
                     catch (Exception e)
                     {
                         //No usedWhiskey property, meaning player timed out on choosing a whiskey
                         //Pass null instead
+                        WhiskeyKind? whiskey = null;
                         aController.useWhiskey(whiskey);
                     }
                 }

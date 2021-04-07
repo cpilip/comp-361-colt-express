@@ -187,6 +187,7 @@ class GameController
         if (aKind == null)
         {
             endOfTurn();
+            return;
         }
 
         //If the kind is normal/old, such a whiskey of this kind must already exist in the player's possessions and is half
@@ -224,7 +225,7 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), WhiskeyKind.Unknown);
 
             //TESTING
-            Whiskey test = new Whiskey(WhiskeyKind.Old);
+            Whiskey test = new Whiskey(WhiskeyKind.Normal);
             this.currentPlayer.addWhiskey(test);
 
 
@@ -245,7 +246,6 @@ class GameController
 
             }
         }
-        endOfTurn();
     }
 
     public void drawCards()
