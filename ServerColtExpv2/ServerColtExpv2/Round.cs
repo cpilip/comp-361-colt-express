@@ -82,7 +82,7 @@ namespace RoundSpace {
         }
 
         public ActionCard getTopOfPlayedCards() {
-            return this.playedCards.Dequeue();
+            return (this.playedCards.Count != 0) ? this.playedCards.Dequeue() : null;
         }
         public ActionCard seeTopOfPlayedCards() {
             return this.playedCards.Peek();

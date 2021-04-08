@@ -12,7 +12,8 @@ namespace CardSpace
         Shoot,
         Rob,
         Marshal,
-        Punch
+        Punch,
+        Ride
     }
 
     class ActionCard : Card
@@ -20,7 +21,7 @@ namespace CardSpace
         [JsonProperty]
         private readonly ActionKind kind;
 
-        public ActionCard(ActionKind k)
+        public ActionCard(Player pPlayer, ActionKind k) : base(assignPlayer(pPlayer))
         {
             this.kind = k;
         }

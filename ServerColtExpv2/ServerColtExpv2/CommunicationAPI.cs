@@ -450,6 +450,26 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "removeTopCard" || action == "highlightTopCard")
+        //"updateHasAnotherAction" will 
+        {
+            var definition = new
+            {
+                eventName = action,
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else
         {
             Console.WriteLine("Message " + action + " not implemented.");

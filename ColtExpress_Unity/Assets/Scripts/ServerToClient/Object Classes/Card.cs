@@ -8,8 +8,17 @@ namespace CardSpace {
 
         public readonly Player myPlayer;
 
-        public Player belongsTo() {
+        protected Card(Player pPlayer)
+        {
+            myPlayer = pPlayer;
+        }
+        public Player belongsTo()
+        {
             return this.myPlayer;
+        }
+        protected static Player assignPlayer(Player playerToAssign)
+        {
+            return playerToAssign;
         }
     }
     

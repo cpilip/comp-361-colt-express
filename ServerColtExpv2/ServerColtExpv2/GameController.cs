@@ -10,7 +10,7 @@ using CardSpace;
 using GameUnitSpace;
 using PositionSpace;
 using HostageSpace;
-
+using System.Threading;
 
 enum GameStatus
 {
@@ -303,6 +303,7 @@ class GameController
         availableHostages.Remove(aHostage);
         currentPlayer.setCapturedHostage(aHostage);
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
     
@@ -320,7 +321,7 @@ class GameController
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
             {
-                BulletCard b = new BulletCard(-1);
+                BulletCard b = new BulletCard(null, -1);
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
 
@@ -328,6 +329,7 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof());
             }
             currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
             this.endOfCards();
         }
         //if the action card is a Move action
@@ -340,7 +342,7 @@ class GameController
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
             {
-                BulletCard b = new BulletCard(-1);
+                BulletCard b = new BulletCard(null, -1);
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
@@ -350,6 +352,7 @@ class GameController
 
 
             currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
             this.endOfCards();
         }
 
@@ -365,11 +368,12 @@ class GameController
 
             if (p.hasMarshal(aMarshal))
             {
-                BulletCard b = new BulletCard(-1);
+                BulletCard b = new BulletCard(null, -1);
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
             }
             //TODO Same with Shotgun 
@@ -384,6 +388,7 @@ class GameController
             else
             {
                 currentPlayer.setWaitingForInput(false);
+                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
             }
         }
@@ -411,13 +416,14 @@ class GameController
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
-            BulletCard b = new BulletCard(-1);
+            BulletCard b = new BulletCard(null, -1);
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof());
         }
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
 
@@ -440,6 +446,7 @@ class GameController
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "decrementBullets", this.currentPlayer.getBandit(), this.currentPlayer.getNumOfBulletsShot());
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
 
@@ -451,14 +458,21 @@ class GameController
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
 
     public void readyForNextMove()
     {
-        ActionCard top = this.currentRound.seeTopOfPlayedCards();
+        //Retrieve the card from the queue and return it to its player's discard pile
+        ActionCard top = this.currentRound.getTopOfPlayedCards();
+        top.belongsTo().addToDiscardPile(top);
+
+        //Figure out who is the current player
         this.currentPlayer = top.belongsTo();
         CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
+
+        Console.WriteLine("Resolving " + top.getKind() + " from " + top.belongsTo().getBandit());
 
         this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
@@ -501,6 +515,7 @@ class GameController
                             //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
 
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                             this.endOfCards();
                         }
                         //If the player is on the roof of a car 
@@ -513,11 +528,12 @@ class GameController
                             //If the player ends up in a car with the Marshal, he takes a bullet
                             if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
                             {
-                                this.currentPlayer.addToDiscardPile(new BulletCard(-1));
+                                this.currentPlayer.addToDiscardPile(new BulletCard(null, -1));
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                                 //TO ALL PLAYERS
                                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
 
+                                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 this.endOfCards();
                             }
 
@@ -536,6 +552,7 @@ class GameController
                             }
                             else
                             {
+                                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 this.endOfCards();
                             }
                         }
@@ -615,7 +632,8 @@ class GameController
                         break;
                     }
             }
-            //this.endOfCards();
+
+            
         }
     }
 
@@ -673,6 +691,8 @@ class GameController
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
 
+                    Thread.Sleep(1000);
+
                     endOfCards();
                 }
                 else
@@ -715,78 +735,84 @@ class GameController
 
     private void endOfCards()
     {
-        Card c = this.currentRound.getTopOfPlayedCards();
-        this.currentPlayer.addToDiscardPile(c);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "removeTopCard", c);
-
-        //if all cards in the pile have been played 
-        if (this.currentRound.getPlayedCards().Count == 0)
+        try
         {
-            //if this is the last round 
-            if (this.currentRound.getIsLastRound())
+            Card c = this.currentRound.seeTopOfPlayedCards();
+            CommunicationAPI.sendMessageToClient(null, "highlightTopCard");
+        }
+        catch (Exception e)
+        {
+            //The queue is empty
+            //if all cards in the pile have been played 
+            if (this.currentRound.getPlayedCards().Count == 0)
             {
-                calculateGameScore();
-            }
-            else
-            {
-                //setting the next round, setting the first turn of the round 
-                this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
-                this.currentTurn = this.currentRound.getTurns()[0];
-                //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
-
-                //setting the next player and game status of the game 
-                this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
-                this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
-                //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
-
-                this.aGameStatus = GameStatus.Schemin;
-                //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
-
-                this.currentPlayer.setWaitingForInput(true);
-                //TO SPECIFIC PLAYER
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
-
-                //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
-                foreach (Player p in this.players)
+                //if this is the last round 
+                if (this.currentRound.getIsLastRound())
                 {
-                    List<Card> cardsToAdd = new List<Card>();
-                    int index = this.players.IndexOf(p);
+                    calculateGameScore();
+                }
+                else
+                {
+                    //setting the next round, setting the first turn of the round 
+                    this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
+                    this.currentTurn = this.currentRound.getTurns()[0];
+                    //TO ALL PLAYERS
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
-                    Random rnd = new Random();
-                    for (int i = 0; i < 6; i++)
-                    {
-                        int rand = rnd.Next(0, p.discardPile.Count);
-                        Card aCard = p.discardPile[rand];
-                        p.hand.Add(aCard);
-                        cardsToAdd.Add(aCard);
-                        p.discardPile.Remove(aCard);
-                    }
-                    //TODO NEED TO SEE WITH CRISTINA
+                    //setting the next player and game status of the game 
+                    this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
+                    this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
+                    //TO ALL PLAYERS
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
+
+                    this.aGameStatus = GameStatus.Schemin;
+                    //TO ALL PLAYERS
+                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
+
+                    this.currentPlayer.setWaitingForInput(true);
                     //TO SPECIFIC PLAYER
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
 
-                }
+                    //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
+                    foreach (Player p in this.players)
+                    {
+                        List<Card> cardsToAdd = new List<Card>();
+                        int index = this.players.IndexOf(p);
 
-                //Stagecoach moves by one car to the back, if not at the last one of the train.
-                TrainCar curAdjacent = myStageCoach.getAdjacentCar();
+                        Random rnd = new Random();
+                        for (int i = 0; i < 6; i++)
+                        {
+                            int rand = rnd.Next(0, p.discardPile.Count);
+                            Card aCard = p.discardPile[rand];
+                            p.hand.Add(aCard);
+                            cardsToAdd.Add(aCard);
+                            p.discardPile.Remove(aCard);
+                        }
+                        //TODO NEED TO SEE WITH CRISTINA
+                        //TO SPECIFIC PLAYER
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
 
-                if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
-                {
-                    TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
-                    myStageCoach.setAdjacentCar(newAdjacent);
-                    
-                    //if Shotgun is not on the stage coach, it also moves by one car to the back
-                    if (!aShotGun.getIsOnStageCoach()){
-                        aShotGun.setPosition(newAdjacent.getRoof());
                     }
-                }
 
+                    //Stagecoach moves by one car to the back, if not at the last one of the train.
+                    TrainCar curAdjacent = myStageCoach.getAdjacentCar();
+
+                    if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
+                    {
+                        TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
+                        myStageCoach.setAdjacentCar(newAdjacent);
+
+                        //if Shotgun is not on the stage coach, it also moves by one car to the back
+                        if (!aShotGun.getIsOnStageCoach())
+                        {
+                            aShotGun.setPosition(newAdjacent.getRoof());
+                        }
+                    }
+
+                }
             }
         }
+
         readyForNextMove();
     }
 
@@ -843,6 +869,10 @@ class GameController
         aShotGun = Shotgun.getInstance();
         myStageCoach.moveRoofCar(aShotGun);
 
+        //TESTING
+        foreach (Player p in this.players) {
+            p.setPosition(this.myTrain[this.myTrain.Count - 1].getInside());
+        }
     }
 
     private void initializeLoot()

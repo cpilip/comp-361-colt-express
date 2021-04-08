@@ -19,11 +19,11 @@ namespace GameUnitSpace {
     }
 
     class Player : GameUnit{
-        [JsonProperty]
+       // [JsonProperty]
         private readonly Character bandit;
-        [JsonProperty]
+       // [JsonProperty]
         private bool waitingForInput;
-        [JsonProperty]
+        //[JsonProperty]
         private bool getsAnotherAction;
         //[JsonProperty]
         private int numOfBulletsShot;
@@ -64,22 +64,22 @@ namespace GameUnitSpace {
             bullets = new List<BulletCard>();
 
             for (int i = 1 ; i <= 6 ;i++) {
-                bullets.Add(new BulletCard(i));
+                bullets.Add(new BulletCard(this, i));
             }
             discardPile = new List<Card>();
             hand = new List<Card>();
             // Create and add all necessary action cards
-            discardPile.Add(new ActionCard(ActionKind.Move));
-            discardPile.Add(new ActionCard(ActionKind.Move));
-            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
-            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
-            discardPile.Add(new ActionCard(ActionKind.Shoot));
-            discardPile.Add(new ActionCard(ActionKind.Shoot));
-            discardPile.Add(new ActionCard(ActionKind.Punch));
-            discardPile.Add(new ActionCard(ActionKind.Rob));
-            discardPile.Add(new ActionCard(ActionKind.Rob));
-            discardPile.Add(new ActionCard(ActionKind.Marshal));
-            discardPile.Add(new ActionCard(ActionKind.Ride));
+            discardPile.Add(new ActionCard(this, ActionKind.Move));
+            discardPile.Add(new ActionCard(this, ActionKind.Move));
+            discardPile.Add(new ActionCard(this, ActionKind.ChangeFloor));
+            discardPile.Add(new ActionCard(this, ActionKind.ChangeFloor));
+            discardPile.Add(new ActionCard(this, ActionKind.Shoot));
+            discardPile.Add(new ActionCard(this, ActionKind.Shoot));
+            discardPile.Add(new ActionCard(this, ActionKind.Punch));
+            discardPile.Add(new ActionCard(this, ActionKind.Rob));
+            discardPile.Add(new ActionCard(this, ActionKind.Rob));
+            discardPile.Add(new ActionCard(this, ActionKind.Marshal));
+            discardPile.Add(new ActionCard(this, ActionKind.Ride));
 
         }
 

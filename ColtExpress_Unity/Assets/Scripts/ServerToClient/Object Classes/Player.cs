@@ -22,11 +22,11 @@ namespace GameUnitSpace
 
     class Player : GameUnit
     {
-        [JsonProperty]
+        //[JsonProperty]
         private readonly Character bandit;
-        [JsonProperty]
+        //[JsonProperty]
         private bool waitingForInput;
-        [JsonProperty]
+        //[JsonProperty]
         private bool getsAnotherAction;
         //[JsonProperty]
         private int numOfBulletsShot;
@@ -60,24 +60,7 @@ namespace GameUnitSpace
         private void initializeCards()
         {
             // Create and add 6 bullet cards
-            bullets = new List<BulletCard>();
-            for (int i = 0; i < 6; i++)
-            {
-                bullets.Add(new BulletCard(-1));
-            }
-            discardPile = new List<System.Object>();
-            hand = new List<System.Object>();
-            // Create and add all necessary action cards
-            discardPile.Add(new ActionCard(ActionKind.Move));
-            discardPile.Add(new ActionCard(ActionKind.Move));
-            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
-            discardPile.Add(new ActionCard(ActionKind.ChangeFloor));
-            discardPile.Add(new ActionCard(ActionKind.Shoot));
-            discardPile.Add(new ActionCard(ActionKind.Shoot));
-            discardPile.Add(new ActionCard(ActionKind.Punch));
-            discardPile.Add(new ActionCard(ActionKind.Rob));
-            discardPile.Add(new ActionCard(ActionKind.Rob));
-            discardPile.Add(new ActionCard(ActionKind.Marshal));
+            
 
         }
 
