@@ -47,7 +47,7 @@ class GameController
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
         this.availableHostages = new List<Hostage>();
-        totalPlayer = 1;
+        totalPlayer = 2;
         this.endOfGame = false;
     }
 
@@ -74,7 +74,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
 
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 1)
+        if (players.Count == 2)
         {
             initializeGameBoard();
 
@@ -188,6 +188,9 @@ class GameController
         }
         //adding the action card to the playedCard pile and removind it from player's hand
         this.currentRound.addToPlayedCards(c);
+
+        CommunicationAPI.sendMessageToClient(null, "updateTopCard", this.currentPlayer.getBandit(), c.getKind());
+
         this.currentPlayer.hand.Remove(c);
 
         endOfTurn();
@@ -233,10 +236,6 @@ class GameController
         else
         {
             CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), WhiskeyKind.Unknown);
-
-            //TESTING
-            Whiskey w = new Whiskey(WhiskeyKind.Old);
-            currentPlayer.addWhiskey(w);
 
             //Retrieve the first full whiskey the player has and do the appropriate action depending on its kind
             Whiskey aW = currentPlayer.getAWhiskey();
@@ -668,12 +667,13 @@ class GameController
                         //Send an empty list to the client's hand
                         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), new List<Card>());
 
-                        endOfCards();
                     }
 
                     this.aGameStatus = GameStatus.Stealin;
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
+
+                    endOfCards();
                 }
                 else
                 {

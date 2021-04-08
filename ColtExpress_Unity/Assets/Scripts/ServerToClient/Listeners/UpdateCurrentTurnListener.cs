@@ -24,6 +24,7 @@ public class UpdateCurrentTurnListener : UIEventListenable
         this.transform.GetChild(t).GetComponent<Image>().color = new Color(1.000f, 0.933f, 0.427f, 0.914f);
 
         GameUIManager.gameUIManagerInstance.isNormalTurn = (this.transform.GetChild(t).gameObject.name == "Standard") ? true : false;
+        GameUIManager.gameUIManagerInstance.isTunnelTurn = (this.transform.GetChild(t).gameObject.name == "Tunnel") ? true : false;
         //GameUIManager.gameUIManagerInstance.hasAnotherAction = (this.transform.GetChild(t).gameObject.name == "SpeedingUp") ? true : false;
 
         Debug.Log("[UpdateCurrentTurnListener] Turn: " + t);

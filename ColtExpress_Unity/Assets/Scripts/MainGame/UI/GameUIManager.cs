@@ -13,6 +13,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject playerProfileLocation;
     public GameObject trainLocation;
     public GameObject deck;
+    public GameObject playedCards;
     public GameObject discardPile;
 
     //Menus
@@ -44,6 +45,7 @@ public class GameUIManager : MonoBehaviour
 
     //Other important information
     public bool isNormalTurn = false;
+    public bool isTunnelTurn = false;
     public bool whiskeyWasUsed = false;
 
     //Loaded sprites
@@ -217,13 +219,13 @@ public class GameUIManager : MonoBehaviour
 
         newCard.GetComponent<Image>().sprite = newCardSprite;
 
-        //Making sure to parent the card under the hand/deck or discard pile, updating the client collection of cards in the hand/deck or discard pile, and fixing the scale
+        //Making sure to parent the card under the hand/deck or playedCards and fixing the scale
         if (inDeck)
         {
             newCard.transform.SetParent(deck.transform);
         } else
         {
-            newCard.transform.SetParent(discardPile.transform);
+            newCard.transform.SetParent(playedCards.transform);
         }
         newCard.transform.localScale = scale;
 
@@ -268,12 +270,21 @@ public class GameUIManager : MonoBehaviour
         {
             turnMenu.SetActive(isVisible);
 
-            //Ensure all buttons are available (whiskey if it is a normal turn
+            //Ensure all buttons are available (whiskey if it is a normal turn)
             turnMenu.transform.GetChild(1).gameObject.SetActive(true);
             turnMenu.transform.GetChild(2).gameObject.SetActive(true);
-            turnMenu.transform.GetChild(3).gameObject.SetActive(isNormalTurn);
+            turnMenu.transform.GetChild(3).gameObject.SetActive(isNormalTurn && playerHasWhiskey());
             
         }
+    }
+
+    public bool playerHasWhiskey()
+    {
+        //3 - Usables, all children disabled?
+        return (getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(0).gameObject.activeSelf &&
+                getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(1).gameObject.activeSelf &&
+                getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(2).gameObject.activeSelf
+                );
     }
 
 

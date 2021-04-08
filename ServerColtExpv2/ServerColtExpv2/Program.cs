@@ -85,7 +85,7 @@ class MyTcpListener
 
 
                     //Verify against lobby service
-                    if (clients.Count == 1)
+                    if (clients.Count == 2)
                     {
                         haveAllConnections = true;
                     }
@@ -172,6 +172,7 @@ class MyTcpListener
                     } 
                     else
                     {
+                        //Player timed out
                         aController.playActionCard(null);
                     }
                 }
