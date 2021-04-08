@@ -1218,12 +1218,32 @@ class GameController
 
     private void intializeRounds()
     {
+        // Variables to get random round layouts
+        List<int> usedRounds = new List<>();
+        Random r = new Random();
+        int rand;
+
+        // Initialize random unique layouts for 4 normal rounds
         for (int i = 0; i < 4; i++)
         {
+            // Look for a random integer between 0 and 6 which has not been used before
+            rand = r.Next(0, 7);
+            while (true) {
+                if (!usedRounds.Contains(rand)) {
+                    break;
+                } 
+                rand = r.Next(0, 7);
+            }
+            usedRounds.Add(rand);
             Round aRound = new Round(false, totalPlayer);
+            aRound.intializeTurn(this.totalPlayer, rand);
             this.rounds.Add(aRound);
         }
+
+        // Initialize random layout for final round
+        rand = r.Next(0, 3);
         Round aFinalRound = new Round(true, totalPlayer);
+        aFinalRound.intializeTurn(this.totalPlayer, rand);
         this.rounds.Add(aFinalRound);
     }
 
