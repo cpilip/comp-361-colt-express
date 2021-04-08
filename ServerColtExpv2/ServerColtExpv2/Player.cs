@@ -177,6 +177,17 @@ namespace GameUnitSpace {
             return total;
         }
 
+        public int getLeastPurseValue() {
+            int min = 10000;
+            foreach (GameItem i in this.possessions) {
+                if (i.getType == ItemType.Purse && i.getValue() < min) {
+                    min = i.getValue();
+                }
+            }
+            if (min == 10000) return 0;
+            else return min;
+        }
+
         public int getHostageValue(){
             int val = 0;
             switch (capturedHostage.getHostageChar())
