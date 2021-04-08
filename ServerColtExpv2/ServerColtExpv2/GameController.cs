@@ -128,7 +128,8 @@ class GameController
                     p.discardPile.Remove(aCard);
                 }
 
-                if(p.getBandit().Equals(Character.Doc)){
+                if (p.getBandit().Equals(Character.Doc))
+                {
                     int rand = rnd.Next(0, p.discardPile.Count);
                     Card aCard = p.discardPile[rand];
                     p.hand.Add(aCard);
@@ -142,10 +143,11 @@ class GameController
             }
 
             // Initialize a List with an AttackPosition for each Player
-            this.attPos = new List<>();
+            this.attPos = new List<AttackPosition>();
             int stopped_count = 0;
-            for(int i = 0 ; i < this.totalPlayers ; i++) {
-                attPos.Add(new AttackPosition(this.players[i].getBandit()), this.totalPlayers);
+            for (int i = 0; i < this.totalPlayer; i++)
+            {
+                attPos.Add(new AttackPosition(this.players[i].getBandit(), this.totalPlayer));
             }
 
             //intializing the first player 
@@ -179,25 +181,29 @@ class GameController
     public void playActionCard(ActionCard c)
     {
         //adding the action card to the playedCard pile and removind it from player's hand
-        if (c.isCanBePlayed()){
+        if (c.isCanBePlayed())
+        {
             this.currentRound.addToPlayedCards(c);
+            //TODO Send message to all clients 
             this.currentPlayer.hand.Remove(c);
         }
-        //TODO Message to server ???
-        
 
         endOfTurn();
     }
 
     public void useWhiskey(WhiskeyKind aKind)
     {
-
         if (aKind.Equals(WhiskeyKind.Normal))
         {
 
             Whiskey aW = currentPlayer.getAWhiskey();
             aW.drinkASip();
-            if (aW.isEmpty()) currentPlayer.removeWhiskey(aW);
+            CommunicationAPI.sendMessageToClient(null, "drinkWhiskey", currentPlayer, aKind);
+            if (aW.isEmpty())
+            {
+                currentPlayer.removeWhiskey(aW);
+                CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", currentPlayer, aKind);
+            }
 
             drawCards();
             // TODO need to ask player to play a Card ?
@@ -206,7 +212,12 @@ class GameController
         {
             Whiskey aW = currentPlayer.getAWhiskey();
             aW.drinkASip();
-            if (aW.isEmpty()) currentPlayer.removeWhiskey(aW);
+            CommunicationAPI.sendMessageToClient(null, "drinkWhiskey", currentPlayer, aKind);
+            if (aW.isEmpty())
+            {
+                currentPlayer.removeWhiskey(aW);
+                CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", currentPlayer, aKind);
+            }
 
             currentPlayer.setGetsAnotherAction(true);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
@@ -240,11 +251,12 @@ class GameController
         endOfTurn();
     }
 
-    public Boolean getEndHorseAttack() { 
+    public Boolean getEndHorseAttack()
+    {
         return this.endHorseAttack;
     }
 
-    public void chosenStartinPostion(Position p)
+    /*public void chosenStartinPostion(Position p)
     {
         playerPtrForStarting.setPosition(p);
         //TO ALL PLAYERS
@@ -252,7 +264,7 @@ class GameController
         p.getTrainCar().setHasAHorse(true);
         playerPtrForStarting.setWaitingForInput(false);
 
-    }
+    }*/
 
     public void chosenHostage(Hostage aHostage)
     {
@@ -260,19 +272,27 @@ class GameController
         availableHostages.Remove(aHostage);
         currentPlayer.setCapturedHostage(aHostage);
 
-        if (aHostage.getHostageChar().Equals(HostageChar.Teacher)){
+
+        if (aHostage.getHostageChar().Equals(HostageChar.Teacher))
+        {
             currentPlayer.actionCantBePlayedinHand(ActionKind.Punch);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "actionCantBePlayed", ActionKind.Punch);
         }
 
-        if (aHostage.getHostageChar().Equals(HostageChar.Zealot)){
+        if (aHostage.getHostageChar().Equals(HostageChar.Zealot))
+        {
             currentPlayer.actionCantBePlayedinHand(ActionKind.Ride);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "actionCantBePlayed", ActionKind.Ride);
         }
 
-        if (aHostage.getHostageChar().Equals(HostageChar.PokerPlayer)){
+        if (aHostage.getHostageChar().Equals(HostageChar.PokerPlayer))
+        {
             currentPlayer.setHasSpecialAbility(false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "specialAbilityDisabled");
         }
 
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
         this.endOfCards();
 
     }
@@ -294,11 +314,12 @@ class GameController
                 BulletCard b = new BulletCard(-1);
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
-
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof());
             }
+
             currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
             this.endOfCards();
         }
         //if the action card is a Move action
@@ -319,48 +340,26 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
             }
 
-            //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
-            if (p.hasShotgun(aShotGun))
+            flag = shotgunCheck(p);
+
+            if (flag)
             {
-                BulletCard b = new BulletCard(-1);
-                currentPlayer.addToDiscardPile(b);
-
-                //if the shotgun is on the last cabosse, player sent to adjacent car
-                if (p.getTrainCar().Equals(myTrain[myTrain.Count() - 1]))
-                {
-                    Position pos = myTrain[myTrain.Count() - 2].getRoof();
-                    currentPlayer.setPosition(pos);
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos);
-                }
-                //if not, the player must choose between the 2 positions 
-                else
-                {
-                    List<Position> aL = new List<Position>();
-                    TrainCar currentTraincar = p.getTrainCar();
-
-                    Position p1 = myTrain[myTrain.IndexOf(currentTraincar) - 1].getRoof();
-                    Position p2 = myTrain[myTrain.IndexOf(currentTraincar) + 1].getRoof();
-
-                    aL.Add(p1);
-                    aL.Add(p2);
-
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
-
-                    flag = false;
-                }
+                currentPlayer.setWaitingForInput(false);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
+                this.endOfCards();
             }
 
-            if (flag) currentPlayer.setWaitingForInput(false);
 
-            this.endOfCards();
         }
 
         else if (topOfPile.getKind().Equals(ActionKind.Ride))
         {
             currentPlayer.setPosition(p);
-
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
+            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", p.getTrainCar(), true);
             currentPlayer.setOnAHorse(false);
+
+            bool flag = true;
 
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
@@ -374,8 +373,6 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
                 this.endOfCards();
             }
-            //TODO Same with Shotgun 
-
             else if (p.isInStageCoach(myStageCoach))
             {
                 if (availableHostages.Count() != 0)
@@ -385,8 +382,14 @@ class GameController
             }
             else
             {
-                currentPlayer.setWaitingForInput(false);
-                this.endOfCards();
+                flag = shotgunCheck(p);
+                if (flag)
+                {
+                    currentPlayer.setWaitingForInput(false);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+                    this.endOfCards();
+                }
+
             }
         }
 
@@ -394,28 +397,25 @@ class GameController
 
     public void chosenPunchTarget(Player victim, GameItem loot, Position dest)
     {
-
-        if (currentPlayer.getBandit().Equals(Character.Cheyenne)){
+        if (currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility())
+        {
             loot.setPosition(null);
+            CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim, loot);
             currentPlayer.addToPossessions(loot);
-            CommunicationAPI.sendMessageToClient(null, "increment", loot);
+            CommunicationAPI.sendMessageToClient(null, "incrementLoot", currentPlayer, loot);
         }
-        else {
+        else
+        {
+            //loot is removed from victim possessions, droped at it position
+            victim.possessions.Remove(loot);
+            CommunicationAPI.sendMessageToClient(null, "decrementLoot", loot);
             loot.setPosition(victim.getPosition());
-            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
         }
-        
-        //drop the loot at victim position, sends victim to destination 
-       
-        victim.setPosition(dest);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest);
 
-        //loot is removed from victime possessions
-        victim.possessions.Remove(loot);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrement", loot);
+        //send victim to destination 
+        victim.setPosition(dest);
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest);
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
@@ -423,20 +423,21 @@ class GameController
             BulletCard b = new BulletCard(-1);
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
-            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof());
         }
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
         this.endOfCards();
     }
 
     public void choseToPunchShootgun()
     {
         aShotGun.setPosition(myStageCoach.getAdjacentCar().getRoof());
-        //Move message
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, myStageCoach.getAdjacentCar().getRoof());
         aShotGun.hasBeenPunched();
-        currentPlayer.addToPossessions(new GameItem(ItemType.Strongbox, 1000));
-        //decrement message
+        GameItem aStrongBox = new GameItem(ItemType.Strongbox, 1000);
+        currentPlayer.addToPossessions(aStrongBox);
+        CommunicationAPI.sendMessageToClient(null, "incrementLoot", currentPlayer, aStrongBox);
 
         this.currentPlayer.setWaitingForInput(false);
 
@@ -447,45 +448,52 @@ class GameController
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
         BulletCard aBullet = currentPlayer.getABullet();
         target.addToDiscardPile(aBullet);
+
         this.currentPlayer.shootBullet();
-        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.bullets);
 
-        if (currentPlayer.getBandit().Equals(Character.Django)){
-            
+        //if the bandit is Django
+        if (currentPlayer.getBandit().Equals(Character.Django) && currentPlayer.getHasSpecialAbility())
+        {
+
             TrainCar targetCar = target.getPosition().getTrainCar();
             TrainCar playerCar = currentPlayer.getPosition().getTrainCar();
-            
+
             //if the target is in front of django, and is not in the locomotive, move target one car to the front.
-            if(myTrain.IndexOf(targetCar) < myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[0]))){
-                
-                if(target.getPosition().isInside())
+            if (myTrain.IndexOf(targetCar) < myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[0])))
+            {
+
+                if (target.getPosition().isInside())
                 {
                     target.setPosition(myTrain[myTrain.IndexOf(targetCar) - 1].getInside());
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) - 1].getInside());
-                } else
+                }
+                else
                 {
                     target.setPosition(myTrain[myTrain.IndexOf(targetCar) - 1].getRoof());
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) - 1].getRoof());
                 }
-                    
+
             }
             //if the target is at the back of django and is not in the cabosse, moved one car at the back.
-            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[myTrain.Count()]))){
-                
-                if(target.getPosition().isInside())
+            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[myTrain.Count()])))
+            {
+
+                if (target.getPosition().isInside())
                 {
                     target.setPosition(myTrain[myTrain.IndexOf(targetCar) + 1].getInside());
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) + 1].getInside());
-                } else
+                }
+                else
                 {
                     target.setPosition(myTrain[myTrain.IndexOf(targetCar) + 1].getRoof());
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) + 1].getRoof());
                 }
             }
         }
-        
+
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
         this.endOfCards();
     }
 
@@ -494,10 +502,50 @@ class GameController
         //the loot is transfered from the position to the currentPlayer possensions
         loot.setPosition(null);
         currentPlayer.addToPossessions(loot);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "increment", loot);
+        CommunicationAPI.sendMessageToClient(null, "incremenLoot", currentPlayer, loot);
         currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
         this.endOfCards();
+    }
+
+    private bool shotgunCheck(Position p)
+    {
+        //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
+        if (p.hasShotgun(aShotGun))
+        {
+            BulletCard b = new BulletCard(-1);
+            currentPlayer.addToDiscardPile(b);
+
+            //if the shotgun is on the last cabosse, player sent to adjacent car
+            if (p.getTrainCar().Equals(myTrain[myTrain.Count() - 1]))
+            {
+                Position pos = myTrain[myTrain.Count() - 2].getRoof();
+                currentPlayer.setPosition(pos);
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos);
+            }
+            //if not, the player must choose between the 2 positions 
+            else
+            {
+                List<Position> aL = new List<Position>();
+                TrainCar currentTraincar = p.getTrainCar();
+
+                Position p1 = myTrain[myTrain.IndexOf(currentTraincar) - 1].getRoof();
+                Position p2 = myTrain[myTrain.IndexOf(currentTraincar) + 1].getRoof();
+
+                aL.Add(p1);
+                aL.Add(p2);
+
+                if(!currentPlayer.getWaitingForInput()) {
+                    currentPlayer.setWaitingForInput(true);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                }
+
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
+
+                return false;
+            }
+        }
+        return true;
     }
 
     public void readyForNextMove()
@@ -506,11 +554,12 @@ class GameController
         this.currentPlayer = top.belongsTo();
         CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
 
+        //TODO do we need this ?
         this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
 
-        // foreach (Player p in this.players)
-        // {
+        //  foreach (Player p in this.players)
+        //    {
         //     if (p.getWaitingForInput())
         //         waiting = false;
 
@@ -528,8 +577,10 @@ class GameController
                         if (moves.Count > 1)
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
+                            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                             this.currentPlayer.setWaitingForInput(true);
-                            //TO SPECIFIC PLAYERS
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves);
                         }
                         else
@@ -540,44 +591,46 @@ class GameController
                     }
                 case ActionKind.ChangeFloor:
                     {
-                        //If the player is inside a car
+                        //If the player is inside a car, goes on the roof
                         if (this.currentPlayer.getPosition().isInside())
                         {
+                            bool flag = true;
                             this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
-                            //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
 
-                            this.endOfCards();
+                            flag = shotgunCheck(currentPlayer.getPosition().getTrainCar().getRoof());
+
+                            if(flag){
+                                this.endOfCards();
+                            }
+                            
                         }
-                        //If the player is on the roof of a car 
+                        //If the player is on the roof of a car, goes inside the car
                         else
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
-                            //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
 
-                            //If the player ends up in a car with the Marshal, he takes a bullet
-                            if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
+                            //if the marshal is at position p, bullet card in deck + sent to the roof 
+                            if (currentPlayer.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
                             {
-                                this.currentPlayer.addToDiscardPile(new BulletCard(-1));
-                                this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
-                                //TO ALL PLAYERS
-                                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                                BulletCard b = new BulletCard(-1);
+                                currentPlayer.addToDiscardPile(b);
+                                currentPlayer.getPosition().getTrainCar().moveRoofCar(currentPlayer);
+                                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, currentPlayer.getPosition().getTrainCar().getRoof());
+                            } 
 
-                                this.endOfCards();
-                            }
-
-                            //TODO Same with Shotgun 
-
-                            //Else, if he ends up in the StageCoach, he chooses a hostage (if there are any left)
-                            else if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
+                            //if he ends up inside the StageCoach, he chooses a hostage (if there are any left)
+                            if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
                             {
                                 if (availableHostages.Count() != 0)
                                 {
                                     this.aGameStatus = GameStatus.FinalizingCard;
+                                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                                     this.currentPlayer.setWaitingForInput(true);
+                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
                                     //TODO new massage 
-                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "choosePossHostage", availableHostages);
+                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "chooseHostage", availableHostages);
                                 }
                             }
                             else
@@ -597,19 +650,23 @@ class GameController
                         else
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
+                            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
+
                             this.currentPlayer.setWaitingForInput(true);
-                            //TO SPECIFIC PLAYER
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                            
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", possTargets);
                         }
                         break;
                     }
                 case ActionKind.Rob:
                     {
-
                         List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
                         this.aGameStatus = GameStatus.FinalizingCard;
+                        CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                         this.currentPlayer.setWaitingForInput(true);
-                        //TO SPECIFIC PLAYER
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+
                         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", atLocation);
                         break;
                     }
@@ -623,10 +680,11 @@ class GameController
                         else
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
+                            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                             this.currentPlayer.setWaitingForInput(true);
-                            //TO ALL PLAYERS
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                            
                             CommunicationAPI.sendMessageToClient(null, "updateMovePositions", possPosition);
-
                         }
                         break;
                     }
@@ -635,18 +693,23 @@ class GameController
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
 
                         //Removing belle from the list of player if there are other players. 
-                        if(atLocation.Count()>1){
-                            foreach (Player player in atLocation){
-                                if (player.getBandit().Equals(Character.Belle)){
+                        if (atLocation.Count() > 1)
+                        {
+                            foreach (Player player in atLocation)
+                            {
+                                if (player.getBandit().Equals(Character.Belle) && player.getHasSpecialAbility())
+                                {
                                     atLocation.Remove(player);
                                 }
                             }
                         }
-                        
+
 
                         this.aGameStatus = GameStatus.FinalizingCard;
+                        CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                         this.currentPlayer.setWaitingForInput(true);
-                        //TO SPECIFIC PLAYER
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+
                         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", atLocation);
                         break;
                     }
@@ -661,13 +724,16 @@ class GameController
                             List<Position> moves = getPossibleMoves(this.currentPlayer);
 
                             this.aGameStatus = GameStatus.FinalizingCard;
+                            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                             this.currentPlayer.setWaitingForInput(true);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
 
-                            //NEW message for a ride action 
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "PossRidePositions", moves);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves);
 
                             //setting the on a horse action to false.
                             currentPlayer.getPosition().getTrainCar().setHasAHorse(false);
+                            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", currentPlayer.getPosition().getTrainCar(), false);
+
                         }
                         break;
                     }
@@ -676,34 +742,41 @@ class GameController
         }
     }
 
-    public void chosenHorseAttackAction(string haAction) {
+    public void chosenHorseAttackAction(string haAction)
+    {
 
         // Update Horse Attack position object for current player
         AttackPosition hap = this.getHAFromCharacter(this.currentPlayer.getBandit());
-        if (haAction.Equals("ride")) {
+        if (haAction.Equals("ride"))
+        {
             // Increment position of horse and update all players
-            if (!hap.incrementPosition()) {
+            if (!hap.incrementPosition())
+            {
                 this.horseAttackCounter++;
             }
-        } else if (haAction.Equals("enter")) { 
+        }
+        else if (haAction.Equals("enter"))
+        {
             // Set Off horse for current Player and update all the players
             hap.getOffHorse();
             this.horseAttackCounter++;
         }
 
         // Check if all players have chosen a position where to stop
-        if (this.horseAttackCounter == this.totalPlayers) {
+        if (this.horseAttackCounter == this.totalPlayer)
+        {
             this.endHorseAttack = true;
 
             // Set all the players' positions in the train
-            foreach (Player p in this.players) {
+            foreach (Player p in this.players)
+            {
                 AttackPosition ap = this.getHAFromCharacter(p.getBandit());
-                p.setPosition(this.myTrain[ap.getPosition()].getInside();
+                p.setPosition(this.myTrain[ap.getPosition()].getInside());
             }
 
             // Update the train for all the players
             CommunicationAPI.sendMessageToClient(null, "updateTrain", myTrain);
-            
+
             // Set currentPlayer back to 0 and start the game
             // Set current player as next player
             this.currentPlayer = players[0];
@@ -711,11 +784,15 @@ class GameController
             //Send the current player as index and value for waiting for input for that index/player
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
-        } else {
+        }
+        else
+        {
             // Update all the players
             CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
             currentPlayer.setWaitingForInput(false);
-            this.currentPlayer = this.players[(this.players.IndexOf(this.currentPlayer) + 1) % this.totalPlayers];
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+            this.currentPlayer = this.players[(this.players.IndexOf(this.currentPlayer) + 1) % this.totalPlayer];
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer);
             currentPlayer.setWaitingForInput(true);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
         }
@@ -725,10 +802,12 @@ class GameController
     /**
     *   Private helper methods
     */
-    private AttackPosition getHAFromCharacter(Character c) {
+    private AttackPosition getHAFromCharacter(Character c)
+    {
         foreach (AttackPosition ha in this.attPos)
         {
-            if (ha.getBandit == c) {
+            if (ha.GetCharacter() == c)
+            {
                 return ha;
             }
         }
@@ -753,7 +832,6 @@ class GameController
             //if this is not the last turn of the round
             if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
             {
-
                 //determining the next player 
                 //if the turn is Switching, order of players is reversed, so next player is previous in the list
                 if (this.currentTurn.getType() == TurnType.Switching)
@@ -837,24 +915,25 @@ class GameController
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)
                 {
-                    if(p.getHostage().getHostageChar().Equals(HostageChar.Teacher)){
+                    if (p.getHostage().getHostageChar().Equals(HostageChar.Teacher))
+                    {
                         p.actionCantBePlayed(ActionKind.Punch);
                     }
 
-                    if (p.getHostage().getHostageChar().Equals(HostageChar.Zealot)){
+                    if (p.getHostage().getHostageChar().Equals(HostageChar.Zealot))
+                    {
                         p.actionCantBePlayed(ActionKind.Ride);
                     }
-                    
+
                     List<Card> cardsToAdd = new List<Card>();
                     int index = this.players.IndexOf(p);
 
                     Random rnd = new Random();
                     for (int i = 0; i < 6; i++)
                     {
-                        
                         //if p has Minister as hostage, then he only draw 5 cards 
                         if (p.getHostage().getHostageChar().Equals(HostageChar.Minister) && i == 5) break;
-                        
+
                         int rand = rnd.Next(0, p.discardPile.Count);
                         Card aCard = p.discardPile[rand];
                         p.hand.Add(aCard);
@@ -862,15 +941,15 @@ class GameController
                         p.discardPile.Remove(aCard);
                     }
 
-                    if(p.getBandit().Equals(Character.Doc)){
+                    if (p.getBandit().Equals(Character.Doc) && p.getHasSpecialAbility())
+                    {
                         int rand = rnd.Next(0, p.discardPile.Count);
                         Card aCard = p.discardPile[rand];
                         p.hand.Add(aCard);
                         cardsToAdd.Add(aCard);
                         p.discardPile.Remove(aCard);
                     }
-                    //TODO NEED TO SEE WITH CRISTINA
-                    //TO SPECIFIC PLAYER
+                
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
 
                 }
@@ -880,14 +959,15 @@ class GameController
 
                 if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
                 {
-                    //TODO send message
                     TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
                     myStageCoach.setAdjacentCar(newAdjacent);
+                    CommunicationAPI.sendMessageToClient(null, "moveStageCoach", newAdjacent);
 
                     //if Shotgun is not on the stage coach, it also moves by one car to the back
                     if (!aShotGun.getIsOnStageCoach())
                     {
                         aShotGun.setPosition(newAdjacent.getRoof());
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, newAdjacent.getRoof());
                     }
                 }
 
@@ -1059,7 +1139,7 @@ class GameController
     {
         List<Position> possPos = new List<Position>();
         TrainCar playerCar = p.getPosition().getTrainCar();
-        
+
         //if the player is on a horse 
         if (currentPlayer.isPlayerOnAHorse())
         {
@@ -1102,13 +1182,16 @@ class GameController
 
         }
         //if the player is inside or on the roof of the stagecoach
-        else if (p.getPosition().isInStageCoach(myStageCoach)){
-            if (p.getPosition().isInside()){
+        else if (p.getPosition().isInStageCoach(myStageCoach))
+        {
+            if (p.getPosition().isInside())
+            {
                 return null;
             }
-            else {
+            else
+            {
                 TrainCar adjacentCar = myStageCoach.getAdjacentCar();
-                
+
                 // Add 1-2 distance forward or backwards
                 for (int i = 1; i < 3; i++)
                 {
@@ -1135,7 +1218,7 @@ class GameController
                         continue;
                     }
                 }
-                    
+
             }
         }
         //if the player is on the roof of a Car
@@ -1250,7 +1333,7 @@ class GameController
             }
 
         }
-        
+
         return possPos;
     }
 
@@ -1307,25 +1390,14 @@ class GameController
             // Look for the players in line of sight forward on roof
             for (int i = this.myTrain.IndexOf(playerCar) + 1; i < myTrain.Count; i++)
             {
-                // If the shotgun is in the line of sight, then he blocks it
-                if (!aShotGun.getIsOnStageCoach())
-                {
-                    if (this.myTrain[i].getRoof().hasShotgun(aShotGun))
-                    {
-                        break;
-                    }
-                }
+
                 List<Player> playersOnWagon = this.myTrain[i].getRoof().getPlayers();
                 if (playersOnWagon.Count != 0)
                 {
                     possPlayers.AddRange(playersOnWagon);
                     break;
                 }
-            }
 
-            // Look for the players in line of sight backwards on roof
-            for (int i = this.myTrain.IndexOf(playerCar) - 1; i >= 0; i--)
-            {
                 // If the shotgun is in the line of sight, then he blocks it
                 if (!aShotGun.getIsOnStageCoach())
                 {
@@ -1334,11 +1406,25 @@ class GameController
                         break;
                     }
                 }
+            }
+
+            // Look for the players in line of sight backwards on roof
+            for (int i = this.myTrain.IndexOf(playerCar) - 1; i >= 0; i--)
+            {
+
                 List<Player> playersOnWagon2 = this.myTrain[i].getRoof().getPlayers();
                 if (playersOnWagon2.Count != 0)
                 {
                     possPlayers.AddRange(playersOnWagon2);
                     break;
+                }
+                // If the shotgun is in the line of sight, then he blocks it
+                if (!aShotGun.getIsOnStageCoach())
+                {
+                    if (this.myTrain[i].getRoof().hasShotgun(aShotGun))
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -1353,7 +1439,8 @@ class GameController
             }
 
             //If player is tuco, then he can shoot on the roof of the same wagon 
-            if (currentPlayer.getBandit().Equals(Character.Tuco)){
+            if (currentPlayer.getBandit().Equals(Character.Tuco) && currentPlayer.getHasSpecialAbility())
+            {
                 List<Player> playersInside = p.getPosition().getTrainCar().getInside().getPlayers();
                 if (playersInside.Count != 0)
                 {
@@ -1397,7 +1484,8 @@ class GameController
             }
 
             //If player is tuco, then he can shoot inside the same wagon 
-            if (currentPlayer.getBandit().Equals(Character.Tuco)){
+            if (currentPlayer.getBandit().Equals(Character.Tuco) && currentPlayer.getHasSpecialAbility())
+            {
                 List<Player> playersOnTheRoof = p.getPosition().getTrainCar().getRoof().getPlayers();
                 if (playersOnTheRoof.Count != 0)
                 {
@@ -1411,7 +1499,7 @@ class GameController
         {
             foreach (Player pl in possPlayers)
             {
-                if (pl.getBandit() == Character.Belle)
+                if (pl.getBandit().Equals(Character.Belle) && pl.getHasSpecialAbility())
                 {
                     possPlayers.Remove(pl);
                 }
