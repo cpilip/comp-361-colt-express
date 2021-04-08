@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 
 namespace RoundSpace {
     enum EndOfRoundEvent {
-        //Normal Round Event
+        
+        //Normal End of Round Event
         AngryMarshal,
         SwivelArm,
         Braking,
@@ -13,13 +14,17 @@ namespace RoundSpace {
         PassengersRebellion,
         PantingHorses,
 
-        //Final Round Event
-        //WhiskeyForMarshal,
-        //HigherSpeed,
+        //Arrival End of Round Event
         MarshalsRevenge,
         Pickpocketing,
-        //Escape
         HostageConductor
+
+        //Extension End of Round Event 
+
+        //Final Round Event,
+        //WhiskeyForMarshal,
+        //HigherSpeed,
+        //Escape
         
     }
 
