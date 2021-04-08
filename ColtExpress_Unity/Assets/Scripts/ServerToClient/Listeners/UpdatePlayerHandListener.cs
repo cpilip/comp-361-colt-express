@@ -28,34 +28,42 @@ public class UpdatePlayerHandListener : UIEventListenable
         if (player == NamedClient.c)
         {
             //Clear the old hand
-            foreach (GameObject c in GameUIManager.gameUIManagerInstance.deck.transform)
+            foreach (Transform c in GameUIManager.gameUIManagerInstance.deck.transform)
             {
-                Destroy(c);
+                Destroy(c.gameObject);
             }
 
             //Get list of JSON cards
             IEnumerable listOfCardTokens = o.SelectToken("cardsToAdd").Children();
 
-            foreach (JToken c in listOfCardTokens)
+            if (o.SelectToken("cardsToAdd").HasValues)
             {
-                //Deserialize each JSON card to an ActionCard or BulletCard
-                Card card = c.ToObject<Card>(serializer);
-                
-                //Call the appropriate card object function
-                if (card.GetType() == typeof(BulletCard))
+                foreach (JToken c in listOfCardTokens)
                 {
-                    //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
-                    GameUIManager.gameUIManagerInstance.createCardObject(player, ((BulletCard)card).getNumBullets(), true);
-                } else
-                {
-                    GameUIManager.gameUIManagerInstance.createCardObject(player, ((ActionCard)card).getKind(), true);
-                }
-            }
+                    //Deserialize each JSON card to an ActionCard or BulletCard
+                    Card card = c.ToObject<Card>(serializer);
 
-            //Activate the six cards
-            for (int i = 0; i < 6; i++) 
-            {
-                GameUIManager.gameUIManagerInstance.deck.transform.GetChild(i).gameObject.SetActive(true);
+                    //Call the appropriate card object function
+                    if (card.GetType() == typeof(BulletCard))
+                    {
+                        //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
+                        GameUIManager.gameUIManagerInstance.createCardObject(player, ((BulletCard)card).getNumBullets(), true);
+                    }
+                    else
+                    {
+                        GameUIManager.gameUIManagerInstance.createCardObject(player, ((ActionCard)card).getKind(), true);
+                    }
+                }
+
+
+                Debug.Log(GameUIManager.gameUIManagerInstance.deck.transform.childCount);
+
+                //Activate the six cards
+                for (int i = 0; i < 6; i++)
+                {
+                    GameUIManager.gameUIManagerInstance.deck.transform.GetChild(i).gameObject.SetActive(true);
+                }
+
             }
 
             Debug.Log("[UpdatePlayerHandListener] Player hand updated for " + player + ".");

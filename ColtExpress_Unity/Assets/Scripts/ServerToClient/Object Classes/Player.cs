@@ -13,10 +13,10 @@ namespace GameUnitSpace
     {
         Ghost,
         Doc,
+        Tuco,
         Cheyenne,
         Belle,
         Django,
-        Tuco,
         Marshal
     }
 

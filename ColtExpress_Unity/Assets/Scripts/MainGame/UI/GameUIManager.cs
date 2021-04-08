@@ -40,7 +40,7 @@ public class GameUIManager : MonoBehaviour
 
     //EventManager instance, game status, has another action status
     private static GameUIManager gameUIManager;
-    public bool gameStatus;
+    public GameStatus gameStatus;
 
     //Other important information
     public bool isNormalTurn = false;
@@ -275,6 +275,7 @@ public class GameUIManager : MonoBehaviour
             
         }
     }
+
 
     //Enable the Play or Draw buttons or both on the turn menu - if this is called, it is because of hasAnotherAction
     //hasAnotherAction is triggered by SpeedingUp turns or whiskey usage

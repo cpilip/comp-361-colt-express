@@ -107,9 +107,11 @@ namespace ClientCommunicationAPIHandler
     }
 
 }
-
 public enum GameStatus
 {
+    ChoosingBandits,
     Schemin,
-    Stealin
+    Stealin,
+    FinalizingCard,
+    Completed
 }

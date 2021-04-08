@@ -26,7 +26,7 @@ public class UpdateHasAnotherActionListener : UIEventListenable
         if (NamedClient.c == player)
         {
             //If SCHEMIN, unlock the turn menu
-            if (GameUIManager.gameUIManagerInstance.gameStatus)
+            if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.Schemin)
             {
                 if (hasAnotherAction)
                 {

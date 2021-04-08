@@ -165,9 +165,15 @@ class MyTcpListener
                 {
                     // Get index; -1 if player timed out
                     int index = Int32.Parse(o.SelectToken("index").ToString());
-                    ActionCard crd = aController.getCardByIndex(index);
-
-                    aController.playActionCard(crd);
+                    if (index != -1)
+                    {
+                        ActionCard crd = aController.getCardByIndex(index);
+                        aController.playActionCard(crd);
+                    } 
+                    else
+                    {
+                        aController.playActionCard(null);
+                    }
                 }
                 else if (eventName.Equals("DrawMessage"))
                 {

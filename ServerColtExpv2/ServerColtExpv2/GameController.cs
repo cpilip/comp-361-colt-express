@@ -34,6 +34,7 @@ class GameController
     private Player currentPlayer;
     private Player playerPtrForStarting;
     private int currentPlayerIndex;
+    private int firstPlayerIndex;
     private List<TrainCar> myTrain;
     private StageCoach myStageCoach;
     private Marshal aMarshal;
@@ -95,7 +96,7 @@ class GameController
 
             this.aGameStatus = GameStatus.Schemin;
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
+            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
 
             this.currentRound = rounds[0];
             //TO ALL PLAYERS
@@ -148,6 +149,11 @@ class GameController
 
             //intializing the first player 
             this.currentPlayer = players[0];
+            this.currentPlayerIndex = 0;
+            this.firstPlayerIndex = 0;
+
+            CommunicationAPI.sendMessageToClient(null, "updateFirstPlayer", this.currentPlayer.getBandit());
+
             currentPlayer.setWaitingForInput(true);
             //TO ALL PLAYERS
             //Send the current player as index and value for waiting for input for that index/player
@@ -176,6 +182,10 @@ class GameController
 
     public void playActionCard(ActionCard c)
     {
+        if (c == null)
+        {
+            endOfTurn();
+        }
         //adding the action card to the playedCard pile and removind it from player's hand
         this.currentRound.addToPlayedCards(c);
         this.currentPlayer.hand.Remove(c);
@@ -223,6 +233,10 @@ class GameController
         else
         {
             CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", this.currentPlayer.getBandit(), WhiskeyKind.Unknown);
+
+            //TESTING
+            Whiskey w = new Whiskey(WhiskeyKind.Old);
+            currentPlayer.addWhiskey(w);
 
             //Retrieve the first full whiskey the player has and do the appropriate action depending on its kind
             Whiskey aW = currentPlayer.getAWhiskey();
@@ -618,59 +632,84 @@ class GameController
             //TO SPECIFIC PLAYER
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "both");
             this.currentPlayer.setGetsAnotherAction(false);
-            //CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), false, "both");
+            
         }
         else
         {
             this.currentPlayer.setWaitingForInput(false);
-            //TO SPECIFIC PLAYER 
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
 
-            
-
-            //if this is not the last turn of the round
-            if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
+           
+            //determining the next player 
+            //if the turn is Switching, order of players is reversed, so next player is previous in the list
+            if (this.currentTurn.getType() == TurnType.Switching)
             {
-                //determining the next player 
-                //if the turn is Switching, order of players is reversed, so next player is previous in the list
-                if (this.currentTurn.getType() == TurnType.Switching)
-                {
-                    this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
-                    //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
-
-                }
-                //otherwise, it is the next player in the list 
-                else
-                {
-                    this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
-                    this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
-                    //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
-
-                }
-
-                //if the turn is Speeding up, the next player has another action 
-                if (this.currentTurn.getType() == TurnType.SpeedingUp)
-                {
-                    this.currentPlayer.setGetsAnotherAction(true);
-                }
+                this.currentPlayerIndex = mod((this.currentPlayerIndex - 1), this.totalPlayer);
+                this.currentPlayer = this.players[this.currentPlayerIndex];
             }
-            // if it is the last turn of the round 
+            //otherwise, it is the next player in the list 
             else
             {
-                //prepare for Stealing phase 
-                foreach (Player p in this.players)
+                this.currentPlayerIndex = mod((this.currentPlayerIndex + 1), this.totalPlayer);
+                this.currentPlayer = this.players[this.currentPlayerIndex];
+            }
+
+            //Verify whether the next player is the first player again; if so, go to the next turn
+            if (this.currentPlayerIndex == this.firstPlayerIndex)
+            {
+                int nextTurnIndex = this.currentRound.getTurns().IndexOf(this.currentTurn) + 1;
+
+                //If the next turn index is out of bounds, the current turn is the last turn
+                if (nextTurnIndex == this.currentRound.getTurns().Count)
                 {
-                    p.moveCardsToDiscard();
-                    //NEED MESSAGE HERE
-                    // p.setWaitingForInput(true);
+                    //prepare for Stealing phase 
+                    foreach (Player p in this.players)
+                    {
+                        p.moveCardsToDiscard();
+                        //Send an empty list to the client's hand
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), new List<Card>());
+
+                        endOfCards();
+                    }
+
                     this.aGameStatus = GameStatus.Stealin;
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", false);
+                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
                 }
+                else
+                {
+                    this.currentTurn = this.currentRound.getTurns()[nextTurnIndex];
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", nextTurnIndex);
+
+                    if (this.currentTurn.getType() == TurnType.Switching)
+                    {
+                        this.currentPlayerIndex = firstPlayerIndex;
+                        this.currentPlayer = this.players[firstPlayerIndex];
+                    }
+                }
+            } 
+            
+            if (this.currentTurn.getType() == TurnType.SpeedingUp)
+            {
+                this.currentPlayer.setGetsAnotherAction(true);
             }
+
+            //TO ALL PLAYERS
+
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
+            //TO CURRENT PLAYER
+            if (this.currentPlayer.isGetsAnotherAction())
+            {
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "both");
+            }
+            else
+            {
+                this.currentPlayer.setWaitingForInput(true);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
+            }
+
+            Console.WriteLine(this.currentTurn.getType());
+            Console.WriteLine(this.currentPlayerIndex);
+
         }
     }
 
@@ -705,7 +744,7 @@ class GameController
 
                 this.aGameStatus = GameStatus.Schemin;
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
+                CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
 
                 this.currentPlayer.setWaitingForInput(true);
                 //TO SPECIFIC PLAYER
@@ -1201,6 +1240,11 @@ class GameController
         return (ActionCard)al[index];
     }
 
-
+    //C# does a remainder, not a true modulo
+    private int mod(int x, int m)
+    {
+        int r = x % m;
+        return r < 0 ? r + m : r;
+    }
 }
 

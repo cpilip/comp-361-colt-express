@@ -143,15 +143,17 @@ namespace GameUnitSpace {
             this.possessions.Add(anItem);
         }
        
-        public void moveFromHandToDiscard(Card c) { 
-            this.hand.Remove(c);
+        public void moveFromHandToDiscard(Card c) {
             this.discardPile.Add(c);
         }
 
         public void moveCardsToDiscard() {
-            foreach (Card c in this.hand) { 
+            foreach (Card c in this.hand) {
+                
                 moveFromHandToDiscard(c);
             }
+
+            this.hand.Clear();
         }
 
         public int getPossesionsValue() {

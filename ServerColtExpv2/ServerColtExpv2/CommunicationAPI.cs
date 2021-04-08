@@ -144,7 +144,7 @@ public class CommunicationAPI
             var definition = new
             {
                 eventName = action,
-                statusIs = (bool)args[0],
+                statusIs = (GameStatus)args[0],
             };
             if (cli == null)
             {
@@ -393,6 +393,27 @@ public class CommunicationAPI
                 currentPlayer = (Character)args[0],
                 hasAnotherAction = (bool)args[1],
                 otherAction = (string)args[2]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "updateFirstPlayer")
+        //"updateHasAnotherAction" will 
+        {
+            var definition = new
+            {
+                eventName = action,
+                currentPlayer = (Character)args[0]
             };
 
             if (cli == null)
