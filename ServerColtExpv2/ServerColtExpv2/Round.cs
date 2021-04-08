@@ -92,9 +92,11 @@ namespace RoundSpace {
 
             
             Random rnd = new Random ();
+            //randomn for last round
+            //
             int rand = rnd.Next(0,7);
 
-            /*
+            
             //if it is a last round
             if (isLastRound){
                 switch (rand)

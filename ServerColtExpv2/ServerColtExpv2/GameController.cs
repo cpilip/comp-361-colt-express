@@ -10,6 +10,7 @@ using CardSpace;
 using GameUnitSpace;
 using PositionSpace;
 using HostageSpace;
+using AttackSpace;
 
 
 enum GameStatus
@@ -675,7 +676,7 @@ class GameController
         }
     }
 
-    public chosenHorseAttackAction(string haAction) {
+    public void chosenHorseAttackAction(string haAction) {
 
         // Update Horse Attack position object for current player
         AttackPosition hap = this.getHAFromCharacter(this.currentPlayer.getBandit());
@@ -879,6 +880,7 @@ class GameController
 
                 if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
                 {
+                    //TODO send message
                     TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
                     myStageCoach.setAdjacentCar(newAdjacent);
 
