@@ -1088,9 +1088,43 @@ class GameController
         }
         scores[maxPlayer] = scores[maxPlayer] + 1000;
 
+        EndOfRoundEvent ev = this.currentRound.getEvent();
+        // Take care of Train station event
+        switch (this.currentRound.getEvent()) {
+            case MarshalsRevenge: {
+                // Each bandit on the roof of the Marshal's car looses his least valuable purse
+                foreach (Player b in this.aMarshal.getPosition().getPlayers()) {
+                    scores[b] =scores[b] - b.getLeastPurseValue();
+                }
+
+                break;
+            }
+            case Pickpocketing: {
+                // Each bandit that is alone takes a purse if available on his spot
+                break;
+            }
+            case HostageConductor: {
+                // +250 to all on locomotive
+                break;
+            }
+            case SharingTheLoot: {
+                // bandits who own a strongbox and are not alone share the value of it with neighbours
+                break;
+            }
+            case Escape: {
+                // Every bandit who is in train loses
+                break;
+            }
+            case MortalBullet: {
+                // Players loose 150 per bullet received during this round
+                break;
+            }   
+        }
+        
         //Sorted list to send to clients
         var myList = scores.ToList();
         myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+
 
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "finalGameScore", myList);
