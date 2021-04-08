@@ -12,6 +12,7 @@ using GameUnitSpace;
 using PositionSpace;
 using RoundSpace;
 using Newtonsoft.Json.Linq;
+using HostageSpace;
 
 /* Author: Christina Pilip
  * Usage: Server to client communication (for now)
@@ -450,7 +451,30 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
-        else if (action == "removeTopCard" || action == "highlightTopCard")
+        else if (action == "availableHostages")
+        {
+            List<HostageChar> l = new List<HostageChar>();
+            ((List<Hostage>)args[0]).ForEach(h => l.Add(h.getHostageChar()));
+
+            var definition = new
+            {
+                eventName = action,
+                availableHostages = l
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage")
         //"updateHasAnotherAction" will 
         {
             var definition = new

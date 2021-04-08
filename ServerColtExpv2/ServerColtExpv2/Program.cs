@@ -12,6 +12,7 @@ using CardSpace;
 using RoundSpace;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using HostageSpace;
 
 
 // Enter the listening loop.
@@ -85,7 +86,7 @@ class MyTcpListener
 
 
                     //Verify against lobby service
-                    if (clients.Count == 2)
+                    if (clients.Count == 1)
                     {
                         haveAllConnections = true;
                     }
@@ -195,8 +196,12 @@ class MyTcpListener
                         WhiskeyKind? whiskey = null;
                         aController.useWhiskey(whiskey);
                     }
+                } 
+                else if (eventName.Equals("HostageMessage"))
+                {
+                    HostageChar hostage = o.SelectToken("chosenHostage").ToObject<HostageChar>();
+                    aController.chosenHostage(hostage);
                 }
-
             }
 
         }

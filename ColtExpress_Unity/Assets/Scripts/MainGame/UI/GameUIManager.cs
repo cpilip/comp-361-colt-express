@@ -1,6 +1,8 @@
 ﻿using CardSpace;
 using GameUnitSpace;
+using HostageSpace;
 using PositionSpace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,9 +17,11 @@ public class GameUIManager : MonoBehaviour
     public GameObject deck;
     public GameObject playedCards;
     public GameObject discardPile;
+    public GameObject hostagesList;
 
     //Menus
     public GameObject turnMenu;
+    public GameObject hostageMenu;
 
     //Blockers
     public GameObject boardBlocker;
@@ -38,6 +42,7 @@ public class GameUIManager : MonoBehaviour
     private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
+    private Dictionary<HostageChar, GameObject> hostageMap = new Dictionary<HostageChar, GameObject>();
 
     //EventManager instance, game status, has another action status
     private static GameUIManager gameUIManager;
@@ -59,6 +64,13 @@ public class GameUIManager : MonoBehaviour
         {
             return gameUIManager;
         }
+    }
+
+    public GameObject getHostage(HostageChar h)
+    {
+        GameObject retrievedHostageObject = null;
+        hostageMap.TryGetValue(h, out retrievedHostageObject);
+        return retrievedHostageObject;
     }
 
     //Get corresponding in-game character object to a character
@@ -370,6 +382,15 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    //Enable the hostage menu (true for visible, false for invisible)
+    public void toggleHostageMenu(bool isVisible)
+    {
+        if (hostageMenu != null)
+        {
+            hostageMenu.SetActive(isVisible);
+        }
+    }
+
     void Start()
     {
         int i = 0;
@@ -386,6 +407,14 @@ public class GameUIManager : MonoBehaviour
 
         foreach (Sprite s in sprites) {
             loadedSprites.Add(s.name, s);
+        }
+
+        HostageChar hostage;
+        foreach (Transform h in hostagesList.transform)
+        {
+            Enum.TryParse(h.gameObject.name, out hostage);
+            hostageMap.Add(hostage, h.gameObject);
+            h.gameObject.SetActive(false);
         }
     }
 

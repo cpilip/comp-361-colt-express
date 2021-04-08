@@ -47,7 +47,7 @@ class GameController
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
         this.availableHostages = new List<Hostage>();
-        totalPlayer = 2;
+        totalPlayer = 1;
         this.endOfGame = false;
     }
 
@@ -74,7 +74,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
 
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 2)
+        if (players.Count == 1)
         {
             initializeGameBoard();
 
@@ -297,11 +297,12 @@ class GameController
 
     }
 
-    public void chosenHostage(Hostage aHostage)
+    public void chosenHostage(HostageChar aHostage)
     {
         //TODO send messages 
-        availableHostages.Remove(aHostage);
-        currentPlayer.setCapturedHostage(aHostage);
+        Hostage retrievedHostage = availableHostages.Find(x => x.getHostageChar() == aHostage);
+        availableHostages.Remove(retrievedHostage);
+        currentPlayer.setCapturedHostage(retrievedHostage);
         currentPlayer.setWaitingForInput(false);
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
@@ -382,7 +383,7 @@ class GameController
             {
                 if (availableHostages.Count() != 0)
                 {
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "chooseHostage", availableHostages);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                 }
             }
             else
@@ -547,7 +548,7 @@ class GameController
                                     this.aGameStatus = GameStatus.FinalizingCard;
                                     this.currentPlayer.setWaitingForInput(true);
                                     //TODO new massage 
-                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "choosePossHostage", availableHostages);
+                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                                 }
                             }
                             else

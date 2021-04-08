@@ -85,7 +85,7 @@ public class NamedClient : MonoBehaviour
 
             buffer += message;
 
-            Debug.Log("[ServerToClient] Data buffered.");
+            //Debug.Log("[ServerToClient] Data buffered.");
         }
 
         //If the buffer is not empty, continually extract the first event message and execute it
