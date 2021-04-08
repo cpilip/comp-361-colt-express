@@ -121,6 +121,15 @@ class GameController
                     cardsToAdd.Add(aCard);
                     p.discardPile.Remove(aCard);
                 }
+
+                if(p.getBandit().Equals(Character.Doc)){
+                    int rand = rnd.Next(0, p.discardPile.Count);
+                    Card aCard = p.discardPile[rand];
+                    p.hand.Add(aCard);
+                    cardsToAdd.Add(aCard);
+                    p.discardPile.Remove(aCard);
+                }
+
                 //TODO NEED TO SEE WITH CRISTINA
                 //TO SPECIFIC PLAYER
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), cardsToAdd);
@@ -167,27 +176,34 @@ class GameController
     public void playActionCard(ActionCard c)
     {
         //adding the action card to the playedCard pile and removind it from player's hand
-        this.currentRound.addToPlayedCards(c);
-        this.currentPlayer.hand.Remove(c);
+        if (c.isCanBePlayed()){
+            this.currentRound.addToPlayedCards(c);
+            this.currentPlayer.hand.Remove(c);
+        }
+        //TODO Message to server ???
+        
 
         endOfTurn();
     }
 
-    public void useWhiskey(WhiskeyKind aKind){
-        
-        if (aKind.Equals(WhiskeyKind.Normal)){
-           
+    public void useWhiskey(WhiskeyKind aKind)
+    {
+
+        if (aKind.Equals(WhiskeyKind.Normal))
+        {
+
             Whiskey aW = currentPlayer.getAWhiskey();
             aW.drinkASip();
-            if(aW.isEmpty()) currentPlayer.removeWhiskey(aW);
-            
+            if (aW.isEmpty()) currentPlayer.removeWhiskey(aW);
+
             drawCards();
             // TODO need to ask player to play a Card ?
         }
-        else {
+        else
+        {
             Whiskey aW = currentPlayer.getAWhiskey();
             aW.drinkASip();
-            if(aW.isEmpty()) currentPlayer.removeWhiskey(aW);
+            if (aW.isEmpty()) currentPlayer.removeWhiskey(aW);
 
             currentPlayer.setGetsAnotherAction(true);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
@@ -233,13 +249,27 @@ class GameController
 
     public void chosenHostage(Hostage aHostage)
     {
-        //TODO send messages 
+        //TODO send all messages 
         availableHostages.Remove(aHostage);
         currentPlayer.setCapturedHostage(aHostage);
+
+        if (aHostage.getHostageChar().Equals(HostageChar.Teacher)){
+            currentPlayer.actionCantBePlayedinHand(ActionKind.Punch);
+        }
+
+        if (aHostage.getHostageChar().Equals(HostageChar.Zealot)){
+            currentPlayer.actionCantBePlayedinHand(ActionKind.Ride);
+        }
+
+        if (aHostage.getHostageChar().Equals(HostageChar.PokerPlayer)){
+            currentPlayer.setHasSpecialAbility(false);
+        }
+
         currentPlayer.setWaitingForInput(false);
         this.endOfCards();
+
     }
-    
+
     public void chosenPosition(Position p)
     {
         ActionCard topOfPile = this.currentRound.seeTopOfPlayedCards();
@@ -280,35 +310,38 @@ class GameController
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
-            } 
+            }
 
             //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
-            if (p.hasShotgun(aShotGun)){
+            if (p.hasShotgun(aShotGun))
+            {
                 BulletCard b = new BulletCard(-1);
                 currentPlayer.addToDiscardPile(b);
-                
+
                 //if the shotgun is on the last cabosse, player sent to adjacent car
-                if (p.getTrainCar().Equals(myTrain[myTrain.Count()-1])){
-                    Position pos = myTrain[myTrain.Count()-2].getRoof();
+                if (p.getTrainCar().Equals(myTrain[myTrain.Count() - 1]))
+                {
+                    Position pos = myTrain[myTrain.Count() - 2].getRoof();
                     currentPlayer.setPosition(pos);
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos);
                 }
                 //if not, the player must choose between the 2 positions 
-                else {
-                    List <Position> aL = new List<Position>();
+                else
+                {
+                    List<Position> aL = new List<Position>();
                     TrainCar currentTraincar = p.getTrainCar();
-                    
-                    Position p1 = myTrain[myTrain.IndexOf(currentTraincar)-1].getRoof();
-                    Position p2 = myTrain[myTrain.IndexOf(currentTraincar)+1].getRoof();
+
+                    Position p1 = myTrain[myTrain.IndexOf(currentTraincar) - 1].getRoof();
+                    Position p2 = myTrain[myTrain.IndexOf(currentTraincar) + 1].getRoof();
 
                     aL.Add(p1);
                     aL.Add(p2);
 
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
 
-                    flag=false;
+                    flag = false;
                 }
-            } 
+            }
 
             if (flag) currentPlayer.setWaitingForInput(false);
 
@@ -355,11 +388,19 @@ class GameController
     public void chosenPunchTarget(Player victim, GameItem loot, Position dest)
     {
 
+        if (currentPlayer.getBandit().Equals(Character.Cheyenne)){
+            loot.setPosition(null);
+            currentPlayer.addToPossessions(loot);
+            CommunicationAPI.sendMessageToClient(null, "increment", loot);
+        }
+        else {
+            loot.setPosition(victim.getPosition());
+            //TO ALL PLAYERS
+            CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
+        }
+        
         //drop the loot at victim position, sends victim to destination 
-        loot.setPosition(victim.getPosition());
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
-
+       
         victim.setPosition(dest);
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest);
@@ -390,8 +431,10 @@ class GameController
         currentPlayer.addToPossessions(new GameItem(ItemType.Strongbox, 1000));
         //decrement message
 
+        this.currentPlayer.setWaitingForInput(false);
+
     }
-    
+
     public void chosenShootTarget(Player target)
     {
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
@@ -400,6 +443,41 @@ class GameController
         this.currentPlayer.shootBullet();
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "decrement", this.currentPlayer.bullets);
+
+        if (currentPlayer.getBandit().Equals(Character.Django)){
+            
+            TrainCar targetCar = target.getPosition().getTrainCar();
+            TrainCar playerCar = currentPlayer.getPosition().getTrainCar();
+            
+            //if the target is in front of django, and is not in the locomotive, move target one car to the front.
+            if(myTrain.IndexOf(targetCar) < myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[0]))){
+                
+                if(target.getPosition().isInside())
+                {
+                    target.setPosition(myTrain[myTrain.IndexOf(targetCar) - 1].getInside());
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) - 1].getInside());
+                } else
+                {
+                    target.setPosition(myTrain[myTrain.IndexOf(targetCar) - 1].getRoof());
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) - 1].getRoof());
+                }
+                    
+            }
+            //if the target is at the back of django and is not in the cabosse, moved one car at the back.
+            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[myTrain.Count()]))){
+                
+                if(target.getPosition().isInside())
+                {
+                    target.setPosition(myTrain[myTrain.IndexOf(targetCar) + 1].getInside());
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) + 1].getInside());
+                } else
+                {
+                    target.setPosition(myTrain[myTrain.IndexOf(targetCar) + 1].getRoof());
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, myTrain[myTrain.IndexOf(targetCar) + 1].getRoof());
+                }
+            }
+        }
+        
         currentPlayer.setWaitingForInput(false);
         this.endOfCards();
     }
@@ -548,6 +626,17 @@ class GameController
                 case ActionKind.Punch:
                     {
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
+
+                        //Removing belle from the list of player if there are other players. 
+                        if(atLocation.Count()>1){
+                            foreach (Player player in atLocation){
+                                if (player.getBandit().Equals(Character.Belle)){
+                                    atLocation.Remove(player);
+                                }
+                            }
+                        }
+                        
+
                         this.aGameStatus = GameStatus.FinalizingCard;
                         this.currentPlayer.setWaitingForInput(true);
                         //TO SPECIFIC PLAYER
@@ -681,15 +770,37 @@ class GameController
                 //TO SPECIFIC PLAYER
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
 
+                checkLadyPool();
+
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)
                 {
+                    if(p.getHostage().getHostageChar().Equals(HostageChar.Teacher)){
+                        p.actionCantBePlayed(ActionKind.Punch);
+                    }
+
+                    if (p.getHostage().getHostageChar().Equals(HostageChar.Zealot)){
+                        p.actionCantBePlayed(ActionKind.Ride);
+                    }
+                    
                     List<Card> cardsToAdd = new List<Card>();
                     int index = this.players.IndexOf(p);
 
                     Random rnd = new Random();
                     for (int i = 0; i < 6; i++)
                     {
+                        
+                        //if p has Minister as hostage, then he only draw 5 cards 
+                        if (p.getHostage().getHostageChar().Equals(HostageChar.Minister) && i == 5) break;
+                        
+                        int rand = rnd.Next(0, p.discardPile.Count);
+                        Card aCard = p.discardPile[rand];
+                        p.hand.Add(aCard);
+                        cardsToAdd.Add(aCard);
+                        p.discardPile.Remove(aCard);
+                    }
+
+                    if(p.getBandit().Equals(Character.Doc)){
                         int rand = rnd.Next(0, p.discardPile.Count);
                         Card aCard = p.discardPile[rand];
                         p.hand.Add(aCard);
@@ -709,9 +820,10 @@ class GameController
                 {
                     TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
                     myStageCoach.setAdjacentCar(newAdjacent);
-                    
+
                     //if Shotgun is not on the stage coach, it also moves by one car to the back
-                    if (!aShotGun.getIsOnStageCoach()){
+                    if (!aShotGun.getIsOnStageCoach())
+                    {
                         aShotGun.setPosition(newAdjacent.getRoof());
                     }
                 }
@@ -782,7 +894,7 @@ class GameController
         GameItem locomotiveStongBox = new GameItem(ItemType.Strongbox, 1000);
         locomotiveStongBox.setPosition(myTrain[0].getInside());
 
-            //REMARK strongbox only accessible when you punch the shotgun 
+        //REMARK strongbox only accessible when you punch the shotgun 
         //initializaing a Strongbox in the stage coach 
         //GameItem stageCoachStongBox = new GameItem(ItemType.Strongbox, 1000);
         //stageCoachStongBox.setPosition(myStageCoach.getInside());
@@ -884,8 +996,8 @@ class GameController
     {
         List<Position> possPos = new List<Position>();
         TrainCar playerCar = p.getPosition().getTrainCar();
-        // Check if on a roof or not
-
+        
+        //if the player is on a horse 
         if (currentPlayer.isPlayerOnAHorse())
         {
             for (int i = 1; i < 4; i++)
@@ -926,6 +1038,44 @@ class GameController
             }
 
         }
+        //if the player is inside or on the roof of the stagecoach
+        else if (p.getPosition().isInStageCoach(myStageCoach)){
+            if (p.getPosition().isInside()){
+                return null;
+            }
+            else {
+                TrainCar adjacentCar = myStageCoach.getAdjacentCar();
+                
+                // Add 1-2 distance forward or backwards
+                for (int i = 1; i < 3; i++)
+                {
+                    try
+                    {
+                        // Add adjacent positions
+                        possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) - i].getRoof());
+                    }
+                    catch (System.IndexOutOfRangeException e)
+                    {
+                        continue;
+                    }
+                }
+
+                for (int i = 1; i < 3; i++)
+                {
+                    try
+                    {
+                        // Add adjacent positions
+                        possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) + i].getRoof());
+                    }
+                    catch (System.IndexOutOfRangeException e)
+                    {
+                        continue;
+                    }
+                }
+                    
+            }
+        }
+        //if the player is on the roof of a Car
         else if (!p.getPosition().isInside())
         {
             //if the playerCar is adjacent to the stageCoach, add roof of the stage coach 
@@ -934,46 +1084,78 @@ class GameController
                 possPos.Add(myStageCoach.getRoof());
             }
 
-            // Add 1-3 distance forward or backwards
-            for (int i = 1; i < 4; i++)
+            //if the current Player has Old Lady as Hostage, can only move one car at a time on the roof
+            if (currentPlayer.getHostage().getHostageChar().Equals(HostageChar.OldLady))
             {
                 try
                 {
+                    TrainCar wagon = this.myTrain[this.myTrain.IndexOf(playerCar) - 1];
                     // Add adjacent positions
-                    possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) - i].getRoof());
-                }
-                catch (System.IndexOutOfRangeException e)
-                {
-                    continue;
-                }
-                //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
-                if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) - i]))
-                {
-                    possPos.Add(myStageCoach.getRoof());
-                }
-            }
-
-            for (int i = 1; i < 4; i++)
-            {
-                try
-                {
-                    // Add adjacent positions
-                    possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + i].getRoof());
-
+                    possPos.Add(wagon.getRoof());
 
                 }
                 catch (System.IndexOutOfRangeException e)
                 {
-                    continue;
+
                 }
 
-                //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
-                if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) + i]))
+                try
                 {
-                    possPos.Add(myStageCoach.getRoof());
+                    // Add adjacent positions
+                    possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + 1].getRoof());
+                }
+                catch (System.IndexOutOfRangeException e)
+                {
+
                 }
             }
+            //otherwise, he can move 3 cars 
+            else
+            {
+
+                // Add 1-3 distance forward or backwards
+                for (int i = 1; i < 4; i++)
+                {
+                    try
+                    {
+                        // Add adjacent positions
+                        possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) - i].getRoof());
+                    }
+                    catch (System.IndexOutOfRangeException e)
+                    {
+                        continue;
+                    }
+                    //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
+                    if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) - i]))
+                    {
+                        possPos.Add(myStageCoach.getRoof());
+                    }
+                }
+
+                for (int i = 1; i < 4; i++)
+                {
+                    try
+                    {
+                        // Add adjacent positions
+                        possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + i].getRoof());
+
+
+                    }
+                    catch (System.IndexOutOfRangeException e)
+                    {
+                        continue;
+                    }
+
+                    //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
+                    if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) + i]))
+                    {
+                        possPos.Add(myStageCoach.getRoof());
+                    }
+                }
+            }
+
         }
+        //if the player is inside a Car
         else
         {
             //if the playerCar is adjacent to the stageCoach, add inside of the stage coach 
@@ -1005,7 +1187,21 @@ class GameController
             }
 
         }
+        
         return possPos;
+    }
+
+    //add a bullet to the player's discard pile that have LadyPool as hostage 
+    private void checkLadyPool()
+    {
+        foreach (Player p in players)
+        {
+            if (p.getHostage().getHostageChar().Equals(HostageChar.LadyPoodle))
+            {
+                p.addToDiscardPile(new BulletCard(-1));
+                break;
+            }
+        }
     }
 
     public Boolean getEndOfGame()
@@ -1018,7 +1214,7 @@ class GameController
         List<Player> possPlayers = new List<Player>();
         TrainCar playerCar = p.getPosition().getTrainCar();
 
-
+        //If player is on the roof of the stagecoach 
         if (myStageCoach.getRoof().Equals(p.getPosition()))
         {
 
@@ -1032,6 +1228,7 @@ class GameController
                 }
             }
         }
+        //If player is inside the stagecoach 
         else if (myStageCoach.getInside().Equals(p.getPosition()))
         {
             Position inSC = myStageCoach.getAdjacentCar().getInside();
@@ -1041,11 +1238,20 @@ class GameController
                 possPlayers.AddRange(playersOnWagon);
             }
         }
+        //otherwise, if player is on the roof of a car
         else if (!p.getPosition().isInside())
         {
             // Look for the players in line of sight forward on roof
             for (int i = this.myTrain.IndexOf(playerCar) + 1; i < myTrain.Count; i++)
             {
+                // If the shotgun is in the line of sight, then he blocks it
+                if (!aShotGun.getIsOnStageCoach())
+                {
+                    if (this.myTrain[i].getRoof().hasShotgun(aShotGun))
+                    {
+                        break;
+                    }
+                }
                 List<Player> playersOnWagon = this.myTrain[i].getRoof().getPlayers();
                 if (playersOnWagon.Count != 0)
                 {
@@ -1057,6 +1263,14 @@ class GameController
             // Look for the players in line of sight backwards on roof
             for (int i = this.myTrain.IndexOf(playerCar) - 1; i >= 0; i--)
             {
+                // If the shotgun is in the line of sight, then he blocks it
+                if (!aShotGun.getIsOnStageCoach())
+                {
+                    if (this.myTrain[i].getRoof().hasShotgun(aShotGun))
+                    {
+                        break;
+                    }
+                }
                 List<Player> playersOnWagon2 = this.myTrain[i].getRoof().getPlayers();
                 if (playersOnWagon2.Count != 0)
                 {
@@ -1068,14 +1282,23 @@ class GameController
             //Look for player on the roof of the stageCoach, if the playerCar is adjacent to the stageCoach 
             if (myStageCoach.getAdjacentCar().Equals(playerCar))
             {
-
                 List<Player> playersOnWagon3 = this.myStageCoach.getRoof().getPlayers();
                 if (playersOnWagon3.Count != 0)
                 {
                     possPlayers.AddRange(playersOnWagon3);
                 }
             }
+
+            //If player is tuco, then he can shoot on the roof of the same wagon 
+            if (currentPlayer.getBandit().Equals(Character.Tuco)){
+                List<Player> playersInside = p.getPosition().getTrainCar().getInside().getPlayers();
+                if (playersInside.Count != 0)
+                {
+                    possPlayers.AddRange(playersInside);
+                }
+            }
         }
+        //else if player is inside a car 
         else
         {
             // Look for the players in the next wagon backwards
@@ -1099,7 +1322,7 @@ class GameController
             {
 
             }
-            //Look for player on the roof of the stageCoach, if the playerCar is adjacent to the stageCoach 
+            //Look for player inside the stageCoach, if the playerCar is adjacent to the stageCoach 
             if (myStageCoach.getAdjacentCar().Equals(playerCar))
             {
 
@@ -1107,6 +1330,15 @@ class GameController
                 if (playersOnWagon3.Count != 0)
                 {
                     possPlayers.AddRange(playersOnWagon3);
+                }
+            }
+
+            //If player is tuco, then he can shoot inside the same wagon 
+            if (currentPlayer.getBandit().Equals(Character.Tuco)){
+                List<Player> playersOnTheRoof = p.getPosition().getTrainCar().getRoof().getPlayers();
+                if (playersOnTheRoof.Count != 0)
+                {
+                    possPlayers.AddRange(playersOnTheRoof);
                 }
             }
         }

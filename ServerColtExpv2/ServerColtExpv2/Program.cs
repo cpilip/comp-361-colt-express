@@ -73,24 +73,24 @@ class MyTcpListener
 
             while (haveAllConnections == false)
             {
-                    //Open a stream for each client
-                    TcpClient client = server.AcceptTcpClient();
+                //Open a stream for each client
+                TcpClient client = server.AcceptTcpClient();
 
-                    IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                    NetworkStream currentClientStream = client.GetStream();
+                IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
+                NetworkStream currentClientStream = client.GetStream();
 
-                    //Add each client mapped to IP address
-                    clients.Add(client, "" + remoteIpEndPoint.Address);
-                    clientStreams.Add(client, currentClientStream);
+                //Add each client mapped to IP address
+                clients.Add(client, "" + remoteIpEndPoint.Address);
+                clientStreams.Add(client, currentClientStream);
 
-                    currentClient = client;
+                currentClient = client;
 
 
-                    //Verify against lobby service
-                    if (clients.Count == 3)
-                    {
-                        haveAllConnections = true;
-                    }
+                //Verify against lobby service
+                if (clients.Count == 3)
+                {
+                    haveAllConnections = true;
+                }
             }
 
             Console.WriteLine("All clients successfully connected.");
@@ -111,7 +111,7 @@ class MyTcpListener
                 //players.Add(p, cli);
             }
 
-            
+
 
             while (!aController.getEndOfGame())
             {
@@ -139,20 +139,30 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("PunchMessage"))
                 {
-                    // Get character
-                    Character ch = o.SelectToken("target").ToObject<Character>();
-                    Player pl = aController.getPlayerByCharacter(ch);
+                    //TODO Check with Christina  
+                    if (o.SelectToken("target").ToObject<GameUnit>() is Shotgun)
+                    {
+                        aController.choseToPunchShootgun();
+                    }
+                    else
+                    {
+                        // Get character
+                        Character ch = o.SelectToken("target").ToObject<Character>();
+                        Player pl = aController.getPlayerByCharacter(ch);
 
-                    // Get item
-                    ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemfromTypePossession(type);
+                        // Get item
+                        ItemType type = o.SelectToken("item").ToObject<ItemType>();
+                        GameItem it = aController.getItemfromTypePossession(type);
 
-                    // Get position
-                    int index = Int32.Parse(o.SelectToken("index").ToString());
-                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
-                    Position pos = aController.getPositionByIndex(index, inside);
+                        // Get position
+                        int index = Int32.Parse(o.SelectToken("index").ToString());
+                        Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
+                        Position pos = aController.getPositionByIndex(index, inside);
 
-                    aController.chosenPunchTarget(pl, it, pos);
+                        aController.chosenPunchTarget(pl, it, pos);
+                    }
+
+
                 }
                 else if (eventName.Equals("MoveMessage"))
                 {

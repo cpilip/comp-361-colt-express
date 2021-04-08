@@ -33,6 +33,7 @@ namespace GameUnitSpace {
         public List<GameItem> possessions;
         private Hostage capturedHostage;
         private bool onAHorse;
+        private bool hasSpecialAbility;
 
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c) {
@@ -53,6 +54,8 @@ namespace GameUnitSpace {
 
             //TODO may update this
             onAHorse=true;
+
+            hasSpecialAbility=true;
         }
 
         /** 
@@ -121,6 +124,15 @@ namespace GameUnitSpace {
         public bool isPlayerOnAHorse(){
             return onAHorse;
         }
+
+        public void setHasSpecialAbility(bool b){
+            hasSpecialAbility = b;
+        } 
+
+        public bool getHasSpecialAbility(){
+            return hasSpecialAbility;
+        }
+
 
         /// Update the state of the get another action flag.
         public void setGetsAnotherAction(Boolean getAnotherAction) {
@@ -274,6 +286,19 @@ namespace GameUnitSpace {
         public void addWhiskey(Whiskey aW){
             possessions.Add(aW);
         }
+
+        public void actionCantBePlayedinHand(ActionKind aKind){
+            foreach (ActionCard c in hand){
+                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+            }
+        }
+
+        public void actionCantBePlayed(ActionKind aKind){
+            foreach (ActionCard c in discardPile){
+                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+            }
+        }
+
 
         /**
             Private helper functions to calculate the ransom price of each hostage 
