@@ -111,7 +111,14 @@ class MyTcpListener
                 //players.Add(p, cli);
             }
 
+            while (!aController.getEndHorseAttack()) {
+                string res = getFromClient(players[aController.getCurrentPlayer()]);
 
+                JObject o = JObject.Parse(res);
+                string haAction = o.SelectToken("HorseAttackAction").ToString();
+
+                aController.chosenHorseAttackAction(haAction);
+            }
 
             while (!aController.getEndOfGame())
             {

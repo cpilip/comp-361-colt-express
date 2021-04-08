@@ -253,6 +253,29 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
+        } else if (action = "updateHorseAttack") 
+        {
+            // "horseAttackUpdate" gives an update of the position of
+            // all the players during the horse attack using a list of HorseAttack objects
+            foreach (AttackPosition ap in (List<AttackPosition>)arg[0]) {
+                var definition = new {
+                    eventName = action,
+                    positions = ap
+                }
+
+                if (cli == null)
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+                }
+                else
+                {
+                    //Serialize parameters as a array with first element being the action
+                    MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+                }
+            }
+            
         }
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
