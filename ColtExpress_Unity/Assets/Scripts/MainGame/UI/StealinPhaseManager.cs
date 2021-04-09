@@ -33,6 +33,100 @@ public class StealinPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.toggleHostageMenu(true);
     }
 
+    public void playerChoseLoot()
+    {
+        GameObject caller = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
+
+        ItemType robLoot = ItemType.Purse;
+        WhiskeyKind robWhiskeyKind = WhiskeyKind.Unknown;
+        WhiskeyStatus robWhiskeyStatus = WhiskeyStatus.Full;
+        bool isWhiskey = false;
+
+        switch (caller.name)
+        {
+            case "FullWhiskey":
+                robLoot = ItemType.Whiskey;
+                robWhiskeyKind = WhiskeyKind.Unknown;
+                robWhiskeyStatus = WhiskeyStatus.Full;
+                isWhiskey = true;
+                break;
+            case "OldWhiskey":
+                robLoot = ItemType.Whiskey;
+                robWhiskeyKind = WhiskeyKind.Old;
+                robWhiskeyStatus = WhiskeyStatus.Half;
+
+                isWhiskey = true;
+                break;
+            case "NormalWhiskey":
+                robLoot = ItemType.Whiskey;
+                robWhiskeyKind = WhiskeyKind.Normal;
+                robWhiskeyStatus = WhiskeyStatus.Half;
+                isWhiskey = true;
+
+                break;
+            default:
+                //Caller must be a different loot item
+                break;
+
+        }
+
+        switch (caller.name)
+        {
+            case "Strongbox":
+                robLoot = ItemType.Strongbox;
+                break;
+            case "Ruby":
+                robLoot = ItemType.Ruby;
+                break;
+            case "Purse":
+                robLoot = ItemType.Purse;
+                break;
+        }
+
+        string value = caller.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
+        int num = Int32.Parse(value.Substring(1));
+        num--;
+
+        if (num <= 0)
+        {
+            num = 0;
+
+            caller.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
+            caller.transform.gameObject.SetActive(false);
+        }
+
+        foreach (Transform t in caller.transform.parent.gameObject.transform)
+        {
+            t.GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+            t.GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+            t.GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLoot);
+        }
+        GameUIManager.gameUIManagerInstance.lockBoard();
+
+        if (isWhiskey)
+        {
+            var definition = new
+            {
+                eventName = "RobMessage",
+                item = robLoot,
+                whiskeyStatus = robWhiskeyStatus,
+                whiskeyKind = robWhiskeyKind
+            };
+
+            ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+        } else
+        {
+            var definition = new
+            {
+                eventName = "RobMessage",
+                item = robLoot
+            };
+
+            ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+        }
+        
+    }
+
     public void playerChoseHostage()
     {
         HostageChar hostage;

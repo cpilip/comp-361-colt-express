@@ -498,6 +498,28 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "updateLootAtLocation")
+        {
+            var definition = new
+            {
+                eventName = action,
+                position = (Position)args[0],
+                index = (int)args[1],
+                items = (List<GameItem>)args[2]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else if (action == "moveGameUnit")
         {
             Position p = (Position)args[1];

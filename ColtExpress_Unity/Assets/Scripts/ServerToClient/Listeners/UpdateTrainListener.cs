@@ -2,8 +2,10 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PositionSpace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UpdateTrainListener : UIEventListenable
@@ -42,11 +44,18 @@ public class UpdateTrainListener : UIEventListenable
         GameObject trainCarRoof = GameUIManager.gameUIManagerInstance.getTrainCarPosition(i, true);
         GameObject trainCarInterior = GameUIManager.gameUIManagerInstance.getTrainCarPosition(i, false);
 
+        //Retrieve the roof loot and interior loot for this train car
+        GameObject trainCarRoofLoot = GameUIManager.gameUIManagerInstance.getTrainCarLoot(i, true);
+        GameObject trainCarInteriorLoot = GameUIManager.gameUIManagerInstance.getTrainCarLoot(i, false);
+
         List<Character> r_P = o.SelectToken("r_players").ToObject<List<Character>>();
         List<ItemType> r_I = o.SelectToken("r_items").ToObject<List<ItemType>>();
 
         bool r_m = o.SelectToken("r_hasMarshal").ToObject<bool>();
         bool r_s = o.SelectToken("r_hasShotgun").ToObject<bool>();
+
+        string value = "";
+        int num = 0;
 
         //Roof initialization
         foreach (Character c in r_P)
@@ -57,21 +66,42 @@ public class UpdateTrainListener : UIEventListenable
         }
         foreach (ItemType m in r_I)
         {
-            GameObject item = null;
             if (m == ItemType.Purse)
             {
-                item = Instantiate(bagPrefab);
+                value = trainCarRoofLoot.transform.GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarRoofLoot.transform.GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarRoofLoot.transform.GetChild(3).gameObject.SetActive(true);
+                }
             }
             if (m == ItemType.Strongbox)
             {
-                item = Instantiate(strongboxPrefab);
+                value = trainCarRoofLoot.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarRoofLoot.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarRoofLoot.transform.GetChild(5).gameObject.SetActive(true);
+                }
             }
             if (m == ItemType.Ruby)
             {
-                item = Instantiate(rubyPrefab);
+                value = trainCarRoofLoot.transform.GetChild(4).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarRoofLoot.transform.GetChild(4).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarRoofLoot.transform.GetChild(4).gameObject.SetActive(true);
+                }
             }
-            item.transform.SetParent(trainCarRoof.transform);
-            item.transform.localScale = scale;
         }
 
         if (r_m)
@@ -103,21 +133,42 @@ public class UpdateTrainListener : UIEventListenable
         }
         foreach (ItemType m in r_I)
         {
-            GameObject item = null;
             if (m == ItemType.Purse)
             {
-                item = Instantiate(bagPrefab);
+                value = trainCarInteriorLoot.transform.GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarInteriorLoot.transform.GetChild(3).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarInteriorLoot.transform.GetChild(3).gameObject.SetActive(true);
+                }
             }
             if (m == ItemType.Strongbox)
             {
-                item = Instantiate(strongboxPrefab);
+                value = trainCarInteriorLoot.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarInteriorLoot.transform.GetChild(5).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarInteriorLoot.transform.GetChild(5).gameObject.SetActive(true);
+                }
             }
             if (m == ItemType.Ruby)
             {
-                item = Instantiate(rubyPrefab);
+                value = trainCarInteriorLoot.transform.GetChild(4).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarInteriorLoot.transform.GetChild(4).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarInteriorLoot.transform.GetChild(4).gameObject.SetActive(true);
+                }
             }
-            item.transform.SetParent(trainCarInterior.transform);
-            item.transform.localScale = scale;
         }
 
         if (r_m)

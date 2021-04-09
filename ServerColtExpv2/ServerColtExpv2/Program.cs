@@ -122,9 +122,21 @@ class MyTcpListener
 
                 if (eventName.Equals("RobMessage"))
                 {
+
                     // Get item
                     ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemfromTypePosition(type);
+                    GameItem it;
+
+                    if (type == ItemType.Whiskey)
+                    {
+                        WhiskeyKind wK = o.SelectToken("whiskeyKind").ToObject<WhiskeyKind>();
+                        WhiskeyStatus wS = o.SelectToken("whiskeyStatus").ToObject<WhiskeyStatus>();
+                        it = aController.getItemfromTypePosition(wS, wK);
+                    }
+                    else
+                    {
+                        it = aController.getItemfromTypePosition(type);
+                    }
 
                     aController.chosenLoot(it);
                 }

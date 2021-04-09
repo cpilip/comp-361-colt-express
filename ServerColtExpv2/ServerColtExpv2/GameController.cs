@@ -622,10 +622,22 @@ class GameController
                     {
 
                         List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
-                        this.aGameStatus = GameStatus.FinalizingCard;
-                        this.currentPlayer.setWaitingForInput(true);
-                        //TO SPECIFIC PLAYER
-                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", atLocation);
+
+                        if (atLocation.Count == 1)
+                        {
+                            //Empty
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
+                        } else
+                        {
+                            this.aGameStatus = GameStatus.FinalizingCard;
+                            this.currentPlayer.setWaitingForInput(true);
+                            //TO SPECIFIC PLAYER
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", this.currentPlayer.getPosition(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), atLocation);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
+                        }
+                       
                         break;
                     }
                 case ActionKind.Marshal:
@@ -824,6 +836,9 @@ class GameController
                 {
                     //setting the next round, setting the first turn of the round 
                     this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
+                    //TO ALL PLAYERS
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", this.currentRound);
+
                     this.currentTurn = this.currentRound.getTurns()[0];
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
@@ -1393,6 +1408,27 @@ class GameController
                 return anItem;
             }
         }
+        return null;
+    }
+
+    public GameItem getItemfromTypePosition(WhiskeyStatus aStatus, WhiskeyKind aKind)
+    {
+        List<GameItem> al = this.currentPlayer.getPosition().getItems();
+        foreach (GameItem anItem in al)
+        {
+            if (anItem is Whiskey)
+            {
+                if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
+                {
+                    return (Whiskey)anItem;
+                } 
+                else if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
+                {
+                    return (Whiskey)anItem;
+                }
+            }
+        }
+        
         return null;
     }
 

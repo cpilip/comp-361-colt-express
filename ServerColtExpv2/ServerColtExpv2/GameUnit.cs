@@ -16,7 +16,12 @@ namespace GameUnitSpace
             }
 
             aPosition = pPosition; 
-            this.aPosition.addUnit(this);
+
+            if(pPosition != null)
+            {
+
+                this.aPosition.addUnit(this);
+            }
         }
 
          public Position getPosition(){

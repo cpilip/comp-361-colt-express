@@ -35,21 +35,21 @@ public class IncrementLootListener : UIEventListenable
                 //2 - Inventory, 1 - Strongboxes, 1 - Text
                 value = playerProfile.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
+                num++;
                 playerProfile.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
                 break;
             case ItemType.Ruby:
                 //2 - Inventory, 2 - Rubies, 1 - Text
                 value = playerProfile.transform.GetChild(2).GetChild(2).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
+                num++;
                 playerProfile.transform.GetChild(2).GetChild(2).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
                 break;
             case ItemType.Purse:
                 //2 - Inventory, 3 - Bags, 1 - Text
                 value = playerProfile.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
-                num--;
+                num++;
                 playerProfile.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
                 break;
             case ItemType.Whiskey:

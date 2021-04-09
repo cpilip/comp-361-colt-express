@@ -24,6 +24,10 @@ public class GameUIManager : MonoBehaviour
     public GameObject shotgun;
     public GameObject stagecoach;
 
+    public GameObject lootOverlayList;
+    public GameObject stagecoachLootRoof;
+    public GameObject stagecoachLootInterior;
+
     //Menus
     public GameObject turnMenu;
     public GameObject hostageMenu;
@@ -49,6 +53,10 @@ public class GameUIManager : MonoBehaviour
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
     private Dictionary<HostageChar, GameObject> hostageMap = new Dictionary<HostageChar, GameObject>();
+
+    //Loot strips
+    private Dictionary<int, GameObject> trainCarRoofLoot = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> trainCarInteriorLoot = new Dictionary<int, GameObject>();
 
     //EventManager instance, game status, has another action status
     private static GameUIManager gameUIManager;
@@ -242,7 +250,11 @@ public class GameUIManager : MonoBehaviour
     public GameObject initializeTrainCar(int index)
     {
         GameObject trainCar = null;
+        GameObject trainCarRLoot = null;
+        GameObject trainCarILoot = null;
         trainCars.TryGetValue(index, out trainCar);
+        trainCarRoofLoot.TryGetValue(index, out trainCarRLoot);
+        trainCarInteriorLoot.TryGetValue(index, out trainCarILoot);
 
         if (index == numPlayers)
         {
@@ -250,14 +262,17 @@ public class GameUIManager : MonoBehaviour
             GameObject caboose = null;
             trainCars.TryGetValue(6, out caboose);
 
-            //Debug.Log(caboose.name);
+            //Retrieve the caboose loot strips
+            GameObject cabooseRoofLoot = null;
+            GameObject cabooseInteriorLoot = null;
+            trainCarRoofLoot.TryGetValue(6, out cabooseRoofLoot);
+            trainCarInteriorLoot.TryGetValue(6, out cabooseInteriorLoot);
 
             //Change the caboose coordinates to be the new end of the train
             Vector3 lastTrainCarCoordinates = trainCar.transform.position;
 
-            //Debug.Log(caboose.name + " previously at " + caboose.transform.position);
-
             caboose.transform.position = lastTrainCarCoordinates;
+            cabooseRoofLoot.transform.parent.position = lastTrainCarCoordinates;
 
            // Debug.Log(caboose.name + " now at " + lastTrainCarCoordinates);
 
@@ -268,16 +283,25 @@ public class GameUIManager : MonoBehaviour
                 trainCar.SetActive(false);
                 trainCars.Remove(i);
 
+
+                trainCarRoofLoot.TryGetValue(i, out trainCarRLoot);
+                trainCarRLoot.transform.parent.gameObject.SetActive(false);
+                trainCarRoofLoot.Remove(i);
+                trainCarInteriorLoot.Remove(i);
+
                 //Debug.Log("Removed " + trainCar.name + " at " + i);
             }
 
             //Remove the caboose mapping without disabling it
             trainCars.Remove(6);
-
+            trainCarRoofLoot.Remove(6);
+            trainCarInteriorLoot.Remove(6);
             //Debug.Log("Removed " + caboose.name + " at " + 6);
 
             //Replace the last train car's index with the caboose in the map
             trainCars.Add(index, caboose);
+            trainCarRoofLoot.Add(index, cabooseRoofLoot);
+            trainCarInteriorLoot.Add(index, cabooseInteriorLoot);
             //Debug.Log("Added " + caboose.name + " at " + index);
 
         }
@@ -293,6 +317,34 @@ public class GameUIManager : MonoBehaviour
         GameObject trainCar = null;
         trainCars.TryGetValue(index, out trainCar);
         return trainCar;
+    }
+
+    //Get a train car's loot strip - true for its roof, false for its interior
+    public GameObject getTrainCarLoot(int index, bool isRoof)
+    {
+        GameObject trainCarStrip = null;
+        if (isRoof)
+        {
+            trainCarRoofLoot.TryGetValue(index, out trainCarStrip);
+            return trainCarStrip;
+        }
+        else
+        {
+            trainCarInteriorLoot.TryGetValue(index, out trainCarStrip);
+            return trainCarStrip;
+        }
+    }
+
+    public GameObject getStageCoachLoot(bool isRoof)
+    {
+        if (isRoof)
+        {
+            return stagecoachLootRoof;
+        }
+        else
+        {
+            return stagecoachLootInterior;
+        }
     }
 
     //Get a train car's position - true for its roof, false for its interior
@@ -564,6 +616,8 @@ public class GameUIManager : MonoBehaviour
         {
             //Debug.Log("Index added " + i);
             trainCars.Add(i, t.gameObject);
+            trainCarRoofLoot.Add(i, lootOverlayList.transform.GetChild(i).GetChild(0).gameObject);
+            trainCarInteriorLoot.Add(i, lootOverlayList.transform.GetChild(i).GetChild(1).gameObject);
             i++;
         }
 
