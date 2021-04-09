@@ -486,6 +486,7 @@ class GameController
         currentPlayer.addToPossessions(loot);
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
+        CommunicationAPI.sendMessageToClient(null, "updateLootAtLocation", this.currentPlayer.getPosition(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), this.currentPlayer.getPosition().getItems(), true);
         currentPlayer.setWaitingForInput(false);
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
@@ -634,7 +635,8 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO SPECIFIC PLAYER
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", this.currentPlayer.getPosition(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), atLocation);
+
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", this.currentPlayer.getPosition(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), atLocation, false);
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
                         }
                        

@@ -505,7 +505,8 @@ public class CommunicationAPI
                 eventName = action,
                 position = (Position)args[0],
                 index = (int)args[1],
-                items = (List<GameItem>)args[2]
+                items = (List<GameItem>)args[2],
+                refresh = (bool)args[3]
             };
 
             if (cli == null)
