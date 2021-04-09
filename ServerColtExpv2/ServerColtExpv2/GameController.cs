@@ -1101,6 +1101,11 @@ class GameController
             }
             case Pickpocketing: {
                 // Each bandit that is alone takes a purse if available on his spot
+                foreach (Player b in this.players) {
+                    if (b.getPosition().getPlayers().Count == 1) {
+                        scores[b] = scores[b] + b.getPosition().getRandomPurse();
+                    }
+                }
                 break;
             }
             case HostageConductor: {

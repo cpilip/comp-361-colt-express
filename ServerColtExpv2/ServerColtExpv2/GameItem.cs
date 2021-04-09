@@ -22,8 +22,6 @@ namespace GameUnitSpace
         [JsonProperty]
         private Player myPlayer;
 
-
-
         public GameItem (ItemType pType, int pValue){
             aValue = pValue;
             aItemType = pType;
