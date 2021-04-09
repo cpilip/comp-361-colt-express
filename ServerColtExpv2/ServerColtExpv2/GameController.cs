@@ -19,7 +19,8 @@ enum GameStatus
     Schemin,
     Stealin,
     FinalizingCard,
-    Completed
+    Completed,
+    HorseAttack
 }
 
 class GameController
@@ -79,7 +80,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
 
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 3)
+        if (players.Count == totalPlayer)
         {
             initializeGameBoard();
 
@@ -90,7 +91,6 @@ class GameController
 
             //initialize the hostages 
             availableHostages = Hostage.getSomeHostages(totalPlayer);
-
             //Send message to all cient about the available hostages for this game
             CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
 
@@ -99,9 +99,9 @@ class GameController
 
             intializeRounds();
 
-            this.aGameStatus = GameStatus.Schemin;
+            this.aGameStatus = GameStatus.HorseAttack;
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
+            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", aGameStatus);
 
             this.currentRound = rounds[0];
             //TO ALL PLAYERS
@@ -144,7 +144,7 @@ class GameController
 
             // Initialize a List with an AttackPosition for each Player
             this.attPos = new List<AttackPosition>();
-            int stopped_count = 0;
+
             for (int i = 0; i < this.totalPlayer; i++)
             {
                 attPos.Add(new AttackPosition(this.players[i].getBandit(), this.totalPlayer));
@@ -184,9 +184,12 @@ class GameController
         if (c.isCanBePlayed())
         {
             this.currentRound.addToPlayedCards(c);
-            //TODO Send message to all clients 
+            //TODO do message
+            CommunicationAPI.sendMessageToClient(null, "addNewPlayedCard", c);
             this.currentPlayer.hand.Remove(c);
         }
+        currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
 
         endOfTurn();
     }
@@ -206,7 +209,10 @@ class GameController
             }
 
             drawCards();
-            // TODO need to ask player to play a Card ?
+
+
+
+            currentPlayer.setGetsAnotherAction(true);
         }
         else
         {
@@ -219,11 +225,18 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", currentPlayer, aKind);
             }
 
+            currentPlayer.setUsedOldWhiskey(true);
+
             currentPlayer.setGetsAnotherAction(true);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
+            //CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
             // TODO need to ask player to play a Card ?
 
         }
+
+        currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+
+        endOfTurn();
 
     }
 
@@ -247,6 +260,10 @@ class GameController
 
         //TO SPECIFIC PLAYER 
         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", c, c1, c2);
+
+        currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+
 
         endOfTurn();
     }
@@ -275,24 +292,28 @@ class GameController
 
         if (aHostage.getHostageChar().Equals(HostageChar.Teacher))
         {
-            currentPlayer.actionCantBePlayedinHand(ActionKind.Punch);
+            currentPlayer.actionCantBePlayed(ActionKind.Punch);
+            //TODO new message 
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "actionCantBePlayed", ActionKind.Punch);
         }
 
         if (aHostage.getHostageChar().Equals(HostageChar.Zealot))
         {
-            currentPlayer.actionCantBePlayedinHand(ActionKind.Ride);
+            currentPlayer.actionCantBePlayed(ActionKind.Ride);
+            //TODO new message 
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "actionCantBePlayed", ActionKind.Ride);
         }
 
         if (aHostage.getHostageChar().Equals(HostageChar.PokerPlayer))
         {
             currentPlayer.setHasSpecialAbility(false);
+            //TODO new message 
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "specialAbilityDisabled");
         }
 
         currentPlayer.setWaitingForInput(false);
         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+        
         this.endOfCards();
 
     }
@@ -305,7 +326,6 @@ class GameController
         if (topOfPile.getKind().Equals(ActionKind.Marshal))
         {
             this.aMarshal.setPosition(p);
-            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", this.aMarshal, p);
 
             //check for all players at position p 
@@ -314,20 +334,20 @@ class GameController
                 BulletCard b = new BulletCard(-1);
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
-                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof());
             }
 
             currentPlayer.setWaitingForInput(false);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+            
             this.endOfCards();
         }
         //if the action card is a Move action
         else if (topOfPile.getKind().Equals(ActionKind.Move))
         {
             currentPlayer.setPosition(p);
-            //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
+            
             bool flag = true;
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
@@ -345,7 +365,8 @@ class GameController
             if (flag)
             {
                 currentPlayer.setWaitingForInput(false);
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+                
                 this.endOfCards();
             }
 
@@ -356,6 +377,7 @@ class GameController
         {
             currentPlayer.setPosition(p);
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
+            //TODO new message 
             CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", p.getTrainCar(), true);
             currentPlayer.setOnAHorse(false);
 
@@ -373,7 +395,8 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
                 this.endOfCards();
             }
-            else if (p.isInStageCoach(myStageCoach))
+
+            if (p.isInStageCoach(myStageCoach))
             {
                 if (availableHostages.Count() != 0)
                 {
@@ -383,10 +406,12 @@ class GameController
             else
             {
                 flag = shotgunCheck(p);
+                
                 if (flag)
                 {
                     currentPlayer.setWaitingForInput(false);
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+                   
                     this.endOfCards();
                 }
 
@@ -397,9 +422,11 @@ class GameController
 
     public void chosenPunchTarget(Player victim, GameItem loot, Position dest)
     {
-        if (currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility())
+        bool flag = true;
+        
+        if (currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse))
         {
-            loot.setPosition(null);
+            victim.possessions.Remove(loot);
             CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim, loot);
             currentPlayer.addToPossessions(loot);
             CommunicationAPI.sendMessageToClient(null, "incrementLoot", currentPlayer, loot);
@@ -408,7 +435,7 @@ class GameController
         {
             //loot is removed from victim possessions, droped at it position
             victim.possessions.Remove(loot);
-            CommunicationAPI.sendMessageToClient(null, "decrementLoot", loot);
+            CommunicationAPI.sendMessageToClient(null, "decrementLoot",victim, loot);
             loot.setPosition(victim.getPosition());
             CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
         }
@@ -425,21 +452,30 @@ class GameController
             dest.getTrainCar().moveRoofCar(victim);
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof());
         }
-        currentPlayer.setWaitingForInput(false);
-        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
-        this.endOfCards();
+
+        flag = shotgunCheck(dest);
+
+        if (flag){
+            currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+            this.endOfCards();
+        }
     }
 
     public void choseToPunchShootgun()
     {
         aShotGun.setPosition(myStageCoach.getAdjacentCar().getRoof());
         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, myStageCoach.getAdjacentCar().getRoof());
+        
         aShotGun.hasBeenPunched();
         GameItem aStrongBox = new GameItem(ItemType.Strongbox, 1000);
         currentPlayer.addToPossessions(aStrongBox);
         CommunicationAPI.sendMessageToClient(null, "incrementLoot", currentPlayer, aStrongBox);
 
         this.currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+
+        endOfCards();
 
     }
 
@@ -493,18 +529,23 @@ class GameController
         }
 
         currentPlayer.setWaitingForInput(false);
-        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
         this.endOfCards();
     }
 
     public void chosenLoot(GameItem loot)
     {
         //the loot is transfered from the position to the currentPlayer possensions
+        //TODO check with Christina
         loot.setPosition(null);
+        CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, null);
+
         currentPlayer.addToPossessions(loot);
         CommunicationAPI.sendMessageToClient(null, "incremenLoot", currentPlayer, loot);
+        
         currentPlayer.setWaitingForInput(false);
-        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), false);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
+        
         this.endOfCards();
     }
 
@@ -535,9 +576,10 @@ class GameController
                 aL.Add(p1);
                 aL.Add(p2);
 
-                if(!currentPlayer.getWaitingForInput()) {
+                if (!currentPlayer.getWaitingForInput())
+                {
                     currentPlayer.setWaitingForInput(true);
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
                 }
 
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
@@ -551,22 +593,20 @@ class GameController
     public void readyForNextMove()
     {
         ActionCard top = this.currentRound.seeTopOfPlayedCards();
-        this.currentPlayer = top.belongsTo();
-        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
-
-        //TODO do we need this ?
-        this.currentPlayer.setWaitingForInput(false);
+    
         Boolean waiting = true;
 
-        //  foreach (Player p in this.players)
-        //    {
-        //     if (p.getWaitingForInput())
-        //         waiting = false;
-
-        // }
+        foreach (Player p in this.players)
+        {
+            if (p.getWaitingForInput()) waiting = false;
+        }
 
         if (waiting)
         {
+            this.currentPlayer = top.belongsTo();
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
+            //TODO message about the card currently beeing played 
+
             // Get the top of the played cards from the schemin phase
             switch (top.getKind())
             {
@@ -576,10 +616,12 @@ class GameController
 
                         if (moves.Count > 1)
                         {
+                            //TODO ask Christina if we need this 
                             this.aGameStatus = GameStatus.FinalizingCard;
                             CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
+
                             this.currentPlayer.setWaitingForInput(true);
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves);
                         }
@@ -600,10 +642,11 @@ class GameController
 
                             flag = shotgunCheck(currentPlayer.getPosition().getTrainCar().getRoof());
 
-                            if(flag){
+                            if (flag)
+                            {
                                 this.endOfCards();
                             }
-                            
+
                         }
                         //If the player is on the roof of a car, goes inside the car
                         else
@@ -618,7 +661,7 @@ class GameController
                                 currentPlayer.addToDiscardPile(b);
                                 currentPlayer.getPosition().getTrainCar().moveRoofCar(currentPlayer);
                                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, currentPlayer.getPosition().getTrainCar().getRoof());
-                            } 
+                            }
 
                             //if he ends up inside the StageCoach, he chooses a hostage (if there are any left)
                             if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
@@ -628,7 +671,7 @@ class GameController
                                     this.aGameStatus = GameStatus.FinalizingCard;
                                     CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                                     this.currentPlayer.setWaitingForInput(true);
-                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
                                     //TODO new massage 
                                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "chooseHostage", availableHostages);
                                 }
@@ -653,8 +696,8 @@ class GameController
                             CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
 
                             this.currentPlayer.setWaitingForInput(true);
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
-                            
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
+
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", possTargets);
                         }
                         break;
@@ -665,7 +708,7 @@ class GameController
                         this.aGameStatus = GameStatus.FinalizingCard;
                         CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                         this.currentPlayer.setWaitingForInput(true);
-                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
                         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateLootAtLocation", atLocation);
                         break;
@@ -682,8 +725,8 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                             this.currentPlayer.setWaitingForInput(true);
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
-                            
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
+
                             CommunicationAPI.sendMessageToClient(null, "updateMovePositions", possPosition);
                         }
                         break;
@@ -704,11 +747,13 @@ class GameController
                             }
                         }
 
+                        //TODO add Shotgun if p is roof of stagecoach and hasBeenPunched is false
+
 
                         this.aGameStatus = GameStatus.FinalizingCard;
                         CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                         this.currentPlayer.setWaitingForInput(true);
-                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
                         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", atLocation);
                         break;
@@ -726,7 +771,7 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                             this.currentPlayer.setWaitingForInput(true);
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput",currentPlayer.getBandit(), true);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves);
 
@@ -738,7 +783,6 @@ class GameController
                         break;
                     }
             }
-            //this.endOfCards();
         }
     }
 
@@ -767,6 +811,7 @@ class GameController
         {
             this.endHorseAttack = true;
 
+
             // Set all the players' positions in the train
             foreach (Player p in this.players)
             {
@@ -784,15 +829,21 @@ class GameController
             //Send the current player as index and value for waiting for input for that index/player
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
+            aGameStatus = GameStatus.Schemin;
+            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", aGameStatus);
+
         }
         else
         {
             // Update all the players
             CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+
             currentPlayer.setWaitingForInput(false);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+
             this.currentPlayer = this.players[(this.players.IndexOf(this.currentPlayer) + 1) % this.totalPlayer];
             CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer);
+
             currentPlayer.setWaitingForInput(true);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
         }
@@ -817,67 +868,103 @@ class GameController
     private void endOfTurn()
     {
         //if the player has another action, then the anotherAction flag is set to false
+
         if (this.currentPlayer.isGetsAnotherAction())
         {
-            //TO SPECIFIC PLAYER
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
-            this.currentPlayer.setGetsAnotherAction(false);
+            currentPlayer.setWaitingForInput(true);
+            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
+
+            //TODO should we keep it ?
+            //CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, false);
+
+            if (currentPlayer.getUsedOldWhiskey())
+            {
+                currentPlayer.setUsedOldWhiskey(false);
+            }
+            else
+            {
+                this.currentPlayer.setGetsAnotherAction(false);
+            }
+
         }
         else
         {
-            this.currentPlayer.setWaitingForInput(false);
-            //TO SPECIFIC PLAYER 
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), false);
-
-            //if this is not the last turn of the round
-            if (!this.currentTurn.Equals((this.currentRound.getTurns()[this.currentRound.getTurns().Count - 1])))
+            //if it is the last player of the turn, change turn, check if last turn in round
+            if (currentPlayer.Equals(players[players.Count() - 1]) && currentTurn.getType() == TurnType.Standard || currentPlayer.Equals(players[0]) && currentTurn.getType() == TurnType.Switching)
             {
-                //determining the next player 
+                // if last turn in round
+                if (currentTurn.Equals(currentRound.getTurns()[currentRound.getTurns().Count() - 1]))
+                {
+                    //prepare for Stealing phase 
+                    foreach (Player p in this.players)
+                    {
+                        p.moveCardsToDiscard();
+                    }
+                    this.aGameStatus = GameStatus.Stealin;
+                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", aGameStatus);
+
+                    readyForNextMove();
+                }
+                //else if not, we set the next turn in the round
+                else
+                {
+                    //setting next turn in round
+                    currentTurn = currentRound.getTurns()[currentRound.getTurns().IndexOf(currentTurn) + 1];
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", currentTurn);
+
+                    if (this.currentTurn.getType() == TurnType.Switching)
+                    {
+                        currentPlayer = players[players.Count() - 1];
+                        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
+                    }
+                    else
+                    {
+                        currentPlayer = players[0];
+                        CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
+                    }
+                    //if the turn is Speeding up, the next player has another action 
+                    if (this.currentTurn.getType() == TurnType.SpeedingUp)
+                    {
+                        this.currentPlayer.setGetsAnotherAction(true);
+
+                    }
+
+                }
+
+            }
+            //if this in not the last player in the turn, we update the currentplayer 
+            else
+            {
                 //if the turn is Switching, order of players is reversed, so next player is previous in the list
                 if (this.currentTurn.getType() == TurnType.Switching)
                 {
-                    this.currentPlayerIndex = this.currentPlayerIndex - 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) - 1 % this.totalPlayer];
-                    //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
                 }
                 //otherwise, it is the next player in the list 
                 else
                 {
-                    this.currentPlayerIndex = this.currentPlayerIndex + 1 % this.totalPlayer;
                     this.currentPlayer = this.players[this.players.IndexOf(this.currentPlayer) + 1 % this.totalPlayer];
-                    //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayerIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
                 }
 
-                //if the turn is Speeding up, the next player has another action 
+                //if the turn is Speeding up, the new next player has another action 
                 if (this.currentTurn.getType() == TurnType.SpeedingUp)
                 {
                     this.currentPlayer.setGetsAnotherAction(true);
-                }
-            }
-            // if it is the last turn of the round 
-            else
-            {
-                //prepare for Stealing phase 
-                foreach (Player p in this.players)
-                {
-                    p.moveCardsToDiscard();
-                    //NEED MESSAGE HERE
-                    // p.setWaitingForInput(true);
-                    this.aGameStatus = GameStatus.Stealin;
-                    //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", false);
+
                 }
             }
         }
+        currentPlayer.setWaitingForInput(true);
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateCurrentPlayer", currentPlayer.getBandit(), true);
     }
 
     private void endOfCards()
     {
         Card c = this.currentRound.getTopOfPlayedCards();
         this.currentPlayer.addToDiscardPile(c);
-        //TO ALL PLAYERS
+        
         CommunicationAPI.sendMessageToClient(null, "removeTopCard", c);
 
         //if all cards in the pile have been played 
@@ -892,22 +979,19 @@ class GameController
             {
                 //setting the next round, setting the first turn of the round 
                 this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", this.rounds.IndexOf(currentRound));
+
                 this.currentTurn = this.currentRound.getTurns()[0];
-                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
                 //setting the next player and game status of the game 
-                this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
-                this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
-                //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayerIndex);
+                this.currentPlayer = this.players[0];
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", players.IndexOf(currentPlayer));
 
                 this.aGameStatus = GameStatus.Schemin;
-                //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "updateGameStatus", true);
 
                 this.currentPlayer.setWaitingForInput(true);
-                //TO SPECIFIC PLAYER
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
 
                 checkLadyPool();
@@ -915,18 +999,9 @@ class GameController
                 //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
                 foreach (Player p in this.players)
                 {
-                    if (p.getHostage().getHostageChar().Equals(HostageChar.Teacher))
-                    {
-                        p.actionCantBePlayed(ActionKind.Punch);
-                    }
-
-                    if (p.getHostage().getHostageChar().Equals(HostageChar.Zealot))
-                    {
-                        p.actionCantBePlayed(ActionKind.Ride);
-                    }
-
+                    
                     List<Card> cardsToAdd = new List<Card>();
-                    int index = this.players.IndexOf(p);
+                    //int index = this.players.IndexOf(p);
 
                     Random rnd = new Random();
                     for (int i = 0; i < 6; i++)
@@ -949,12 +1024,12 @@ class GameController
                         cardsToAdd.Add(aCard);
                         p.discardPile.Remove(aCard);
                     }
-                
+
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
 
                 }
 
-                //Stagecoach moves by one car to the back, if not at the last one of the train.
+                //Stagecoach moves by one car to the back, if not at the cabosse. 
                 TrainCar curAdjacent = myStageCoach.getAdjacentCar();
 
                 if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
@@ -973,6 +1048,7 @@ class GameController
 
             }
         }
+
         readyForNextMove();
     }
 

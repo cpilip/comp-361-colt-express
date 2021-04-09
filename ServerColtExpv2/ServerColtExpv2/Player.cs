@@ -25,6 +25,8 @@ namespace GameUnitSpace {
         private bool waitingForInput;
         [JsonProperty]
         private bool getsAnotherAction;
+
+        private bool usedOldWhiskey;
         //[JsonProperty]
         private int numOfBulletsShot;
         public List <Card> hand;
@@ -299,6 +301,13 @@ namespace GameUnitSpace {
             }
         }
 
+        public void setUsedOldWhiskey(bool b){
+            usedOldWhiskey = b;
+        }
+
+        public bool getUsedOldWhiskey(){
+            return usedOldWhiskey;
+        }
 
         /**
             Private helper functions to calculate the ransom price of each hostage 
@@ -332,6 +341,7 @@ namespace GameUnitSpace {
             return counter;
         }
 
+        
     }
 
 }

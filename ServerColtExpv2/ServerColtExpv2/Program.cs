@@ -180,6 +180,8 @@ class MyTcpListener
 
                     aController.chosenPosition(pos);
                 }
+                //TODO hostage message 
+                
                 else if (eventName.Equals("CardMessage"))
                 {
                     // Get index; -1 if player timed out
@@ -192,6 +194,8 @@ class MyTcpListener
                 {
                     aController.drawCards();
                 }
+                //TODO whiskey message 
+                
 
             }
 
