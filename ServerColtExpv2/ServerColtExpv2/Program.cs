@@ -72,24 +72,24 @@ class MyTcpListener
 
             while (haveAllConnections == false)
             {
-                    //Open a stream for each client
-                    TcpClient client = server.AcceptTcpClient();
+                //Open a stream for each client
+                TcpClient client = server.AcceptTcpClient();
 
-                    IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                    NetworkStream currentClientStream = client.GetStream();
+                IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
+                NetworkStream currentClientStream = client.GetStream();
 
-                    //Add each client mapped to IP address
-                    clients.Add(client, "" + remoteIpEndPoint.Address);
-                    clientStreams.Add(client, currentClientStream);
+                //Add each client mapped to IP address
+                clients.Add(client, "" + remoteIpEndPoint.Address);
+                clientStreams.Add(client, currentClientStream);
 
-                    currentClient = client;
+                currentClient = client;
 
 
-                    //Verify against lobby service
-                    if (clients.Count == 3)
-                    {
-                        haveAllConnections = true;
-                    }
+                //Verify against lobby service
+                if (clients.Count == 3)
+                {
+                    haveAllConnections = true;
+                }
             }
 
             Console.WriteLine("All clients successfully connected.");
@@ -110,7 +110,14 @@ class MyTcpListener
                 //players.Add(p, cli);
             }
 
-            
+            while (!aController.getEndHorseAttack()) {
+                string res = getFromClient(players[aController.getCurrentPlayer()]);
+
+                JObject o = JObject.Parse(res);
+                string haAction = o.SelectToken("HorseAttackAction").ToString();
+
+                aController.chosenHorseAttackAction(haAction);
+            }
 
             while (!aController.getEndOfGame())
             {
@@ -214,6 +221,8 @@ class MyTcpListener
 
                     aController.chosenPosition(pos);
                 }
+                //TODO hostage message 
+                
                 else if (eventName.Equals("CardMessage"))
                 {
                     // Get index; -1 if player timed out

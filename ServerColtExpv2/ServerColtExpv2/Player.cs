@@ -39,6 +39,7 @@ namespace GameUnitSpace {
         private Hostage capturedHostage;
         [JsonIgnore]
         private bool onAHorse;
+        private bool hasSpecialAbility;
 
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c) {
@@ -58,7 +59,9 @@ namespace GameUnitSpace {
             capturedHostage = null;
 
             //TODO may update this
-            onAHorse=false;
+            onAHorse=true;
+
+            hasSpecialAbility=true;
         }
 
         /** 
@@ -101,7 +104,10 @@ namespace GameUnitSpace {
             capturedHostage = h;
         }
 
-
+        public Hostage getHostage(){
+            return capturedHostage;
+        }
+        
         /// Set the state of waiting for input flag.
         public void setWaitingForInput(bool waitingForInput) {
             this.waitingForInput = waitingForInput;
@@ -124,6 +130,15 @@ namespace GameUnitSpace {
         public bool isPlayerOnAHorse(){
             return onAHorse;
         }
+
+        public void setHasSpecialAbility(bool b){
+            hasSpecialAbility = b;
+        } 
+
+        public bool getHasSpecialAbility(){
+            return hasSpecialAbility;
+        }
+
 
         /// Update the state of the get another action flag.
         public void setGetsAnotherAction(Boolean getAnotherAction) {
@@ -168,6 +183,17 @@ namespace GameUnitSpace {
                 total =  total + it.getValue();
             }
             return total;
+        }
+
+        public int getLeastPurseValue() {
+            int min = 10000;
+            foreach (GameItem i in this.possessions) {
+                if (i.getType == ItemType.Purse && i.getValue() < min) {
+                    min = i.getValue();
+                }
+            }
+            if (min == 10000) return 0;
+            else return min;
         }
 
         public int getHostageValue(){
@@ -283,6 +309,18 @@ namespace GameUnitSpace {
 
         public void addWhiskey(Whiskey aW){
             possessions.Add(aW);
+        }
+
+        public void actionCantBePlayedinHand(ActionKind aKind){
+            foreach (ActionCard c in hand){
+                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+            }
+        }
+
+        public void actionCantBePlayed(ActionKind aKind){
+            foreach (ActionCard c in discardPile){
+                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+            }
         }
 
         /**

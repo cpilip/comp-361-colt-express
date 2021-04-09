@@ -21,8 +21,6 @@ namespace GameUnitSpace
         private ItemType aItemType;
         private Player myPlayer;
 
-
-
         public GameItem (ItemType pType, int pValue){
             aValue = pValue;
             aItemType = pType;

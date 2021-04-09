@@ -18,13 +18,26 @@ namespace CardSpace {
         [JsonProperty]
         private readonly ActionKind kind;
 
-        public ActionCard(Player pPlayer, ActionKind k) : base(assignPlayer(pPlayer)) 
+   
+        [JsonProperty]
+        private bool canBePlayed;
+        
+         public ActionCard(Player pPlayer, ActionKind k) : base(assignPlayer(pPlayer)) 
         {
             this.kind = k;
+            canBePlayed = true;
         }
 
         public ActionKind getKind() {
             return this.kind;
+        }
+
+        public void cantBePlayedAnymore(){
+            canBePlayed = false;
+        }
+
+        public bool isCanBePlayed(){
+            return canBePlayed;
         }
     }
 }

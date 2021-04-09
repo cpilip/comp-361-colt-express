@@ -7,7 +7,8 @@ namespace RoundSpace {
         Standard,
         Tunnel,
         SpeedingUp,
-        Switching
+        Switching,
+        Turmoil
     }
     
     class Turn{
