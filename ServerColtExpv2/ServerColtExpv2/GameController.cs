@@ -1088,9 +1088,48 @@ class GameController
         }
         scores[maxPlayer] = scores[maxPlayer] + 1000;
 
+        EndOfRoundEvent ev = this.currentRound.getEvent();
+        // Take care of Train station event
+        switch (this.currentRound.getEvent()) {
+            case MarshalsRevenge: {
+                // Each bandit on the roof of the Marshal's car looses his least valuable purse
+                foreach (Player b in this.aMarshal.getPosition().getPlayers()) {
+                    scores[b] =scores[b] - b.getLeastPurseValue();
+                }
+
+                break;
+            }
+            case Pickpocketing: {
+                // Each bandit that is alone takes a purse if available on his spot
+                foreach (Player b in this.players) {
+                    if (b.getPosition().getPlayers().Count == 1) {
+                        scores[b] = scores[b] + b.getPosition().getRandomPurse();
+                    }
+                }
+                break;
+            }
+            case HostageConductor: {
+                // +250 to all on locomotive
+                break;
+            }
+            case SharingTheLoot: {
+                // bandits who own a strongbox and are not alone share the value of it with neighbours
+                break;
+            }
+            case Escape: {
+                // Every bandit who is in train loses
+                break;
+            }
+            case MortalBullet: {
+                // Players loose 150 per bullet received during this round
+                break;
+            }   
+        }
+        
         //Sorted list to send to clients
         var myList = scores.ToList();
         myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+
 
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "finalGameScore", myList);
@@ -1218,12 +1257,32 @@ class GameController
 
     private void intializeRounds()
     {
+        // Variables to get random round layouts
+        List<int> usedRounds = new List<>();
+        Random r = new Random();
+        int rand;
+
+        // Initialize random unique layouts for 4 normal rounds
         for (int i = 0; i < 4; i++)
         {
+            // Look for a random integer between 0 and 6 which has not been used before
+            rand = r.Next(0, 12);
+            while (true) {
+                if (!usedRounds.Contains(rand)) {
+                    break;
+                } 
+                rand = r.Next(0, 12);
+            }
+            usedRounds.Add(rand);
             Round aRound = new Round(false, totalPlayer);
+            aRound.intializeTurn(this.totalPlayer, rand);
             this.rounds.Add(aRound);
         }
+
+        // Initialize random layout for final round
+        rand = r.Next(0, 6);
         Round aFinalRound = new Round(true, totalPlayer);
+        aFinalRound.intializeTurn(this.totalPlayer, rand);
         this.rounds.Add(aFinalRound);
     }
 

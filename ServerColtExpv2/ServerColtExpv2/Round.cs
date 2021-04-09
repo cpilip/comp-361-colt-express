@@ -13,24 +13,18 @@ namespace RoundSpace {
         TakeItAll,
         PassengersRebellion,
         PantingHorses,
+        WhiskeyForMarshal,
+        HigherSpeed,
+        ShotgunRage,
 
         //Arrival End of Round Event
         MarshalsRevenge,
         Pickpocketing,
-        HostageConductor
-
-        //Extension End of Round Event 
-
-        //Final Round Event,
-        //WhiskeyForMarshal,
-        //HigherSpeed,
-        //Escape
+        HostageConductor,
+        SharingTheLoot,
+        Escape, 
+        MortalBullet,
         
-    }
-
-    enum turnLayout {
-        
-
     }
 
     class Round {
@@ -44,15 +38,8 @@ namespace RoundSpace {
         private List<Turn> turns;
 
         public Round(Boolean isLastRound, int nbOfPlayer) {
-            
             this.isLastRound = isLastRound;
-
             this.turns = new List<Turn>();
-
-            /*
-                Here, we'll have to choose between a valid game layout 
-            */
-            intializeTurn(nbOfPlayer);
         }
 
 
@@ -83,20 +70,10 @@ namespace RoundSpace {
             return this.playedCards.Peek();
         }
 
-        public void intializeTurn(int nbOfPlayer){
+        // Initialize the turns for a round from one of the preset layouts
+        // Returns a unique ID to designate the layout that was chosen to avoid repeating layouts
+        public int intializeTurn(int nbOfPlayer, int rand){
 
-            this.turns.Add(new Turn (TurnType.Standard));
-            this.turns.Add(new Turn (TurnType.Tunnel));
-            this.turns.Add(new Turn (TurnType.SpeedingUp));
-            this.turns.Add(new Turn (TurnType.Switching));
-
-            
-            Random rnd = new Random ();
-            //randomn for last round
-            //
-            int rand = rnd.Next(0,7);
-
-            
             //if it is a last round
             if (isLastRound){
                 switch (rand)
@@ -122,11 +99,35 @@ namespace RoundSpace {
                         this.anEvent = EndOfRoundEvent.MarshalsRevenge;
                         break;
                     }
+                    case 3 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.Escape;
+                        break;
+                    }
+                    case 4 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.SharingTheLoot;
+                        break;
+                    }
+                    case 5 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.MortalBullet;
+                        break;
+                    }
                 }
             }
             //else, if there are 5-6 players 
             else if (nbOfPlayer>4){
-                
                 switch (rand)
                 {
                     case 0 :{
@@ -135,14 +136,14 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Switching));
                         this.anEvent = EndOfRoundEvent.PassengersRebellion;
-                        break;
+                        return 0;
                     }   
                     case 1 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
-                        break;
+                        return 1;
                     }
                     case 2 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -150,33 +151,72 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.Braking;
-                        break;
+                        return 2;
                     }
                     case 3 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.SpeedingUp));
                         this.turns.Add(new Turn (TurnType.Switching));
                         this.anEvent = EndOfRoundEvent.TakeItAll;
-                        break;
+                        return 3;
                     }
                     case 4 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.SpeedingUp));
-                        break;
+                        this.anEvent = null;
+                        return 4;
                     }
                     case 5 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Switching));
                         this.anEvent = EndOfRoundEvent.AngryMarshal;
-                        break;
+                        return 5;
                     }
                     case 6 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.SwivelArm;
-                        break;
+                        return 6;
+                    }
+                    case 7 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.ShotgunRage;
+                        return 7;
+                    }
+                    case 8 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.HigherSpeed;
+                        return 8;
+                    }
+                    case 9 :{
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = null;
+                        return 9;
+                    }
+                    case 10 :{
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        this.anEvent = EndOfRoundEvent.PantingHorses;
+                        return 10;
+                    }
+                    case 11 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.WhiskeyForMarshal;
+                        return 11;
                     }
                 }
             }
@@ -191,7 +231,7 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.SwivelArm;
-                        break;
+                        return 0;
                     }   
                     case 1 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -199,13 +239,13 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Switching));
                         this.anEvent = EndOfRoundEvent.AngryMarshal;
-                        break;
+                        return 1;
                     }
                     case 2 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.SpeedingUp));
                         this.turns.Add(new Turn (TurnType.Standard));
-                        break;
+                        return 2;
                     }
                     case 3 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -213,7 +253,7 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.SpeedingUp));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.TakeItAll;
-                        break;
+                        return 3;
                     }
                     case 4 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -221,7 +261,7 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.Braking;
-                        break;
+                        return 4;
                     }
                     case 5 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -229,7 +269,7 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
-                        break;
+                        return 5;
                     }
                     case 6 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -238,7 +278,47 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.anEvent = EndOfRoundEvent.PassengersRebellion;
-                        break;
+                        return 6;
+                    }
+                    case 7 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.ShotgunRage;
+                        return 7;
+                    }
+                    case 8 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.TakeItAll;
+                        return 8;
+                    }
+                    case 9 :{
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.WhiskeyForMarshal;
+                        return 9;
+                    }
+                    case 10 :{
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.SpeedingUp));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = EndOfRoundEvent.PantingHorses;
+                        return 10;
+                    }
+                    case 11 :{
+                        this.turns.Add(new Turn (TurnType.Turmoil));
+                        this.turns.Add(new Turn (TurnType.Tunnel));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.turns.Add(new Turn (TurnType.Standard));
+                        this.anEvent = null;
+                        return 11;
                     }
                 }
 
