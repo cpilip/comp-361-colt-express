@@ -5,7 +5,7 @@ namespace GameUnitSpace{
 
     class Shotgun : GameUnit
     {
-        [JsonProperty]
+        [JsonIgnore]
         private static Shotgun aShotGun = new Shotgun();
         [JsonProperty]
         private bool isOnStageCoach = true;

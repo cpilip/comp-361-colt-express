@@ -27,6 +27,7 @@ public class GameUIManager : MonoBehaviour
     //Menus
     public GameObject turnMenu;
     public GameObject hostageMenu;
+    public GameObject punchShotgunButton;
 
     //Blockers
     public GameObject boardBlocker;
@@ -100,6 +101,25 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void clearPunchTargets()
+    {
+        List<GameObject> flattenList = playerProfiles.Values.ToList();
+
+        foreach (GameObject t in flattenList)
+        {
+            t.transform.GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+            t.transform.GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+            t.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseTargetPunch);
+        }
+
+        punchShotgunButton.SetActive(false);
+    }
+
+    public void togglePunchShotgunButton(bool isVisible)
+    {
+        punchShotgunButton.SetActive(isVisible);
+    }
+
     public void clearMovePositions()
     {
         List<int> flattenList = trainCars.Keys.ToList();
@@ -123,6 +143,11 @@ public class GameUIManager : MonoBehaviour
 
         getStagecoachPosition(true).GetComponent<Button>().enabled = false;
 
+    }
+
+    public bool getShotgunByShotgunButton(GameObject shotgunButton)
+    {
+        return GameObject.ReferenceEquals(shotgunButton, punchShotgunButton);
     }
 
     public Character getCharacterByPlayerProfile(GameObject playerProfile)

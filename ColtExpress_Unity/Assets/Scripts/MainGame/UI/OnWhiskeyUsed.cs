@@ -12,6 +12,7 @@ public class OnWhiskeyUsed : MonoBehaviour
     public event wasWhiskeyUsed notifyWhiskeyWasUsed;
 
     public bool thisWhiskeyTypeUsed = false;
+    public bool allowedForPunch = false;
 
     void Start()
     {
@@ -20,8 +21,15 @@ public class OnWhiskeyUsed : MonoBehaviour
     }
     public void TaskOnClick()
     {
-        thisWhiskeyTypeUsed = true;
-        notifyWhiskeyWasUsed?.Invoke();
+        if (allowedForPunch)
+        {
+            allowedForPunch = false;
+            GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch();
+        } else
+        {
+            thisWhiskeyTypeUsed = true;
+            notifyWhiskeyWasUsed?.Invoke();
+        }
     }
 
 

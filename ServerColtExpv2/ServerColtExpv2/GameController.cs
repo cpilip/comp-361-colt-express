@@ -444,11 +444,19 @@ class GameController
     public void choseToPunchShootgun()
     {
         aShotGun.setPosition(myStageCoach.getAdjacentCar().getRoof());
-        //Move message
-        aShotGun.hasBeenPunched();
-        currentPlayer.addToPossessions(new GameItem(ItemType.Strongbox, 1000));
-        //decrement message
 
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, myStageCoach.getAdjacentCar().getRoof(), getIndexByTrainCar(myStageCoach.getAdjacentCar()));
+
+        aShotGun.hasBeenPunched();
+
+        GameItem loot = new GameItem(ItemType.Strongbox, 1000);
+        currentPlayer.addToPossessions(loot);
+
+        CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
+
+        currentPlayer.setWaitingForInput(false);
+        CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+        this.endOfCards();
     }
     
     public void chosenShootTarget(Player target)
@@ -585,7 +593,6 @@ class GameController
                     }
                 case ActionKind.Shoot:
                     {
-                        Console.WriteLine("SHOOT");
                         List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
                         if (possTargets.Count == 1)
                         {
@@ -640,11 +647,23 @@ class GameController
                     }
                 case ActionKind.Punch:
                     {
+                        bool shotgunIsATarget = (this.currentPlayer.getPosition().isInStageCoach(this.myStageCoach) && this.currentPlayer.getPosition().isInside() && this.aShotGun.getIsOnStageCoach() == false);
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
-                        this.aGameStatus = GameStatus.FinalizingCard;
-                        this.currentPlayer.setWaitingForInput(true);
-                        //TO SPECIFIC PLAYER
-                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", atLocation);
+                        
+                        if (atLocation.Count == 0 && shotgunIsATarget == false)
+                        {
+                            //Empty
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
+
+                        } else 
+                        {
+                            this.aGameStatus = GameStatus.FinalizingCard;
+                            this.currentPlayer.setWaitingForInput(true);
+                            //TO SPECIFIC PLAYER
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTargetPunch", atLocation, shotgunIsATarget);
+                        }
                         break;
                     }
                 case ActionKind.Ride:
@@ -1177,6 +1196,47 @@ class GameController
 
         }
         return possPos;
+    }
+
+    public void getPossiblePunchMoves(Player p)
+    {
+        List<Position> possPos = new List<Position>();
+        TrainCar playerCar = p.getPosition().getTrainCar();
+
+        //Move the target to the floor of an adjacent car        
+        //if the playerCar is adjacent to the stageCoach, add inside of the stage coach 
+        if (myStageCoach.getAdjacentCar().Equals(playerCar))
+        {
+            possPos.Add(myStageCoach.getInside());
+        }
+
+        try
+        {
+            TrainCar wagon = this.myTrain[this.myTrain.IndexOf(playerCar) - 1];
+            // Add adjacent positions
+            possPos.Add(wagon.getInside());
+
+        }
+        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+        {
+
+        }
+
+        try
+        {
+            // Add adjacent positions
+            possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + 1].getInside());
+        }
+        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+        {
+
+        }
+
+        List<int> indices = new List<int>();
+
+        possPos.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
+
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePunchPositions", possPos, indices);
     }
 
     public Boolean getEndOfGame()

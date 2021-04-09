@@ -138,20 +138,28 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("PunchMessage"))
                 {
-                    // Get character
-                    Character ch = o.SelectToken("target").ToObject<Character>();
-                    Player pl = aController.getPlayerByCharacter(ch);
+                    bool isShotgun = o.SelectToken("isShotgun").ToObject<bool>();
+                    if (isShotgun)
+                    {
+                        aController.choseToPunchShootgun();
+                    } else
+                    {
+                        // Get character
+                        Character ch = o.SelectToken("target").ToObject<Character>();
+                        Player pl = aController.getPlayerByCharacter(ch);
 
-                    // Get item
-                    ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemfromTypePossession(type);
+                        // Get item
+                        ItemType type = o.SelectToken("item").ToObject<ItemType>();
+                        GameItem it = aController.getItemfromTypePossession(type);
 
-                    // Get position
-                    int index = Int32.Parse(o.SelectToken("index").ToString());
-                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
-                    Position pos = aController.getPositionByIndex(index, inside);
+                        // Get position
+                        int index = Int32.Parse(o.SelectToken("index").ToString());
+                        Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
+                        Position pos = aController.getPositionByIndex(index, inside);
 
-                    aController.chosenPunchTarget(pl, it, pos);
+                        aController.chosenPunchTarget(pl, it, pos);
+                    }
+                    
                 }
                 else if (eventName.Equals("MoveMessage"))
                 {
