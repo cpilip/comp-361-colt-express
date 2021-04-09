@@ -544,6 +544,29 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "updatePossTarget")
+        {
+            List<Character> l = new List<Character>();
+            ((List<Player>)args[0]).ForEach(x => l.Add(x.getBandit()));
+
+            var definition = new
+            {
+                eventName = action,
+                targets = l
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage" || action == "moveStageCoach")
         //"updateHasAnotherAction" will 
         {

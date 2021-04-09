@@ -1,4 +1,5 @@
 ﻿using CardSpace;
+using Coffee.UIEffects;
 using GameUnitSpace;
 using HostageSpace;
 using PositionSpace;
@@ -87,6 +88,18 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void clearShootTargets()
+    {
+        List<GameObject> flattenList = playerProfiles.Values.ToList();
+
+        foreach (GameObject t in flattenList)
+        {
+            t.transform.GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+            t.transform.GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+            t.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseTarget);
+        }
+    }
+
     public void clearMovePositions()
     {
         List<int> flattenList = trainCars.Keys.ToList();
@@ -105,8 +118,27 @@ public class GameUIManager : MonoBehaviour
 
         }
 
+        Image s_image = getStagecoachPosition(true).GetComponent<Image>();
+        s_image.color = new Color(s_image.color.r, s_image.color.g, s_image.color.b, 0f);
+
+        getStagecoachPosition(true).GetComponent<Button>().enabled = false;
+
     }
 
+    public Character getCharacterByPlayerProfile(GameObject playerProfile)
+    {
+        List<Character> flattenList = playerProfiles.Keys.ToList();
+
+        foreach (Character c in flattenList)
+        {
+            if (GameObject.ReferenceEquals(playerProfile, getPlayerProfileObject(c)))
+            {
+                return c;
+            }
+        }
+
+        return Character.Marshal;
+    }
     public (bool, int) getTrainCarIndexByPosition(GameObject trainCarPosition)
     {
         List<int> flattenList = trainCars.Keys.ToList();

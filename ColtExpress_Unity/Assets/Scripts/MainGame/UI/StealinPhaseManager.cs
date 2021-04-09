@@ -1,4 +1,5 @@
-﻿using HostageSpace;
+﻿using GameUnitSpace;
+using HostageSpace;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,5 +56,23 @@ public class StealinPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.lockBoard();
         GameUIManager.gameUIManagerInstance.clearMovePositions();
         ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+    }
+
+    public void playerChoseTarget()
+    {
+        Character target = GameUIManager.gameUIManagerInstance.getCharacterByPlayerProfile(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject);
+
+        if (target != Character.Marshal)
+        {
+            var definition = new
+            {
+                eventName = "ShootMessage",
+                target = target
+            };
+
+            GameUIManager.gameUIManagerInstance.lockSidebar();
+            GameUIManager.gameUIManagerInstance.clearShootTargets();
+            ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+        }
     }
 }

@@ -21,11 +21,17 @@ public class UpdateMovePositionsListener : UIEventListenable
         List<Position> positions = o.SelectToken("positions").ToObject<List<Position>>();
         int positionsIndex = 0;
 
-        Debug.Log(data);
-
         foreach (int index in i)
         {
-            GameObject gamePosition = GameUIManager.gameUIManagerInstance.getTrainCarPosition(index, positions[positionsIndex].isRoof());
+            GameObject gamePosition = null;
+            //Stagecoach roof
+            if (index == -1)
+            {
+                gamePosition = GameUIManager.gameUIManagerInstance.getStagecoachPosition(positions[positionsIndex].isRoof());
+            } else
+            {
+                gamePosition = GameUIManager.gameUIManagerInstance.getTrainCarPosition(index, positions[positionsIndex].isRoof());
+            }
             Image image = gamePosition.GetComponent<Image>();
 
             image.color = new Color(image.color.r, image.color.g, image.color.b, 0.392f);

@@ -20,7 +20,7 @@ public class DecrementBulletsListener : UIEventListenable
 
         JObject o = JObject.Parse(data);
         Character c = o.SelectToken("player").ToObject<Character>();
-        int n = o.SelectToken("loot").ToObject<int>();
+        int n = o.SelectToken("numOfBullets").ToObject<int>();
 
         GameObject playerProfile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c);
         //2 - Inventory, 0 - Bullets, 1 - Text

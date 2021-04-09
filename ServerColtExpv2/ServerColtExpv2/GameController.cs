@@ -47,7 +47,7 @@ class GameController
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
         this.availableHostages = new List<Hostage>();
-        totalPlayer = 2;
+        totalPlayer = 3;
         this.endOfGame = false;
     }
 
@@ -74,7 +74,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
 
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 2)
+        if (players.Count == 3)
         {
             initializeGameBoard();
 
@@ -504,15 +504,11 @@ class GameController
                         List<Position> moves = this.getPossibleMoves(this.currentPlayer);
                         List<int> indices = new List<int>();
                         
-                        //Remove the stagecoach from the list of moves - you cannot use a Move card to go there
+                        //Remove the stagecoach interior from the list of moves - you cannot use a Move card to go there
+                        //You can move to the roof, though
                         if (moves.Contains(myStageCoach.getInside()))
                         {
                             moves.Remove(myStageCoach.getInside());
-                        }
-
-                        if (moves.Contains(myStageCoach.getRoof()))
-                        {
-                            moves.Remove(myStageCoach.getRoof());
                         }
 
                         moves.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
@@ -589,17 +585,24 @@ class GameController
                     }
                 case ActionKind.Shoot:
                     {
+                        Console.WriteLine("SHOOT");
                         List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
                         if (possTargets.Count == 1)
                         {
                             this.chosenShootTarget(possTargets[0]);
                         }
-                        else
+                        else if (possTargets.Count > 1)
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO SPECIFIC PLAYER
+                            
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePossTarget", possTargets);
+                        } else
+                        {
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
                         }
                         break;
                     }
@@ -1186,7 +1189,7 @@ class GameController
         List<Player> possPlayers = new List<Player>();
         TrainCar playerCar = p.getPosition().getTrainCar();
 
-
+        //If on roof of stagecoach, all players on the train's roofs are targets
         if (myStageCoach.getRoof().Equals(p.getPosition()))
         {
 
@@ -1200,6 +1203,7 @@ class GameController
                 }
             }
         }
+        //If inside, add adjacent car's players as targets
         else if (myStageCoach.getInside().Equals(p.getPosition()))
         {
             Position inSC = myStageCoach.getAdjacentCar().getInside();
@@ -1209,6 +1213,7 @@ class GameController
                 possPlayers.AddRange(playersOnWagon);
             }
         }
+        //On roof
         else if (!p.getPosition().isInside())
         {
             // Look for the players in line of sight forward on roof
@@ -1244,6 +1249,7 @@ class GameController
                 }
             }
         }
+        //Inside
         else
         {
             // Look for the players in the next wagon backwards
