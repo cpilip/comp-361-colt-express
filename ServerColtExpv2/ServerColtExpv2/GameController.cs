@@ -630,7 +630,7 @@ class GameController
                             this.currentRound.getTopOfPlayedCards();
                             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                             this.endOfCards();
-                        } else if ()
+                        } else 
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
