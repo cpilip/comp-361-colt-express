@@ -32,6 +32,7 @@ public class CommunicationAPI
             typeof(GameUnit),
             typeof(GameStatus),
             typeof(Marshal),
+            typeof(Shotgun),
             typeof(Player),
             typeof(Position),
             typeof(Round),
@@ -543,7 +544,7 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
-        else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage")
+        else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage" || action == "moveStageCoach")
         //"updateHasAnotherAction" will 
         {
             var definition = new

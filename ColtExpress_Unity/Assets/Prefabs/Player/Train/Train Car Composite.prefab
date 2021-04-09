@@ -88,7 +88,6 @@ GameObject:
   - component: {fileID: 5776864486690875999}
   - component: {fileID: 5776864486690875998}
   - component: {fileID: 5776864486690875997}
-  - component: {fileID: 5776864486690876002}
   - component: {fileID: 4953585053663785253}
   - component: {fileID: 2356032689037571451}
   m_Layer: 0
@@ -226,18 +225,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &5776864486690876002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5776864486690875992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4953585053663785253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,7 +296,6 @@ GameObject:
   - component: {fileID: 6522852173050295709}
   - component: {fileID: 6522852173050295708}
   - component: {fileID: 6522852173050295711}
-  - component: {fileID: 6522852173050295712}
   - component: {fileID: 3800529853913978260}
   - component: {fileID: 560337058770749959}
   m_Layer: 0
@@ -447,18 +433,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6522852173050295712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522852173050295706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3800529853913978260
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 {
     public Transform parentToReturnTo;
     public int originalIndex;
+    public bool fromDeck = true;
 
     public void OnBeginDrag(PointerEventData eventdata)
     {
@@ -34,7 +35,22 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         // If not dropped on a Drop Zone, return the Draggable to the parent panel
         this.transform.SetParent(parentToReturnTo);
-        this.transform.SetSiblingIndex(originalIndex);
+
+
+        if (parentToReturnTo != null)
+        {
+            if (parentToReturnTo.name == "Played Cards")
+            {
+                this.transform.SetSiblingIndex(parentToReturnTo.childCount - 1);
+
+                Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
+            } else
+            {
+
+                this.transform.SetSiblingIndex(originalIndex);
+                Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
+            }
+        } 
 
         // Re-enable raycasting 
         GetComponent<CanvasGroup>().blocksRaycasts = true;

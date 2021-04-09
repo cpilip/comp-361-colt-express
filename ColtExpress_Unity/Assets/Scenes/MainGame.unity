@@ -462,8 +462,6 @@ GameObject:
   - component: {fileID: 35810732}
   - component: {fileID: 35810731}
   - component: {fileID: 35810730}
-  - component: {fileID: 35810729}
-  - component: {fileID: 35810734}
   - component: {fileID: 35810735}
   m_Layer: 0
   m_Name: Train Car Interior
@@ -491,18 +489,6 @@ RectTransform:
   m_AnchoredPosition: {x: 23.8, y: -178.20001}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &35810729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35810727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &35810730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,21 +598,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 35810727}
   m_CullTransparentMesh: 0
---- !u!114 &35810734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 35810727}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &35810735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,8 +665,6 @@ GameObject:
   - component: {fileID: 68074552}
   - component: {fileID: 68074551}
   - component: {fileID: 68074550}
-  - component: {fileID: 68074549}
-  - component: {fileID: 68074554}
   - component: {fileID: 68074555}
   m_Layer: 0
   m_Name: Train Car Roof
@@ -723,18 +692,6 @@ RectTransform:
   m_AnchoredPosition: {x: 23.8, y: -59.4}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &68074549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68074547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &68074550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,21 +801,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68074547}
   m_CullTransparentMesh: 0
---- !u!114 &68074554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68074547}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &68074555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,6 +1336,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 158425098}
+  - component: {fileID: 158425099}
   m_Layer: 0
   m_Name: Stagecoach
   m_TagString: Untagged
@@ -1421,9 +1364,22 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -161.7043, y: 205.96378}
+  m_AnchoredPosition: {x: -38, y: 184.3}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &158425099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158425097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d508327370e9fc840b4eef2696eef594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: moveStageCoach
 --- !u!1 &159118591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2029,8 +1985,6 @@ GameObject:
   - component: {fileID: 216801511}
   - component: {fileID: 216801510}
   - component: {fileID: 216801509}
-  - component: {fileID: 216801508}
-  - component: {fileID: 216801513}
   - component: {fileID: 216801514}
   m_Layer: 0
   m_Name: Train Car Roof
@@ -2058,18 +2012,6 @@ RectTransform:
   m_AnchoredPosition: {x: 237.9, y: -140.4}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &216801508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 216801506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &216801509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2179,21 +2121,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 216801506}
   m_CullTransparentMesh: 0
---- !u!114 &216801513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 216801506}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &216801514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2554,7 +2481,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5776864486690876002, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 3800529853913978260, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 4953585053663785253, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
 --- !u!1 &230798368
 GameObject:
@@ -4158,7 +4088,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Train Car Composite '
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5776864486690876002, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 3800529853913978260, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 4953585053663785253, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
 --- !u!224 &497757608 stripped
 RectTransform:
@@ -7399,8 +7332,6 @@ GameObject:
   - component: {fileID: 847060978}
   - component: {fileID: 847060977}
   - component: {fileID: 847060976}
-  - component: {fileID: 847060975}
-  - component: {fileID: 847060980}
   - component: {fileID: 847060981}
   m_Layer: 0
   m_Name: Train Car Interior
@@ -7428,18 +7359,6 @@ RectTransform:
   m_AnchoredPosition: {x: 237.9, y: -259.19995}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &847060975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847060973}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &847060976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7549,21 +7468,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 847060973}
   m_CullTransparentMesh: 0
---- !u!114 &847060980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847060973}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &847060981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8886,9 +8790,6 @@ GameObject:
   - component: {fileID: 1193859764}
   - component: {fileID: 1193859763}
   - component: {fileID: 1193859762}
-  - component: {fileID: 1193859761}
-  - component: {fileID: 1193859767}
-  - component: {fileID: 1193859766}
   - component: {fileID: 1193859768}
   m_Layer: 0
   m_Name: Train Car Interior
@@ -8916,18 +8817,6 @@ RectTransform:
   m_AnchoredPosition: {x: 23.8, y: -178.20001}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1193859761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193859759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1193859762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9037,36 +8926,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1193859759}
   m_CullTransparentMesh: 0
---- !u!114 &1193859766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193859759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 1
---- !u!114 &1193859767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1193859759}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &1193859768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9729,8 +9588,6 @@ GameObject:
   - component: {fileID: 1332562761}
   - component: {fileID: 1332562760}
   - component: {fileID: 1332562759}
-  - component: {fileID: 1332562758}
-  - component: {fileID: 1332562763}
   - component: {fileID: 1332562764}
   m_Layer: 0
   m_Name: Train Car Roof
@@ -9758,18 +9615,6 @@ RectTransform:
   m_AnchoredPosition: {x: 23.8, y: -59.4}
   m_SizeDelta: {x: 47.6, y: 118.8}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1332562758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332562756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1332562759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9879,21 +9724,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332562756}
   m_CullTransparentMesh: 0
---- !u!114 &1332562763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332562756}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 0.8117647, b: 0.35686275, a: 0.14117648}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 0
 --- !u!114 &1332562764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10146,7 +9976,6 @@ GameObject:
   - component: {fileID: 1414555238}
   - component: {fileID: 1414555237}
   - component: {fileID: 1414555236}
-  - component: {fileID: 1414555235}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -10174,18 +10003,6 @@ RectTransform:
   m_AnchoredPosition: {x: 266.8, y: -190.19}
   m_SizeDelta: {x: 11.360672, y: 113.81566}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1414555235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1414555233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1414555236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12689,7 +12506,6 @@ GameObject:
   - component: {fileID: 1792338854}
   - component: {fileID: 1792338853}
   - component: {fileID: 1792338856}
-  - component: {fileID: 1792338855}
   m_Layer: 0
   m_Name: Horse
   m_TagString: Untagged
@@ -12753,18 +12569,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1792338851}
   m_CullTransparentMesh: 0
---- !u!114 &1792338855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1792338851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cd4ee2ebce30354abc2905fd2c6d6da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1792338856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14689,7 +14493,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5776864486690876002, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 3800529853913978260, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 4953585053663785253, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
 --- !u!1 &1953286378
 GameObject:
@@ -16381,7 +16188,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5776864486690876002, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 3800529853913978260, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
+    - {fileID: 4953585053663785253, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 774fcd066903fb248ad72d6eb8fbb2b4, type: 3}
 --- !u!1001 &1041708331388915018
 PrefabInstance:
