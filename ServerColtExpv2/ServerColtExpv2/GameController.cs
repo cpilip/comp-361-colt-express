@@ -928,7 +928,7 @@ class GameController
         myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
 
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "finalGameScore", myList, maxPlayer);
+        CommunicationAPI.sendMessageToClient(null, "finalGameScores", myList, maxPlayer);
 
         this.endOfGame = true;
     }
