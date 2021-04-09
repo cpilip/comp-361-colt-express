@@ -96,4 +96,14 @@ public class Switch : MonoBehaviour
         SceneManager.LoadScene("ChooseCharacter");
     }
 
+    public void goMainMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void exitGameApplication()
+    {
+        Application.Quit();
+    }
+
 }
