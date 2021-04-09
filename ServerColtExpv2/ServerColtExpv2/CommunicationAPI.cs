@@ -218,7 +218,7 @@ public class CommunicationAPI
             {
                 eventName = action,
                 currentPlayer = (Character)args[0],
-                waitingForInput = (bool)args[1],
+                waitingForInput = (bool)args[1]
             };
 
             if (cli == null)
@@ -476,6 +476,27 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "updateHostageName")
+        {
+            var definition = new
+            {
+                eventName = action,
+                player = (Character)args[0],
+                hostage = (HostageChar)args[1]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else if (action == "moveGameUnit")
         {
             Position p = (Position)args[1];
@@ -501,7 +522,27 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "updateMovePositions")
+        {
+            var definition = new
+            {
+                eventName = action,
+                positions = (List<Position>)args[0],
+                indices = (List<int>)args[1]
+            };
 
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage")
         //"updateHasAnotherAction" will 
         {

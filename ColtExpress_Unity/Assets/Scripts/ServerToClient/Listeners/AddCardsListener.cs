@@ -19,10 +19,6 @@ public class AddCardsListener : UIEventListenable
                 };
         */
 
-        if (cardIterator != null)
-        {
-            cardIterator.GetComponent<UIShiny>().Play();
-        }
 
         JObject o = JObject.Parse(data);
         
@@ -32,6 +28,9 @@ public class AddCardsListener : UIEventListenable
        
         //Get list of JSON cards
         IEnumerable listOfCardTokens = o.SelectToken("cardsToAdd").Children();
+        int count = 0;
+
+        
 
         foreach (JToken c in listOfCardTokens)
         {
@@ -48,7 +47,13 @@ public class AddCardsListener : UIEventListenable
             {
                 GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((ActionCard)card).getKind(), true);
             }
+            count++;
 
+        }
+
+        if (cardIterator != null && count > 0)
+        {
+            cardIterator.GetComponent<UIShiny>().Play();
         }
 
         Debug.Log("[AddCardsListener] Cards added.");

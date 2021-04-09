@@ -19,12 +19,14 @@ public class HightlightTopCardListener : UIEventListenable
 
         if (pileFlipped == false)
         {
+            Debug.Log("PILE FLIPPED");
             for (var i = 0; i < playedCards.transform.childCount - 1; i++)
             {
                 playedCards.transform.GetChild(0).gameObject.SetActive(false);
                 playedCards.transform.GetChild(0).SetSiblingIndex(playedCards.transform.childCount - 1 - i);
             }
             playedCards.transform.GetChild(0).gameObject.SetActive(false);
+
             pileFlipped = true;
 
             if (playedCards.transform.childCount >= 8)
@@ -45,10 +47,12 @@ public class HightlightTopCardListener : UIEventListenable
         }
 
         GameObject topCard = playedCards.transform.GetChild(playedCards.transform.childCount - 1).gameObject;
+        Debug.Log("[HighlightTopCardListener] " + topCard.GetComponent<CardID>().kind + " " + topCard.GetComponent<CardID>().isHidden);
 
         if (topCard.GetComponent<CardID>().isHidden)
         {
             GameUIManager.gameUIManagerInstance.flipCardObject(topCard.GetComponent<CardID>().c, topCard.GetComponent<CardID>().kind, topCard);
+            Debug.LogError("card flipped");
             topCard.GetComponent<CardID>().isHidden = false;
         }
 

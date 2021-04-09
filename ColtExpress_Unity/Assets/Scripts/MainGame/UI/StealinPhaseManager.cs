@@ -40,4 +40,20 @@ public class StealinPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.toggleHostageMenu(false);
         ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
     }
+
+    public void playerChosePosition()
+    {
+        (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
+
+        var definition = new
+        {
+            eventName = "MoveMessage",
+            index = position.Item2,
+            inside = position.Item1
+        };
+
+        GameUIManager.gameUIManagerInstance.lockBoard();
+        GameUIManager.gameUIManagerInstance.clearMovePositions();
+        ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+    }
 }

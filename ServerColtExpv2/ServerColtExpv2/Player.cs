@@ -58,7 +58,7 @@ namespace GameUnitSpace {
             capturedHostage = null;
 
             //TODO may update this
-            onAHorse=true;
+            onAHorse=false;
         }
 
         /** 
@@ -86,7 +86,6 @@ namespace GameUnitSpace {
             discardPile.Add(new ActionCard(this, ActionKind.Rob));
             discardPile.Add(new ActionCard(this, ActionKind.Marshal));
             discardPile.Add(new ActionCard(this, ActionKind.Ride));
-
         }
 
         /**
@@ -101,6 +100,7 @@ namespace GameUnitSpace {
         public void setCapturedHostage(Hostage h){
             capturedHostage = h;
         }
+
 
         /// Set the state of waiting for input flag.
         public void setWaitingForInput(bool waitingForInput) {

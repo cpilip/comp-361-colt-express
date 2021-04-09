@@ -50,7 +50,7 @@ public class MoveGameUnitListener : UIEventListenable
                     //Parent it under the new position instead
                     gameCharacterObject.transform.parent = gamePosition.transform;
 
-                    Debug.LogError("[MoveGameUnitListener] Moved " + ((Player)c).getBandit() + " to stagecoach " + location);
+                    Debug.Log("[MoveGameUnitListener] Moved " + ((Player)c).getBandit() + " to stagecoach " + location);
                 }
                 else if (c.GetType() == typeof(Marshal))
                 {
@@ -59,7 +59,7 @@ public class MoveGameUnitListener : UIEventListenable
 
                     //Parent it under the new position instead
                     gameCharacterObject.transform.parent = gamePosition.transform;
-                    Debug.LogError("[MoveGameUnitListener] Moved " + Character.Marshal.ToString() + " to stagecoach " + location);
+                    Debug.Log("[MoveGameUnitListener] Moved " + Character.Marshal.ToString() + " to stagecoach " + location);
                 }
                 else if (c.GetType() == typeof(Shotgun))
                 {
@@ -68,7 +68,7 @@ public class MoveGameUnitListener : UIEventListenable
 
                     //Parent it under the new position instead
                     gameCharacterObject.transform.parent = gamePosition.transform;
-                    Debug.LogError("[MoveGameUnitListener] Moved " + Character.Shotgun.ToString() + " to stagecoach " + location);
+                    Debug.Log("[MoveGameUnitListener] Moved " + Character.Shotgun.ToString() + " to stagecoach " + location);
                 }
             } else
             {
@@ -98,7 +98,7 @@ public class MoveGameUnitListener : UIEventListenable
                 //Parent it under the new position instead
                 gameCharacterObject.transform.parent = gamePosition.transform;
 
-                Debug.LogError("[MoveGameUnitListener] Moved " + ((Player)c).getBandit() + " to train car " + i + " " + location);
+                Debug.Log("[MoveGameUnitListener] Moved " + ((Player)c).getBandit() + " to train car " + i + " " + location);
             }
             else if (c.GetType() == typeof(Marshal))
             {
@@ -107,7 +107,7 @@ public class MoveGameUnitListener : UIEventListenable
 
                 //Parent it under the new position instead
                 gameCharacterObject.transform.parent = gamePosition.transform;
-                Debug.LogError("[MoveGameUnitListener] Moved " + Character.Marshal.ToString() + " to train car " + i + " " + location);
+                Debug.Log("[MoveGameUnitListener] Moved " + Character.Marshal.ToString() + " to train car " + i + " " + location);
             }
             else if (c.GetType() == typeof(Shotgun))
             {
@@ -116,7 +116,7 @@ public class MoveGameUnitListener : UIEventListenable
 
                 //Parent it under the new position instead
                 gameCharacterObject.transform.parent = gamePosition.transform;
-                Debug.LogError("[MoveGameUnitListener] Moved " + Character.Shotgun.ToString() + " to train car " + i + " " + location);
+                Debug.Log("[MoveGameUnitListener] Moved " + Character.Shotgun.ToString() + " to train car " + i + " " + location);
             }
         }
 

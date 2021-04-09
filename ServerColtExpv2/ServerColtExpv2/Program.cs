@@ -86,7 +86,7 @@ class MyTcpListener
 
 
                     //Verify against lobby service
-                    if (clients.Count == 1)
+                    if (clients.Count == 2)
                     {
                         haveAllConnections = true;
                     }
@@ -201,6 +201,7 @@ class MyTcpListener
                 {
                     HostageChar hostage = o.SelectToken("chosenHostage").ToObject<HostageChar>();
                     aController.chosenHostage(hostage);
+
                 }
             }
 

@@ -47,7 +47,7 @@ class GameController
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
         this.availableHostages = new List<Hostage>();
-        totalPlayer = 1;
+        totalPlayer = 2;
         this.endOfGame = false;
     }
 
@@ -74,7 +74,7 @@ class GameController
         Console.WriteLine("A player picked a character.");
 
         //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
-        if (players.Count == 1)
+        if (players.Count == 2)
         {
             initializeGameBoard();
 
@@ -214,6 +214,7 @@ class GameController
             
             drawCards();
 
+
             //TO SPECIFIC PLAYER
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
 
@@ -263,23 +264,29 @@ class GameController
     {
         Random rnd = new Random();
 
-        //taking three random cards from player's discardPile and adding them to the player's hand
+        //taking three random cards from player's discardPile and adding them to the player's hand while the discardpile has cards
         List<Card> cardsToAdd = new List<Card>();
 
-        int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
-        Card c = this.currentPlayer.discardPile[rand];
-        this.currentPlayer.moveFromDiscardToHand(c);
-        cardsToAdd.Add(c);
+        try
+        {
+            int rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+            Card c = this.currentPlayer.discardPile[rand];
+            this.currentPlayer.moveFromDiscardToHand(c);
+            cardsToAdd.Add(c);
 
-        rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
-        Card c1 = this.currentPlayer.discardPile[rand];
-        this.currentPlayer.moveFromDiscardToHand(c);
-        cardsToAdd.Add(c1);
+            rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+            c = this.currentPlayer.discardPile[rand];
+            this.currentPlayer.moveFromDiscardToHand(c);
+            cardsToAdd.Add(c);
 
-        rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
-        Card c2 = this.currentPlayer.discardPile[rand];
-        this.currentPlayer.moveFromDiscardToHand(c);
-        cardsToAdd.Add(c2);
+            rand = rnd.Next(0, this.currentPlayer.discardPile.Count);
+            c = this.currentPlayer.discardPile[rand];
+            this.currentPlayer.moveFromDiscardToHand(c);
+            cardsToAdd.Add(c);
+        } catch (Exception e) when(e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+        { 
+            //Out of cards to draw
+        }
 
         //TO SPECIFIC PLAYER 
         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", cardsToAdd);
@@ -304,13 +311,16 @@ class GameController
         availableHostages.Remove(retrievedHostage);
         currentPlayer.setCapturedHostage(retrievedHostage);
         currentPlayer.setWaitingForInput(false);
+
+        CommunicationAPI.sendMessageToClient(null, "updateHostageName ", currentPlayer.getBandit(), retrievedHostage.getHostageChar());
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
     
     public void chosenPosition(Position p)
     {
-        ActionCard topOfPile = this.currentRound.seeTopOfPlayedCards();
+        //Card removed
+        ActionCard topOfPile = this.currentRound.getTopOfPlayedCards();
 
         //if the action card is a Move Marshall action
         if (topOfPile.getKind().Equals(ActionKind.Marshal))
@@ -347,6 +357,7 @@ class GameController
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "addCards", new List<Card> {b});
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
             }
             //TODO Same with Shotgun 
@@ -467,8 +478,9 @@ class GameController
 
     public void readyForNextMove()
     {
-        //Retrieve the card from the queue and return it to its player's discard pile
-        ActionCard top = this.currentRound.getTopOfPlayedCards();
+        //See the top card in the queue and return it to its player's discard pile
+        //Not removed yet
+        ActionCard top = this.currentRound.seeTopOfPlayedCards();
         top.belongsTo().addToDiscardPile(top);
 
         //Figure out who is the current player
@@ -495,13 +507,27 @@ class GameController
                 case ActionKind.Move:
                     {
                         List<Position> moves = this.getPossibleMoves(this.currentPlayer);
+                        List<int> indices = new List<int>();
+                        
+                        //Remove the stagecoach from the list of moves - you cannot use a Move card to go there
+                        if (moves.Contains(myStageCoach.getInside()))
+                        {
+                            moves.Remove(myStageCoach.getInside());
+                        }
+
+                        if (moves.Contains(myStageCoach.getRoof()))
+                        {
+                            moves.Remove(myStageCoach.getRoof());
+                        }
+
+                        moves.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
 
                         if (moves.Count > 1)
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO SPECIFIC PLAYERS
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves);
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves, indices);
                         }
                         else
                         {
@@ -591,6 +617,20 @@ class GameController
                 case ActionKind.Marshal:
                     {
                         List<Position> possPosition = this.aMarshal.getPossiblePositions();
+                        List<int> indices = new List<int>();
+                        
+                        if (possPosition.Contains(myStageCoach.getInside()))
+                        {
+                            possPosition.Remove(myStageCoach.getInside());
+                        }
+
+                        if (possPosition.Contains(myStageCoach.getRoof()))
+                        {
+                            possPosition.Remove(myStageCoach.getRoof());
+                        }
+
+                        possPosition.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
+
                         if (possPosition.Count == 1)
                         {
                             this.chosenPosition(possPosition[0]);
@@ -600,7 +640,7 @@ class GameController
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient(null, "updateMovePositions", possPosition);
+                            CommunicationAPI.sendMessageToClient(null, "updateMovePositions", possPosition, indices);
 
                         }
                         break;
@@ -1007,7 +1047,7 @@ class GameController
                         possPos.Add(myStageCoach.getInside());
                     }
                 }
-                catch (System.IndexOutOfRangeException e)
+                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                 {
                     continue;
                 }
@@ -1024,7 +1064,7 @@ class GameController
                         possPos.Add(myStageCoach.getInside());
                     }
                 }
-                catch (System.IndexOutOfRangeException e)
+                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                 {
                     continue;
                 }
@@ -1047,7 +1087,7 @@ class GameController
                     // Add adjacent positions
                     possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) - i].getRoof());
                 }
-                catch (System.IndexOutOfRangeException e)
+                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                 {
                     continue;
                 }
@@ -1067,7 +1107,7 @@ class GameController
 
 
                 }
-                catch (System.IndexOutOfRangeException e)
+                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                 {
                     continue;
                 }
@@ -1094,7 +1134,7 @@ class GameController
                 possPos.Add(wagon.getInside());
 
             }
-            catch (System.IndexOutOfRangeException e)
+            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
             {
 
             }
@@ -1104,7 +1144,7 @@ class GameController
                 // Add adjacent positions
                 possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + 1].getInside());
             }
-            catch (System.IndexOutOfRangeException e)
+            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
             {
 
             }
@@ -1189,7 +1229,7 @@ class GameController
                 // Add adjacent positions
                 possPlayers.AddRange(this.myTrain[this.myTrain.IndexOf(playerCar) - 1].getInside().getPlayers());
             }
-            catch (System.IndexOutOfRangeException e)
+            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
             {
 
             }
@@ -1200,7 +1240,7 @@ class GameController
                 // Add adjacent positions
                 possPlayers.AddRange(this.myTrain[this.myTrain.IndexOf(playerCar) + 1].getInside().getPlayers());
             }
-            catch (System.IndexOutOfRangeException e)
+            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
             {
 
             }
@@ -1273,6 +1313,7 @@ class GameController
     public ActionCard getCardByIndex(int index)
     {
         List<Card> al = this.currentPlayer.hand;
+        //Console.WriteLine("INDEX AT " + index +" WITH "+ ((ActionCard)al[index]).getKind());
         return (ActionCard)al[index];
     }
 

@@ -87,6 +87,48 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void clearMovePositions()
+    {
+        List<int> flattenList = trainCars.Keys.ToList();
+
+        foreach (int i in flattenList)
+        {
+            Image image = getTrainCarPosition(i, true).GetComponent<Image>();
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
+
+            getTrainCarPosition(i, true).GetComponent<Button>().enabled = false;
+
+            image = getTrainCarPosition(i, false).GetComponent<Image>();
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 0f);
+
+            getTrainCarPosition(i, false).GetComponent<Button>().enabled = false;
+
+        }
+
+    }
+
+    public (bool, int) getTrainCarIndexByPosition(GameObject trainCarPosition)
+    {
+        List<int> flattenList = trainCars.Keys.ToList();
+
+        foreach (int i in flattenList)
+        {
+            //If passed train car position is the same as the roof
+            if (GameObject.ReferenceEquals(trainCarPosition, getTrainCarPosition(i, true)))
+            {
+                return (false, i);
+            }
+            //Not the roof
+            else if (GameObject.ReferenceEquals(trainCarPosition, getTrainCarPosition(i, false)))
+            {
+                //Reverse on server - true if inside
+                return (true, i);
+            }
+        }
+
+        return (true, -1);
+    }
+
     //Get corresponding in-game character object to a character
     public GameObject getCharacterObject(Character c)
     {
@@ -222,11 +264,11 @@ public class GameUIManager : MonoBehaviour
     {
         if (isRoof)
         {
-            return stagecoach.transform.GetChild(3).gameObject;
+            return stagecoach.transform.GetChild(2).gameObject;
         }
         else
         {
-            return stagecoach.transform.GetChild(1).gameObject;
+            return stagecoach.transform.GetChild(0).gameObject;
         }
 
     }

@@ -30,9 +30,11 @@ public class RemoveTopCardListener : UIEventListenable
                     break;
                 }
             }
-        } 
+        }
 
-        Destroy(topCard);
+
+        Debug.Log("[RemoveTopCardListener] Popped top card " + topCard.GetComponent<CardID>().kind);
+        DestroyImmediate(topCard);
 
         if (playedCards.transform.childCount == 0)
         {
@@ -41,6 +43,5 @@ public class RemoveTopCardListener : UIEventListenable
             playedCards.GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 0.392f);
         }
 
-        Debug.Log("[RemoveTopCardListener] Popped top card.");
     }
 }

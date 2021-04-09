@@ -15,6 +15,7 @@ public class UpdateWaitingForInputListener : UIEventListenable
                 eventName = "updateWaitingForInput",
                 currentPlayer = character,
                 waitingForInput = bool,
+                canDraw = bool
             };
         */
         JObject o = JObject.Parse(data);
@@ -28,7 +29,7 @@ public class UpdateWaitingForInputListener : UIEventListenable
             {
                 if (waitingForInput) { 
                     GameUIManager.gameUIManagerInstance.toggleTurnMenu(true);
-                Debug.Log("[UpdateWaitingForInputListener] SCHEMING, TRUE: Turn menu visible for player " + player + ".");
+                    Debug.Log("[UpdateWaitingForInputListener] SCHEMING, TRUE: Turn menu visible for player " + player + ".");
                 }
                 else
                 {
@@ -39,7 +40,17 @@ public class UpdateWaitingForInputListener : UIEventListenable
 
             } else
             {
-                Debug.Log("[UpdateWaitingForInputListener] STEALIN.");
+                if (waitingForInput)
+                {
+
+                    GameUIManager.gameUIManagerInstance.unlockBoard();
+                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, TRUE: Board unlocked.");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.lockBoard();
+                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, TRUE: Board unlocked.");
+                }
             }
         }
         
