@@ -19,6 +19,7 @@ public class StealinPhaseManager : MonoBehaviour
     private WhiskeyKind whiskeyKind;
 
     private bool notInPunch = true;
+    private bool isLoot = false;
 
     void Start()
     {
@@ -87,20 +88,42 @@ public class StealinPhaseManager : MonoBehaviour
                     inside = position.Item1
                 };
 
+
+                GameUIManager.gameUIManagerInstance.lockBoard();
+                GameUIManager.gameUIManagerInstance.clearMovePositions();
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
             }
             else
             {
-                var definition = new
+                if (isLoot)
                 {
-                    eventName = "PunchMessage",
-                    target = punchTarget,
-                    item = punchLoot,
-                    index = position.Item2,
-                    inside = position.Item1
-                };
+                    var definition = new
+                    {
+                        eventName = "PunchMessage",
+                        target = punchTarget,
+                        item = punchLoot,
+                        index = position.Item2,
+                        inside = position.Item1
+                    };
 
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+
+                    GameUIManager.gameUIManagerInstance.lockBoard();
+                    GameUIManager.gameUIManagerInstance.clearMovePositions();
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                } else
+                {
+                    var definition = new
+                    {
+                        eventName = "PunchMessage",
+                        target = punchTarget,
+                        index = position.Item2,
+                        inside = position.Item1
+                    };
+
+                    GameUIManager.gameUIManagerInstance.lockBoard();
+                    GameUIManager.gameUIManagerInstance.clearMovePositions();
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                }
             }
             
         }
@@ -126,8 +149,11 @@ public class StealinPhaseManager : MonoBehaviour
 
     public void playerChoseTargetPunch()
     {
+
         notInPunch = false;
         Character target = Character.Marshal;
+
+        Debug.Log("[UpdatePossTargetsPunchListener] Player chose: " + target.ToString());
         if (GameUIManager.gameUIManagerInstance.getShotgunByShotgunButton(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject))
         {
             //Shotgun punched
@@ -147,25 +173,28 @@ public class StealinPhaseManager : MonoBehaviour
             //Character punched
             target = GameUIManager.gameUIManagerInstance.getCharacterByPlayerProfile(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject);
             punchTarget = target;
-
+            
             GameObject targetprofile = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(target);
 
             if (targetprofile.transform.GetChild(3).GetChild(0).gameObject.activeSelf)
             {
                 targetprofile.transform.GetChild(3).GetChild(0).gameObject.GetComponent<OnWhiskeyUsed>().allowedForPunch = true;
                 targetprofile.transform.GetChild(3).GetChild(0).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = true;
+                isLoot = true;
             }
 
             if (targetprofile.transform.GetChild(3).GetChild(1).gameObject.activeSelf)
             {
                 targetprofile.transform.GetChild(3).GetChild(1).gameObject.GetComponent<OnWhiskeyUsed>().allowedForPunch = true;
                 targetprofile.transform.GetChild(3).GetChild(1).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = true;
+                isLoot = true;
             }
 
             if (targetprofile.transform.GetChild(3).GetChild(2).gameObject.activeSelf)
             {
                 targetprofile.transform.GetChild(3).GetChild(2).gameObject.GetComponent<OnWhiskeyUsed>().allowedForPunch = true;
                 targetprofile.transform.GetChild(3).GetChild(2).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = true;
+                isLoot = true;
             }
 
             //Strongbox
@@ -177,6 +206,7 @@ public class StealinPhaseManager : MonoBehaviour
                 targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                isLoot = true;
             }
 
             //Rubies
@@ -188,6 +218,7 @@ public class StealinPhaseManager : MonoBehaviour
                 targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<UIShiny>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                isLoot = true;
             }
 
             //Purse
@@ -199,10 +230,26 @@ public class StealinPhaseManager : MonoBehaviour
                 targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<UIShiny>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().enabled = true;
                 targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                isLoot = true;
             }
 
             GameUIManager.gameUIManagerInstance.clearPunchTargets();
             GameUIManager.gameUIManagerInstance.togglePunchShotgunButton(false);
+
+            if (isLoot)
+            {
+                Debug.Log("[UpdatePossTargetsPunchListener] Loot available.");
+            } else
+            {
+                Debug.Log("[UpdatePossTargetsPunchListener] No loot available.");
+                var definition = new
+                {
+                    eventName = "PunchPositionsRequestMessage",
+                    target = punchTarget
+                };
+
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+            }
         }
 
     }

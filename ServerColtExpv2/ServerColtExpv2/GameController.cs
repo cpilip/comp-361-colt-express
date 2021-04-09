@@ -412,20 +412,25 @@ class GameController
         this.currentRound.getTopOfPlayedCards();
 
         //drop the loot at victim position, sends victim to destination 
-        loot.setPosition(victim.getPosition());
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
+        if (loot != null)
+        {
+            loot.setPosition(victim.getPosition());
+            //TO ALL PLAYERS
+            CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition());
+        }
 
         victim.setPosition(dest);
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest, getIndexByTrainCar(dest.getTrainCar()));
 
         //loot is removed from victime possessions
-        victim.possessions.Remove(loot);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
-        CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
-
+        if (loot != null)
+        {
+            victim.possessions.Remove(loot);
+            //TO ALL PLAYERS
+            CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
+            CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
+        }
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
         if (dest.hasMarshal(aMarshal))
         {
@@ -649,6 +654,9 @@ class GameController
                     {
                         bool shotgunIsATarget = (this.currentPlayer.getPosition().isInStageCoach(this.myStageCoach) && this.currentPlayer.getPosition().isInside() && this.aShotGun.getIsOnStageCoach() == false);
                         List<Player> atLocation = this.currentPlayer.getPosition().getPlayers();
+
+                        //Remove the player who requested the action themself, lol
+                        atLocation.Remove(this.currentPlayer);
                         
                         if (atLocation.Count == 0 && shotgunIsATarget == false)
                         {
@@ -1237,6 +1245,8 @@ class GameController
         possPos.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
 
         CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePunchPositions", possPos, indices);
+
+        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
     }
 
     public Boolean getEndOfGame()

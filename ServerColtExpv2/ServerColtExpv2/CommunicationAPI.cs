@@ -576,7 +576,7 @@ public class CommunicationAPI
             {
                 eventName = action,
                 targets = l,
-                shotgunCanBePunched = (bool)args[2]
+                shotgunCanBePunched = (bool)args[1]
             };
 
             if (cli == null)

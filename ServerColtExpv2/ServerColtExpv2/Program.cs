@@ -138,20 +138,52 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("PunchMessage"))
                 {
-                    bool isShotgun = o.SelectToken("isShotgun").ToObject<bool>();
-                    if (isShotgun)
+                    //Look for the shotgun property
+                    try
                     {
+                        bool isShotgun = o.SelectToken("isShotgun").ToObject<bool>();
                         aController.choseToPunchShootgun();
-                    } else
+                    }
+                    catch (Exception e)
                     {
+                        //No shotgun property
+
                         // Get character
                         Character ch = o.SelectToken("target").ToObject<Character>();
                         Player pl = aController.getPlayerByCharacter(ch);
+                        ItemType type;
+                        GameItem it;
+                        try
+                        {
+                            // Get item
+                            type = o.SelectToken("item").ToObject<ItemType>();
 
-                        // Get item
-                        ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                        GameItem it = aController.getItemfromTypePossession(type);
+                            if (type == ItemType.Whiskey)
+                            {
+                                WhiskeyKind wK = o.SelectToken("whiskeyKind").ToObject<WhiskeyKind>();
+                                WhiskeyStatus wS = o.SelectToken("whiskeyStatus").ToObject<WhiskeyStatus>();
 
+                                if (wK == WhiskeyKind.Unknown)
+                                {
+                                    it = pl.getAWhiskey();
+                                } else
+                                {
+                                    it = pl.getAWhiskey(wK);
+                                }
+
+                                
+                            } else
+                            {
+                                it = aController.getItemfromTypePossession(type);
+                            }
+
+                        }
+                        catch (Exception f)
+                        {
+                            //No item, but character was punched
+                            it = null;
+                        }
+                        
                         // Get position
                         int index = Int32.Parse(o.SelectToken("index").ToString());
                         Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
@@ -188,6 +220,15 @@ class MyTcpListener
                 else if (eventName.Equals("DrawMessage"))
                 {
                     aController.drawCards();
+                }
+                else if (eventName.Equals("PunchPositionsRequestMessage"))
+                {
+                    //Return possible positions for punch to current player
+                    Character ch = o.SelectToken("target").ToObject<Character>();
+                    Player pl = aController.getPlayerByCharacter(ch);
+
+                    aController.getPossiblePunchMoves(pl);
+
                 }
                 else if (eventName.Equals("WhiskeyMessage"))
                 {

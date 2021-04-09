@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UpdatePossTargetPunchListener : UIEventListenable
+public class UpdatePossTargetsPunchListener : UIEventListenable
 {
     public override void updateElement(string data)
     {
@@ -40,6 +40,6 @@ public class UpdatePossTargetPunchListener : UIEventListenable
 
         GameUIManager.gameUIManagerInstance.unlockSidebar();
 
-        Debug.Log("[UpdatePossTargetsListener] Targets are: " + availableTargets);
+        Debug.Log("[UpdatePossTargetsPunchListener] Targets are: " + availableTargets);
     }
 }
