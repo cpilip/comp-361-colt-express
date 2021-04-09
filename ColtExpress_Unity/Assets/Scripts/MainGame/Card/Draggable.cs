@@ -34,6 +34,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         // If not dropped on a Drop Zone, return the Draggable to the parent panel
         this.transform.SetParent(parentToReturnTo);
+        this.transform.SetSiblingIndex(originalIndex);
 
         // Re-enable raycasting 
         GetComponent<CanvasGroup>().blocksRaycasts = true;

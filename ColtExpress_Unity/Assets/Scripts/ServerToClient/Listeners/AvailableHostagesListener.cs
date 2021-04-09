@@ -23,6 +23,8 @@ public class AvailableHostagesListener : UIEventListenable
 
         string availableHostages = "";
 
+        GameUIManager.gameUIManagerInstance.clearHostages();
+
         foreach (HostageChar h in hostages)
         {
             GameUIManager.gameUIManagerInstance.getHostage(h).SetActive(true);

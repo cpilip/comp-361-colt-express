@@ -19,19 +19,25 @@ namespace GameUnitSpace {
     }
 
     class Player : GameUnit{
-       // [JsonProperty]
+       [JsonProperty]
         private readonly Character bandit;
-       // [JsonProperty]
+        [JsonIgnore]
         private bool waitingForInput;
-        //[JsonProperty]
+        [JsonIgnore]
         private bool getsAnotherAction;
-        //[JsonProperty]
+        [JsonIgnore]
         private int numOfBulletsShot;
+        [JsonIgnore]
         public List <Card> hand;
+        [JsonIgnore]
         public List <Card> discardPile;
+        [JsonIgnore]
         public List <BulletCard> bullets;
+        [JsonIgnore]
         public List<GameItem> possessions;
+        [JsonIgnore]
         private Hostage capturedHostage;
+        [JsonIgnore]
         private bool onAHorse;
 
         /// Constructor for the Player class, initializes a Player object.

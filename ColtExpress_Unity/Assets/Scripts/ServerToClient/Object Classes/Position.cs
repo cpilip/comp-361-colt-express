@@ -41,6 +41,12 @@ namespace PositionSpace
             return this.floor == Floor.Inside;
         }
 
+        //True if roof
+        public bool isRoof()
+        {
+            return this.floor == Floor.Roof;
+        }
+
         // Add a unit to the Position's GameUnit HashSet
         public void addUnit(GameUnit unit)
         {

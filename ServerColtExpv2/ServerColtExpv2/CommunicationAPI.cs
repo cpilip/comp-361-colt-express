@@ -96,10 +96,12 @@ public class CommunicationAPI
                     i_items = n.getInside().getUnits_Items(),
                     i_players = n.getInside().getUnits_Players(),
                     i_hasMarshal = n.getInside().hasMarshal(Marshal.getInstance()),
+                    i_hasShotgun = n.getInside().hasShotgun(Shotgun.getInstance()),
 
                     r_items = n.getRoof().getUnits_Items(),
                     r_players = n.getRoof().getUnits_Players(),
-                    r_hasMarshal = n.getRoof().hasMarshal(Marshal.getInstance())
+                    r_hasMarshal = n.getRoof().hasMarshal(Marshal.getInstance()),
+                    r_hasShotgun = n.getInside().hasShotgun(Shotgun.getInstance())
                 };
 
                 i++;
@@ -474,6 +476,32 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "moveGameUnit")
+        {
+            Position p = (Position)args[1];
+
+            var definition = new
+            {
+                eventName = action,
+                gameUnit = (GameUnit)args[0],
+                position = p,
+                isInStageCoach = (p.getTrainCar() is StageCoach) ? true : false,
+                trainCarIndex = (int)args[2]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+
         else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage")
         //"updateHasAnotherAction" will 
         {

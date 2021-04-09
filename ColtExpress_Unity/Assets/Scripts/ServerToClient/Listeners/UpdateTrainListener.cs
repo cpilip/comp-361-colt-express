@@ -23,10 +23,12 @@ public class UpdateTrainListener : UIEventListenable
                     indexofCar = int,
                     i_items = item types (interior),
                     i_hasMarshal = true if yes,
+                    i_hasShotgun = 
                     i_players = characters (interior),
                     r_items = item types (roof),
                     r_players = n.getRoof().getUnits_players(),
                     r_hasMarshal = true if yes
+                    i_hasShotgun =
                 };
         */
 
@@ -44,6 +46,7 @@ public class UpdateTrainListener : UIEventListenable
         List<ItemType> r_I = o.SelectToken("r_items").ToObject<List<ItemType>>();
 
         bool r_m = o.SelectToken("r_hasMarshal").ToObject<bool>();
+        bool r_s = o.SelectToken("r_hasShotgun").ToObject<bool>();
 
         //Roof initialization
         foreach (Character c in r_P)
@@ -78,10 +81,18 @@ public class UpdateTrainListener : UIEventListenable
             character.transform.localScale = scale;
         }
 
+        if (r_s)
+        {
+            GameObject character = GameUIManager.gameUIManagerInstance.getCharacterObject(GameUnitSpace.Character.Shotgun);
+            character.transform.SetParent(trainCarRoof.transform);
+            character.transform.localScale = scale;
+        }
+
         r_P = o.SelectToken("i_players").ToObject<List<Character>>();
         r_I = o.SelectToken("i_items").ToObject<List<ItemType>>();
         
         r_m = o.SelectToken("i_hasMarshal").ToObject<bool>();
+        r_s = o.SelectToken("i_hasShotgun").ToObject<bool>();
 
         //Interior initialization
         foreach (Character c in r_P)
@@ -112,6 +123,13 @@ public class UpdateTrainListener : UIEventListenable
         if (r_m)
         {
             GameObject character = GameUIManager.gameUIManagerInstance.createCharacterObject(GameUnitSpace.Character.Marshal);
+            character.transform.SetParent(trainCarInterior.transform);
+            character.transform.localScale = scale;
+        }
+
+        if (r_s)
+        {
+            GameObject character = GameUIManager.gameUIManagerInstance.getCharacterObject(GameUnitSpace.Character.Shotgun);
             character.transform.SetParent(trainCarInterior.transform);
             character.transform.localScale = scale;
         }

@@ -17,12 +17,13 @@ namespace GameUnitSpace
         Cheyenne,
         Belle,
         Django,
-        Marshal
+        Marshal,
+        Shotgun
     }
 
     class Player : GameUnit
     {
-        //[JsonProperty]
+        [JsonProperty]
         private readonly Character bandit;
         //[JsonProperty]
         private bool waitingForInput;

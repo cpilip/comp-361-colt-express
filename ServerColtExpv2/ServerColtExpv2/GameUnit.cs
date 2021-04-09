@@ -6,8 +6,8 @@ namespace GameUnitSpace
 {
     abstract class GameUnit
     {
-        
-        //[JsonProperty]
+
+        [JsonIgnore]
         private Position aPosition;
         public void setPosition(Position pPosition){
             if (this.aPosition != null)

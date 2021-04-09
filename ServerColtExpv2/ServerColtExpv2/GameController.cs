@@ -291,7 +291,7 @@ class GameController
     {
         playerPtrForStarting.setPosition(p);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", playerPtrForStarting, p);
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", playerPtrForStarting, p, getIndexByTrainCar(p.getTrainCar()));
         p.getTrainCar().setHasAHorse(true);
         playerPtrForStarting.setWaitingForInput(false);
 
@@ -317,7 +317,7 @@ class GameController
         {
             this.aMarshal.setPosition(p);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", this.aMarshal, p);
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", this.aMarshal, p, getIndexByTrainCar(p.getTrainCar()));
 
             //check for all players at position p 
             foreach (Player aPlayer in p.getPlayers())
@@ -327,7 +327,7 @@ class GameController
                 p.getTrainCar().moveRoofCar(aPlayer);
 
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar())); 
             }
             currentPlayer.setWaitingForInput(false);
             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
@@ -338,7 +338,7 @@ class GameController
         {
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, getIndexByTrainCar(p.getTrainCar()));
 
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
@@ -347,7 +347,7 @@ class GameController
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
             }
             //TODO Same with Shotgun 
 
@@ -365,7 +365,7 @@ class GameController
             currentPlayer.setOnAHorse(false);
 
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p);
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, getIndexByTrainCar(p.getTrainCar()));
 
             if (p.hasMarshal(aMarshal))
             {
@@ -373,7 +373,7 @@ class GameController
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof());
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
                 CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
             }
@@ -383,6 +383,8 @@ class GameController
             {
                 if (availableHostages.Count() != 0)
                 {
+
+                    CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                 }
             }
@@ -406,7 +408,7 @@ class GameController
 
         victim.setPosition(dest);
         //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest);
+        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest, getIndexByTrainCar(dest.getTrainCar()));
 
         //loot is removed from victime possessions
         victim.possessions.Remove(loot);
@@ -421,7 +423,7 @@ class GameController
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof());
+            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof(), getIndexByTrainCar(dest.getTrainCar()));
         }
         currentPlayer.setWaitingForInput(false);
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
@@ -514,7 +516,7 @@ class GameController
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
                             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                             this.endOfCards();
@@ -524,7 +526,7 @@ class GameController
                         {
                             this.currentPlayer.getPosition().getTrainCar().moveInsideCar(this.currentPlayer);
                             //TO ALL PLAYERS
-                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside());
+                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getInside(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
                             //If the player ends up in a car with the Marshal, he takes a bullet
                             if (this.currentPlayer.getPosition().hasMarshal(this.aMarshal))
@@ -532,7 +534,7 @@ class GameController
                                 this.currentPlayer.addToDiscardPile(new BulletCard(null, -1));
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                                 //TO ALL PLAYERS
-                                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof());
+                                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
                                 CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 this.endOfCards();
@@ -547,7 +549,8 @@ class GameController
                                 {
                                     this.aGameStatus = GameStatus.FinalizingCard;
                                     this.currentPlayer.setWaitingForInput(true);
-                                    //TODO new massage 
+                                    //TODO new massage
+                                    CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                                 }
                             }
@@ -740,6 +743,8 @@ class GameController
         {
             Card c = this.currentRound.seeTopOfPlayedCards();
             CommunicationAPI.sendMessageToClient(null, "highlightTopCard");
+
+            Thread.Sleep(3000);
         }
         catch (Exception e)
         {
@@ -1269,6 +1274,11 @@ class GameController
     {
         List<Card> al = this.currentPlayer.hand;
         return (ActionCard)al[index];
+    }
+
+    public int getIndexByTrainCar(TrainCar trainCar)
+    {
+        return myTrain.IndexOf(trainCar);
     }
 
     //C# does a remainder, not a true modulo

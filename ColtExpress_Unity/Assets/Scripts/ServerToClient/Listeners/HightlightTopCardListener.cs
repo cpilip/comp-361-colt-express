@@ -46,6 +46,12 @@ public class HightlightTopCardListener : UIEventListenable
 
         GameObject topCard = playedCards.transform.GetChild(playedCards.transform.childCount - 1).gameObject;
 
+        if (topCard.GetComponent<CardID>().isHidden)
+        {
+            GameUIManager.gameUIManagerInstance.flipCardObject(topCard.GetComponent<CardID>().c, topCard.GetComponent<CardID>().kind, topCard);
+            topCard.GetComponent<CardID>().isHidden = false;
+        }
+
         topCard.GetComponent<UIShiny>().enabled = true;
 
         Debug.Log("[HighlightTopCardListener] Highlighted top card.");

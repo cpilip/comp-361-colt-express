@@ -5,6 +5,7 @@ using PositionSpace;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,9 @@ public class GameUIManager : MonoBehaviour
     public GameObject playedCards;
     public GameObject discardPile;
     public GameObject hostagesList;
+
+    public GameObject shotgun;
+    public GameObject stagecoach;
 
     //Menus
     public GameObject turnMenu;
@@ -71,6 +75,16 @@ public class GameUIManager : MonoBehaviour
         GameObject retrievedHostageObject = null;
         hostageMap.TryGetValue(h, out retrievedHostageObject);
         return retrievedHostageObject;
+    }
+
+    public void clearHostages()
+    {
+        List<GameObject> flattenList = hostageMap.Values.ToList();
+
+        foreach (GameObject t in flattenList)
+        {
+            t.SetActive(false);
+        }
     }
 
     //Get corresponding in-game character object to a character
@@ -198,6 +212,25 @@ public class GameUIManager : MonoBehaviour
 
     }
 
+    public GameObject getStageCoach()
+    {
+        return stagecoach;
+    }
+
+    //Get a train car's position - true for its roof, false for its interior
+    public GameObject getStagecoachPosition(bool isRoof)
+    {
+        if (isRoof)
+        {
+            return stagecoach.transform.GetChild(3).gameObject;
+        }
+        else
+        {
+            return stagecoach.transform.GetChild(1).gameObject;
+        }
+
+    }
+
     //Create a new in-game Action card object - true for in the deck, or false for the discard pile
     public GameObject createCardObject(Character c, ActionKind k, bool inDeck)
     {
@@ -230,6 +263,8 @@ public class GameUIManager : MonoBehaviour
         }
 
         newCard.GetComponent<Image>().sprite = newCardSprite;
+        newCard.GetComponent<CardID>().kind = k;
+        newCard.GetComponent<CardID>().c = c;
 
         //Making sure to parent the card under the hand/deck or playedCards and fixing the scale
         if (inDeck)
@@ -244,6 +279,37 @@ public class GameUIManager : MonoBehaviour
         newCard.SetActive(false);
 
         return newCard;
+    }
+
+    public void flipCardObject(Character c, ActionKind k, GameObject card)
+    {
+        Sprite cardSprite = null;
+
+        switch (k)
+        {
+            case ActionKind.Move:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_move", out cardSprite);
+                break;
+            case ActionKind.Shoot:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_shoot", out cardSprite);
+                break;
+            case ActionKind.Rob:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_rob", out cardSprite);
+                break;
+            case ActionKind.Marshal:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_marshal", out cardSprite);
+                break;
+            case ActionKind.Punch:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_punch", out cardSprite);
+                break;
+            case ActionKind.ChangeFloor:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_floor", out cardSprite);
+                break;
+            default:
+                break;
+        }
+
+        card.GetComponent<Image>().sprite = cardSprite;
     }
 
     //Create a new in-game bullet card object - true for in the deck, or false for the discard pile
@@ -416,6 +482,8 @@ public class GameUIManager : MonoBehaviour
             hostageMap.Add(hostage, h.gameObject);
             h.gameObject.SetActive(false);
         }
+
+        characters.Add(Character.Shotgun, shotgun);
     }
 
     void Awake()

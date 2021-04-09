@@ -43,7 +43,8 @@ public class UpdateTopCardListener : UIEventListenable
         //If topcard was played during a tunnel turn
         if (GameUIManager.gameUIManagerInstance.isTunnelTurn)
         {
-            topCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/hiddenCard"); ;
+            topCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/hiddenCard");
+            topCard.GetComponent<CardID>().isHidden = true;
         }
 
         //If most recent added card brought the total > 7, set the first visible back card invisible
