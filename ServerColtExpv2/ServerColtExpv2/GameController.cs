@@ -624,13 +624,13 @@ class GameController
 
                         List<GameItem> atLocation = this.currentPlayer.getPosition().getItems();
 
-                        if (atLocation.Count == 1)
+                        if (atLocation.Count == 0)
                         {
                             //Empty
                             this.currentRound.getTopOfPlayedCards();
                             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                             this.endOfCards();
-                        } else
+                        } else if ()
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             this.currentPlayer.setWaitingForInput(true);
@@ -845,10 +845,13 @@ class GameController
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
-                    //setting the next player and game status of the game 
-                    this.currentPlayer = this.players[this.rounds.IndexOf(currentRound)];
+                    //setting the next First player and game status of the game
+                    this.firstPlayerIndex = (this.firstPlayerIndex == totalPlayer - 1) ? 0 : firstPlayerIndex++;
+                    this.currentPlayer = this.players[firstPlayerIndex];
                     this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
                     //TO ALL PLAYERS
+
+                    CommunicationAPI.sendMessageToClient(null, "updateFirstPlayer", this.currentPlayer.getBandit());
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
 
                     this.aGameStatus = GameStatus.Schemin;
@@ -876,7 +879,7 @@ class GameController
                         }
                         //TODO NEED TO SEE WITH CRISTINA
                         //TO SPECIFIC PLAYER
-                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", p.getBandit(), cardsToAdd);
 
                     }
 
