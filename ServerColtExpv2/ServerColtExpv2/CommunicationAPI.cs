@@ -83,7 +83,8 @@ public class CommunicationAPI
                     MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
                 }
             }
-        } else if (action == "updatePlayers")
+        } 
+        else if (action == "updatePlayers")
         {
             //On one client: "updatePlayers" triggers creation of player profiles for every player in the list provided;
             //if the current player in the list is the player of the client, initialize their hand, discard pile, and remaining bullets additionally
@@ -139,7 +140,8 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-        } else if (action == "updateGameStatus")
+        } 
+        else if (action == "updateGameStatus")
         {
             //One one client: "updateGameStatus" triggers either the Schemin or Stealin' phase
             var definition = new
@@ -206,7 +208,8 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
 
-        } else if (action == "updateWaitingForInput")
+        } 
+        else if (action == "updateWaitingForInput")
         //"updateWaitingForInput" unlocks the UI for the current player
         //If the game status is Schemin', the turn menu is unlocked - expect the player to be able to play a card or draw cards
         //If the game status is Stealin', the board is unlocked
@@ -254,7 +257,8 @@ public class CommunicationAPI
                 //Serialize parameters as a array with first element being the action
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
-        } else if (action == "updateHorseAttack") 
+        } 
+        else if (action == "updateHorseAttack") 
         {
             // "horseAttackUpdate" gives an update of the position of
             // all the players during the horse attack using a list of HorseAttack objects
@@ -276,8 +280,30 @@ public class CommunicationAPI
                     MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
                 }
             }
+        }
+        else if (action == "updateMovePosition"){
             
         }
+
+        
+        
+        //message to do:
+        // - updateMovePositions
+        // - moveGameUnit
+        // - updatePossTarget
+        // - updateLootAtLocation
+        // - updatePossTargetPunch
+        // - updateTopCard
+        // - availableHostages
+        // - updateSelectHostage
+        // - updateHostageName
+
+        // - (updateRidePositions) ???
+        // - (highlightTopCard) ???
+        // - (actionCantBePlayed) ???
+        // - (specialAbilityDisabled) ???
+        // - (drinkWhiskey) ???
+
 
         List<System.Object> objectsToSerialize = new List<System.Object>();
         objectsToSerialize.Add(action);
