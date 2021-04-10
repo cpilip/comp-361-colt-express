@@ -211,7 +211,8 @@ class GameController
         endOfTurn();
     }
 
-    public void useWhiskey(WhiskeyKind? aKind){
+    public void useWhiskey(WhiskeyKind? aKind)
+    {
         if (aKind == null)
         {
             endOfTurn();
@@ -252,8 +253,6 @@ class GameController
                 currentPlayer.removeWhiskey(aW);
                 CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", currentPlayer.getBandit(), aKind);
             }
-
-            currentPlayer.setUsedOldWhiskey(true);
 
             currentPlayer.setGetsAnotherAction(true);
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
@@ -398,12 +397,9 @@ class GameController
                 BulletCard b = new BulletCard(null, -1);
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof(), myTrain.IndexOf(p.getTrainCar()));
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
             }
 
-                //TO ALL PLAYERS
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar())); 
-            }
             currentPlayer.setWaitingForInput(false);
             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
             this.endOfCards();
@@ -669,7 +665,7 @@ class GameController
         //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
         if (p.hasShotgun(aShotGun))
         {
-            BulletCard b = new BulletCard(-1);
+            BulletCard b = new BulletCard(null, -1);
             currentPlayer.addToDiscardPile(b);
 
             //if the shotgun is on the last cabosse, player sent to adjacent car
@@ -1182,7 +1178,7 @@ class GameController
                     this.aGameStatus = GameStatus.Schemin;
                     //TO ALL PLAYERS
                     CommunicationAPI.sendMessageToClient(null, "updateGameStatus", this.aGameStatus);
-                checkLadyPool();
+                    checkLadyPool();
 
                     this.currentPlayer.setWaitingForInput(true);
                     //TO SPECIFIC PLAYER
@@ -1204,41 +1200,39 @@ class GameController
                             cardsToAdd.Add(aCard);
                             p.discardPile.Remove(aCard);
                         }
-    
-                    if (p.getBandit().Equals(Character.Doc) && p.getHasSpecialAbility())
-                    {
-                        int rand = rnd.Next(0, p.discardPile.Count);
-                        Card aCard = p.discardPile[rand];
-                        p.hand.Add(aCard);
-                        cardsToAdd.Add(aCard);
-                        p.discardPile.Remove(aCard);
-                    }
 
-                    CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
-                    }
+                        if (p.getBandit().Equals(Character.Doc) && p.getHasSpecialAbility())
+                        {
+                            int rand = rnd.Next(0, p.discardPile.Count);
+                            Card aCard = p.discardPile[rand];
+                            p.hand.Add(aCard);
+                            cardsToAdd.Add(aCard);
+                            p.discardPile.Remove(aCard);
+                        }
 
-                    
+                        CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(p), "updatePlayerHand", currentPlayer.getBandit(), cardsToAdd);
+                    }
 
                     //Stagecoach moves by one car to the back, if not at the last one of the train.
                     TrainCar curAdjacent = myStageCoach.getAdjacentCar();
 
-                if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
-                {
-                    TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
-                    myStageCoach.setAdjacentCar(newAdjacent);
-                    CommunicationAPI.sendMessageToClient(null, "moveStageCoach", newAdjacent);
-
-                    //if Shotgun is not on the stage coach, it also moves by one car to the back
-                    if (!aShotGun.getIsOnStageCoach())
+                    if (!curAdjacent.Equals(myTrain[myTrain.Count() - 1]))
                     {
-                        aShotGun.setPosition(newAdjacent.getRoof());
-                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, newAdjacent.getRoof(), myTrain.IndexOf(newAdjacent));
-                    }
+                        TrainCar newAdjacent = myTrain[myTrain.IndexOf(curAdjacent) - 1];
+                        myStageCoach.setAdjacentCar(newAdjacent);
+                        CommunicationAPI.sendMessageToClient(null, "moveStageCoach", newAdjacent);
 
+                        //if Shotgun is not on the stage coach, it also moves by one car to the back
+                        if (!aShotGun.getIsOnStageCoach())
+                        {
+                            aShotGun.setPosition(newAdjacent.getRoof());
+                            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, newAdjacent.getRoof(), myTrain.IndexOf(newAdjacent));
+                        }
+
+                    }
                 }
             }
         }
-
     }
 
     private void calculateGameScore()
@@ -1264,7 +1258,7 @@ class GameController
         EndOfRoundEvent ev = this.currentRound.getEvent();
         // Take care of Train station event
         switch (this.currentRound.getEvent()) {
-            case MarshalsRevenge: {
+            case EndOfRoundEvent.MarshalsRevenge: {
                 // Each bandit on the roof of the Marshal's car looses his least valuable purse
                 foreach (Player b in this.aMarshal.getPosition().getPlayers()) {
                     scores[b] =scores[b] - b.getLeastPurseValue();
@@ -1272,7 +1266,7 @@ class GameController
 
                 break;
             }
-            case Pickpocketing: {
+            case EndOfRoundEvent.Pickpocketing: {
                 // Each bandit that is alone takes a purse if available on his spot
                 foreach (Player b in this.players) {
                     if (b.getPosition().getPlayers().Count == 1) {
@@ -1281,19 +1275,19 @@ class GameController
                 }
                 break;
             }
-            case HostageConductor: {
+            case EndOfRoundEvent.HostageConductor: {
                 // +250 to all on locomotive
                 break;
             }
-            case SharingTheLoot: {
+            case EndOfRoundEvent.SharingTheLoot: {
                 // bandits who own a strongbox and are not alone share the value of it with neighbours
                 break;
             }
-            case Escape: {
+            case EndOfRoundEvent.Escape: {
                 // Every bandit who is in train loses
                 break;
             }
-            case MortalBullet: {
+            case EndOfRoundEvent.MortalBullet: {
                 // Players loose 150 per bullet received during this round
                 break;
             }   
@@ -1435,7 +1429,7 @@ class GameController
     private void intializeRounds()
     {
         // Variables to get random round layouts
-        List<int> usedRounds = new List<>();
+        List<int> usedRounds = new List<int>();
         Random r = new Random();
         int rand;
 
@@ -1701,7 +1695,7 @@ class GameController
         {
             if (p.getHostage().getHostageChar().Equals(HostageChar.LadyPoodle))
             {
-                p.addToDiscardPile(new BulletCard(-1));
+                p.addToDiscardPile(new BulletCard(null, -1));
                 break;
             }
         }

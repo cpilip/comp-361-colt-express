@@ -24,6 +24,9 @@ namespace RoundSpace {
         SharingTheLoot,
         Escape, 
         MortalBullet,
+
+        //NULL
+        Null
         
     }
 
@@ -55,7 +58,8 @@ namespace RoundSpace {
             return this.playedCards;
         }
 
-        public EndOfRoundEvent getEvent(EndOfRoundEvent e){
+        public EndOfRoundEvent getEvent(){
+            
             return this.anEvent;
         }
 
@@ -163,8 +167,8 @@ namespace RoundSpace {
                     case 4 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.SpeedingUp));
-                        this.anEvent = null;
-                        return 4;
+                        this.anEvent = EndOfRoundEvent.Null;
+                            return 4;
                     }
                     case 5 :{
                         this.turns.Add(new Turn (TurnType.Standard));
@@ -200,7 +204,7 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Turmoil));
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
-                        this.anEvent = null;
+                        this.anEvent = EndOfRoundEvent.Null;
                         return 9;
                     }
                     case 10 :{
@@ -317,13 +321,13 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
-                        this.anEvent = null;
-                        return 11;
+                        this.anEvent = EndOfRoundEvent.Null;
+                            return 11;
                     }
                 }
 
             }
-
+            return -1;
         }
 
         public Boolean getIsLastRound(){
