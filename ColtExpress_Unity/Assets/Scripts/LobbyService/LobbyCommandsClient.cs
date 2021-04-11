@@ -11,7 +11,7 @@ public class LobbyCommandsClient
 {
     // default local host : 127.0.0.1:4242
     // Azure server IP : 13.68.140.249
-    public const string connectionIP = "168.61.46.213:443"; // IP of Azure server
+    public const string connectionIP = "52.152.132.200:443"; // IP of Azure server
 
     private string response;
 
