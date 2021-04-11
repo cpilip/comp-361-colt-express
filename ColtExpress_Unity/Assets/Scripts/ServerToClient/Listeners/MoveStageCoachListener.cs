@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveStageCoachListener : UIEventListenable
 {
-    private int atIndex = 0;
+    public static int atIndex = 0;
 
     public override void updateElement(string data)
     {

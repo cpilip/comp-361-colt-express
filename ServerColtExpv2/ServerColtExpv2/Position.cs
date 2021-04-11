@@ -99,6 +99,8 @@ namespace PositionSpace
             List<ItemType> l = new List<ItemType>();
             this.units.OfType<GameItem>().ToList()
                 .ForEach(i => l.Add(i.getType()));
+            this.units.OfType<Whiskey>().ToList()
+                .ForEach(i => l.Add(i.getType()));
             return l;
         }
 

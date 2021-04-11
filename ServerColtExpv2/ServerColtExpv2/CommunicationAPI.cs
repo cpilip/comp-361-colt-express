@@ -199,7 +199,8 @@ public class CommunicationAPI
             {
                 eventName = action,
                 isLastRound = r.getIsLastRound(),
-                turns = l
+                turns = l,
+                roundEvent = r.getEvent()
             };
             if (cli == null)
             {
@@ -280,6 +281,7 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         } 
+        
         else if (action == "updateHorseAttack") 
         {
             // "horseAttackUpdate" gives an update of the position of
@@ -645,6 +647,29 @@ public class CommunicationAPI
                 positions = (List<Position>)args[0],
                 indices = (List<int>)args[1]
             };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
+        else if (action == "updateRidePositions")
+        {
+             var definition = new
+            {
+                eventName = action,
+                positions = (List<Position>)args[0],
+                indices = (List<int>)args[1],
+                player = (Character)args[2],
+                playerAtIndex = (int)args[3]
+             };
 
             if (cli == null)
             {

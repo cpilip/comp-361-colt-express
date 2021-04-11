@@ -30,8 +30,21 @@ public class UpdateHorseAttackListener : UIEventListenable
 
             if (p.hasStopped() == false)
             {
-                //If the horse has stopped, parent the character under the train car interior
+                //If the horse has stopped, parent the character under the train car interior and set the horse to the same pos
                 charObject.transform.parent = GameUIManager.gameUIManagerInstance.getTrainCarPosition(pos, false).transform;
+
+                //Get the horse and add it to the next horse set
+                GameObject horse = GameUIManager.gameUIManagerInstance.getHorseByCharacter(p.GetCharacter());
+
+                GameObject horseOriginalSet = horse.transform.parent.gameObject;
+
+                horse.transform.parent = GameUIManager.gameUIManagerInstance.getHorseSet(pos).transform;
+
+                //Adjust spacing of old and new horseset
+                GameUIManager.gameUIManagerInstance.adjustHorseSpacing(horseOriginalSet);
+                GameUIManager.gameUIManagerInstance.adjustHorseSpacing(horse.transform.parent.gameObject);
+                //Make sure the horse is at the top
+                horse.transform.SetAsFirstSibling();
             } 
             else
             {

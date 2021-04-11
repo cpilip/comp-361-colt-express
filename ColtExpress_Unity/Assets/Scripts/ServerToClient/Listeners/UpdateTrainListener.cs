@@ -102,6 +102,18 @@ public class UpdateTrainListener : UIEventListenable
                     trainCarRoofLoot.transform.GetChild(4).gameObject.SetActive(true);
                 }
             }
+            if (m == ItemType.Whiskey)
+            {
+                value = trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarRoofLoot.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
         }
 
         if (r_m)
@@ -167,6 +179,18 @@ public class UpdateTrainListener : UIEventListenable
                 if (num > 0)
                 {
                     trainCarInteriorLoot.transform.GetChild(4).gameObject.SetActive(true);
+                }
+            }
+            if (m == ItemType.Whiskey)
+            {
+                value = trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                num = Int32.Parse(value.Substring(1));
+                num++;
+                trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+
+                if (num > 0)
+                {
+                    trainCarRoofLoot.transform.GetChild(0).gameObject.SetActive(true);
                 }
             }
         }

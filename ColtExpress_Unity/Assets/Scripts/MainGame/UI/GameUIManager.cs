@@ -567,6 +567,9 @@ public class GameUIManager : MonoBehaviour
             case ActionKind.ChangeFloor:
                 loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_floor", out newCardSprite);
                 break;
+            case ActionKind.Ride:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_ride", out newCardSprite);
+                break;
             default:
                 break;
         }
@@ -614,6 +617,9 @@ public class GameUIManager : MonoBehaviour
             case ActionKind.ChangeFloor:
                 loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_floor", out cardSprite);
                 break;
+            case ActionKind.Ride:
+                loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_ride", out cardSprite);
+                break;
             default:
                 break;
         }
@@ -622,18 +628,26 @@ public class GameUIManager : MonoBehaviour
     }
 
     //Create a new in-game bullet card object - true for in the deck, or false for the discard pile
-    public GameObject createCardObject(Character c, int num, bool inDeck)
+    public GameObject createCardObject(Character? c, int num, bool inDeck)
     {
         GameObject newCard = null;
         Sprite newCardSprite = null;
         newCard = Instantiate(bulletCardPrefab);
 
-        //Grab the corresponding bullet card sprite
-        loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_" + num, out newCardSprite);
+        if (c == null)
+        {
+
+            loadedSprites.TryGetValue("neutral_bullet", out newCardSprite);
+        } else
+        {
+            //Grab the corresponding bullet card sprite
+            loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_" + num, out newCardSprite);
+
+
+        }
 
         newCard.GetComponent<Image>().sprite = newCardSprite;
         newCard.GetComponent<CardID>().isBulletCard = true;
-
         //Making sure to parent the card under the hand/deck or discard pile, updating the client collection of cards in the hand/deck or discard pile, and fixing the scale
         if (inDeck)
         {

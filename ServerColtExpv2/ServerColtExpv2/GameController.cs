@@ -982,13 +982,18 @@ class GameController
 
                             //geting all possible move when player is on a horse
                             List<Position> moves = getPossibleMoves(this.currentPlayer);
+                            List<int> indices = new List<int>();
+
+                            moves.ForEach(m => indices.Add(getIndexByTrainCar(m.getTrainCar())));
+
 
                             this.aGameStatus = GameStatus.FinalizingCard;
-                            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
+
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves, indices, this.currentPlayer.getBandit(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
+
                             this.currentPlayer.setWaitingForInput(true);
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves);
 
                             //setting the on a horse action to false.
                             currentPlayer.getPosition().getTrainCar().setHasAHorse(false);
@@ -1040,6 +1045,9 @@ class GameController
 
                 p.setPosition(this.myTrain[pos].getInside());
                 p.setOnAHorse(false);
+
+
+                this.myTrain[pos].setHasAHorse(true);
             }
 
             // Update the train for all the players

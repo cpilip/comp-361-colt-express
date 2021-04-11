@@ -46,8 +46,16 @@ public class UpdatePlayerHandListener : UIEventListenable
                     //Call the appropriate card object function
                     if (card.GetType() == typeof(BulletCard))
                     {
-                        //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
-                        GameUIManager.gameUIManagerInstance.createCardObject(player, ((BulletCard)card).getNumBullets(), true);
+                        if (card.belongsTo() == null)
+                        {
+                            GameUIManager.gameUIManagerInstance.createCardObject(null, ((BulletCard)card).getNumBullets(), true);
+                        } 
+                        else
+                        {
+
+                            GameUIManager.gameUIManagerInstance.createCardObject(card.belongsTo().getBandit(), ((BulletCard)card).getNumBullets(), true);
+                        }
+
                     }
                     else
                     {
