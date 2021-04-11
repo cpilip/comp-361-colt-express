@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &843320209900950582
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4798057953339303289, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5849413908775895403, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_text
+      value: Players play their cards face down and reveal them all at the same time
+        - chaos!
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318609, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_Name
+      value: Turmoil
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318612, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1582266532144497419, guid: fb0ec286e2aa6164581f23940d3eb718,
+        type: 3}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7183234902964318614, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8638492337083604375, guid: 6d8d33312bbcf834094aac926911407d,
+        type: 3}
+      propertyPath: m_text
+      value: Turmoil Turn
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6d8d33312bbcf834094aac926911407d, type: 3}

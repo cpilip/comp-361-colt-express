@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class MoveStageCoachListener : UIEventListenable
 {
-    private bool atLocomotive = true;
+    private int atIndex = 0;
 
     public override void updateElement(string data)
     {
-        if (atLocomotive)
+        
+        if (atIndex < GameUIManager.gameUIManagerInstance.getNumTrainCars())
         {
-            this.transform.position = new Vector3(this.transform.position.x + (-150), this.transform.position.y, this.transform.position.z);
-            atLocomotive = false;
-        }
-        else
-        {
-            this.transform.position = new Vector3(this.transform.position.x + (-127), this.transform.position.y, this.transform.position.z);
+            GameObject adjacentCar = GameUIManager.gameUIManagerInstance.getTrainCar(atIndex);
+            Vector3 coordinates = new Vector3(adjacentCar.transform.position.x, this.transform.position.y, this.transform.position.z);
 
+            this.transform.position = coordinates;
+
+            atIndex++;
         }
+        
     }
 }

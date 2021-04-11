@@ -500,6 +500,11 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public int getNumTrainCars()
+    {
+        return trainCars.Values.Count;
+    }
+
     //Get a train car's position - true for its roof, false for its interior
     public GameObject getTrainCarPosition(int index, bool isRoof)
     {

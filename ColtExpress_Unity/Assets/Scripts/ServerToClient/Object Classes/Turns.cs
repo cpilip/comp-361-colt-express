@@ -3,13 +3,15 @@ using Newtonsoft.Json;
 
 namespace RoundSpace {
 
-    enum TurnType {
+    enum TurnType
+    {
         Standard,
         Tunnel,
         SpeedingUp,
-        Switching
+        Switching,
+        Turmoil
     }
-    
+
     class Turn{
         [JsonProperty]
         private readonly TurnType type;
