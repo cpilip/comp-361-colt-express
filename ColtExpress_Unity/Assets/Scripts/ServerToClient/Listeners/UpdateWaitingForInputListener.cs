@@ -38,7 +38,8 @@ public class UpdateWaitingForInputListener : UIEventListenable
                     Debug.Log("[UpdateWaitingForInputListener] SCHEMIN, FALSE: Turn menu hidden for player and hand locked for " + player + ".");
                 }
 
-            } else
+            } else if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.Stealin)
+            //If STEALIN, unlock the board
             {
                 if (waitingForInput)
                 {
@@ -49,9 +50,23 @@ public class UpdateWaitingForInputListener : UIEventListenable
                 else
                 {
                     GameUIManager.gameUIManagerInstance.lockBoard();
-                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, TRUE: Board unlocked.");
+                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, FALSE: Board locked.");
+                }
+            } else if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.HorseAttack)
+            {
+                if (waitingForInput)
+                {
+
+                    GameUIManager.gameUIManagerInstance.toggleHorseAttackMenu(true);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, TRUE: Menu unlocked.");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.toggleHorseAttackMenu(false);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, FALSE: Menu locked.");
                 }
             }
+            //If HORSE ATTACK, display horse attack menu
         }
         
     }

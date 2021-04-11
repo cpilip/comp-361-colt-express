@@ -45,6 +45,8 @@ class GameController
     private Boolean endHorseAttack;
     private List<AttackPosition> attPos;
     private int horseAttackCounter;
+    private int horseAttackPlayerCounter;
+    private int horseAttackPlayersRemaining;
 
     private GameController()
     {
@@ -117,10 +119,9 @@ class GameController
             this.currentPlayer = players[0];
 
             //TO ALL PLAYERS
-            //Send the current player to all clients and value for waiting for input for that player
+            //Send the current player to all clients 
             CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
-
+            
             //for each player, getting 6 cards from their Pile at randomn and adding them to their hand 
             foreach (Player p in this.players)
             {
@@ -156,6 +157,9 @@ class GameController
             {
                 attPos.Add(new AttackPosition(this.players[i].getBandit(), this.totalPlayer));
             }
+
+            CommunicationAPI.sendMessageToClient(null, "updateHorses", attPos, players);
+            this.horseAttackPlayersRemaining = players.Count;
 
             //intializing the first player 
             this.currentPlayer = players[0];
@@ -202,7 +206,7 @@ class GameController
         {
             this.currentRound.addToPlayedCards(c);
             //TODO see with Christina
-            CommunicationAPI.sendMessageToClient(null, "updateTopCard",c.belongsTo(), c);
+            CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind());
             this.currentPlayer.hand.Remove(c);
         }
         currentPlayer.setWaitingForInput(false);
@@ -960,16 +964,18 @@ class GameController
 
     public void chosenHorseAttackAction(string haAction)
     {
+        //For tracking if all players in one round of the attack have gone
+        horseAttackPlayerCounter++;
 
         // Update Horse Attack position object for current player
         AttackPosition hap = this.getHAFromCharacter(this.currentPlayer.getBandit());
         if (haAction.Equals("ride"))
         {
             // Increment position of horse and update all players
-            if (!hap.incrementPosition())
+            if (!hap.incrementPosition()) //If at end, set to false (then is true and increment)
             {
                 this.horseAttackCounter++;
-            }
+            } 
         }
         else if (haAction.Equals("enter"))
         {
@@ -978,6 +984,7 @@ class GameController
             this.horseAttackCounter++;
         }
 
+       
         // Check if all players have chosen a position where to stop
         if (this.horseAttackCounter == this.totalPlayer)
         {
@@ -988,11 +995,18 @@ class GameController
             foreach (Player p in this.players)
             {
                 AttackPosition ap = this.getHAFromCharacter(p.getBandit());
-                p.setPosition(this.myTrain[ap.getPosition()].getInside());
+
+                //Calculate correct train car - horse positions are reversed?
+                int pos = (ap.getPosition() == 0) ? attPos.Count : attPos.Count - ap.getPosition();
+
+                p.setPosition(this.myTrain[pos].getInside());
             }
 
             // Update the train for all the players
-            CommunicationAPI.sendMessageToClient(null, "updateTrain", myTrain);
+            CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+
+            aGameStatus = GameStatus.Schemin;
+            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", aGameStatus);
 
             // Set currentPlayer back to 0 and start the game
             // Set current player as next player
@@ -1001,23 +1015,43 @@ class GameController
             //Send the current player as index and value for waiting for input for that index/player
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
-            aGameStatus = GameStatus.Schemin;
-            CommunicationAPI.sendMessageToClient(null, "updateGameStatus", aGameStatus);
 
         }
-        else
+        else 
         {
-            // Update all the players
-            CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+            
+            if (horseAttackPlayerCounter == horseAttackPlayersRemaining)
+            {
+                // Update all the players
+                //Those who have entered and those who haven't
+                CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+                horseAttackPlayerCounter = 0;
+                horseAttackPlayersRemaining--;
+            }
 
-            currentPlayer.setWaitingForInput(false);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+            //Calculate next player; if the next player has already entered the train, calculate until the next player has not
+            do
+            {
+                this.currentPlayer = this.players[mod((this.players.IndexOf(this.currentPlayer) + 1), this.totalPlayer)];
+            } while (this.getHAFromCharacter(this.currentPlayer.getBandit()).hasStopped() == false);
 
-            this.currentPlayer = this.players[(this.players.IndexOf(this.currentPlayer) + 1) % this.totalPlayer];
-            CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer);
+            //If the next player is already at the max position, move them
+            if (this.getHAFromCharacter(this.currentPlayer.getBandit()).getPosition() == myTrain.Count - 2)
+            {
+                this.getHAFromCharacter(this.currentPlayer.getBandit()).getOffHorse();
+                CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
 
-            currentPlayer.setWaitingForInput(true);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+                chosenHorseAttackAction("enter");
+            }
+            else
+            {
+                CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", currentPlayer.getBandit());
+
+                currentPlayer.setWaitingForInput(true);
+                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
+            }
+
+            
         }
     }
 
@@ -1327,10 +1361,7 @@ class GameController
         aShotGun = Shotgun.getInstance();
         myStageCoach.moveRoofCar(aShotGun);
 
-        //TESTING
-        foreach (Player p in this.players) {
-            p.setPosition(this.myTrain[this.myTrain.Count - 1].getInside());
-        }
+        
     }
 
     private void initializeLoot()
@@ -1906,14 +1937,29 @@ class GameController
 
     public Position getPositionByIndex(int index, Boolean inside)
     {
-        if (inside)
+        if (index == -1)
         {
-            return this.myTrain[index].getInside();
-        }
+            if (inside)
+            {
+                return this.myStageCoach.getInside();
+            }
+            else
+            {
+                return this.myStageCoach.getRoof();
+            }
+        } 
         else
         {
-            return this.myTrain[index].getRoof();
+            if (inside)
+            {
+                return this.myTrain[index].getInside();
+            }
+            else
+            {
+                return this.myTrain[index].getRoof();
+            }
         }
+        
     }
 
     public GameItem getItemfromTypePosition(ItemType aType)

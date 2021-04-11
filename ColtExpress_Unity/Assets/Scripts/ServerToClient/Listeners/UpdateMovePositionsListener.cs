@@ -28,7 +28,13 @@ public class UpdateMovePositionsListener : UIEventListenable
             if (index == -1)
             {
                 gamePosition = GameUIManager.gameUIManagerInstance.getStagecoachPosition(positions[positionsIndex].isRoof());
-            } else
+
+                if (positions[positionsIndex].isRoof())
+                {
+                    gamePosition.GetComponent<Image>().raycastTarget = true;
+                }
+            } 
+            else
             {
                 gamePosition = GameUIManager.gameUIManagerInstance.getTrainCarPosition(index, positions[positionsIndex].isRoof());
             }

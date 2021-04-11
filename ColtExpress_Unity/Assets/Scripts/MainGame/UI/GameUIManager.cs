@@ -21,8 +21,12 @@ public class GameUIManager : MonoBehaviour
     public GameObject discardPile;
     public GameObject hostagesList;
 
+    public GameObject horseSetCaboose;
+
     public GameObject shotgun;
     public GameObject stagecoach;
+
+    public GameObject horseTrack;
 
     public GameObject lootOverlayList;
     public GameObject stagecoachLootRoof;
@@ -31,6 +35,7 @@ public class GameUIManager : MonoBehaviour
     //Menus
     public GameObject turnMenu;
     public GameObject hostageMenu;
+    public GameObject horseAttackMenu;
     public GameObject punchShotgunButton;
 
     //Blockers
@@ -52,7 +57,10 @@ public class GameUIManager : MonoBehaviour
     private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
+    private List<GameObject> freeHorses = new List<GameObject>();
+    private Dictionary<Character, GameObject> charactersOnHorses = new Dictionary<Character, GameObject>();
     private Dictionary<HostageChar, GameObject> hostageMap = new Dictionary<HostageChar, GameObject>();
+    private Dictionary<int, GameObject> horseSets = new Dictionary<int, GameObject>();
 
     //Loot strips
     private Dictionary<int, GameObject> trainCarRoofLoot = new Dictionary<int, GameObject>();
@@ -172,6 +180,35 @@ public class GameUIManager : MonoBehaviour
 
         return Character.Marshal;
     }
+
+    public void rideAhead()
+    {
+        var definition = new
+        {
+            eventName = "HorseAttackMessage",
+            HorseAttackAction = "ride"
+        };
+
+        ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+        toggleHorseAttackMenu(false);
+    }
+
+    public void enterCar()
+    {
+        var definition = new
+        {
+            eventName = "HorseAttackMessage",
+            HorseAttackAction = "enter"
+        };
+
+        ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+        toggleHorseAttackMenu(false);
+    }
+
+    public void toggleHorseAttackMenu(bool isVisible)
+    {
+        horseAttackMenu.SetActive(isVisible);
+    }
     public (bool, int) getTrainCarIndexByPosition(GameObject trainCarPosition)
     {
         List<int> flattenList = trainCars.Keys.ToList();
@@ -191,7 +228,16 @@ public class GameUIManager : MonoBehaviour
             }
         }
 
-        return (true, -1);
+        //If stagecoach and same as roof
+        if (GameObject.ReferenceEquals(trainCarPosition, getStagecoachPosition(true)))
+        {
+            return (false, -1);
+        } else if (GameObject.ReferenceEquals(trainCarPosition, getStagecoachPosition(false)))
+        {
+            return (true, -1);
+        }
+
+        return (false, -1);
     }
 
     //Get corresponding in-game character object to a character
@@ -217,6 +263,64 @@ public class GameUIManager : MonoBehaviour
 
         characters.Add(c, newPlayer);
         return newPlayer;
+    }
+
+    //Grab all horse objects
+    public void initializeHorses(List<Character> players)
+    {
+        //Add number of horses
+        for (int i = 0; i < players.Count; i++)
+        {
+            horseSets.Add(i, horseTrack.transform.GetChild(i).gameObject);
+        }
+        //Destroy the rest - remember button
+        for (int i = players.Count; i < horseSetCaboose.transform.childCount - 1; i++)
+        {
+            Destroy(horseSetCaboose.transform.GetChild(i).gameObject);
+            horseTrack.transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        //Put all the bandits on the free horses
+        for (int i = 0; i < players.Count; i++)
+        {
+            //Parent bandit on free horse
+            getCharacterObject(players[i]).transform.SetParent(horseSetCaboose.transform.GetChild(i).transform.GetChild(0).transform);
+            Debug.LogError("Parented " + players[i] + " on " + horseSetCaboose.transform.GetChild(i).gameObject.name);
+            getCharacterObject(players[i]).transform.localScale = scale;
+
+            //Add mapping
+            charactersOnHorses.Add(players[i], horseSetCaboose.transform.GetChild(i).transform.GetChild(0).gameObject);
+        }
+
+        switch (players.Count)
+        {
+            case 6:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -129;
+                break;
+            case 5:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -127;
+                break;
+            case 4:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -124;
+                break;
+            case 3:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -119;
+                break;
+            case 2:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -102;
+                break;
+            case 1:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -102;
+                break;
+        }
+
+        //Finally, update the horses to the caboose end
+        trainCars.TryGetValue(players.Count, out GameObject caboose);
+
+        //Change the caboose/caboose loot coordinates to be the new end of the train
+        Vector3 lastTrainCarCoordinates = new Vector3(caboose.transform.position.x, horseSetCaboose.transform.position.y, horseSetCaboose.transform.position.z);
+
+        horseSetCaboose.transform.position = lastTrainCarCoordinates;
     }
 
     //Get corresponding player profile to a player
@@ -268,11 +372,12 @@ public class GameUIManager : MonoBehaviour
             trainCarRoofLoot.TryGetValue(6, out cabooseRoofLoot);
             trainCarInteriorLoot.TryGetValue(6, out cabooseInteriorLoot);
 
-            //Change the caboose coordinates to be the new end of the train
+            //Change the caboose/caboose loot coordinates to be the new end of the train
             Vector3 lastTrainCarCoordinates = trainCar.transform.position;
 
             caboose.transform.position = lastTrainCarCoordinates;
             cabooseRoofLoot.transform.parent.position = lastTrainCarCoordinates;
+            cabooseInteriorLoot.transform.parent.position = lastTrainCarCoordinates;
 
            // Debug.Log(caboose.name + " now at " + lastTrainCarCoordinates);
 
@@ -287,6 +392,9 @@ public class GameUIManager : MonoBehaviour
                 trainCarRoofLoot.TryGetValue(i, out trainCarRLoot);
                 trainCarRLoot.transform.parent.gameObject.SetActive(false);
                 trainCarRoofLoot.Remove(i);
+
+                trainCarInteriorLoot.TryGetValue(i, out trainCarILoot);
+                trainCarILoot.transform.parent.gameObject.SetActive(false);
                 trainCarInteriorLoot.Remove(i);
 
                 //Debug.Log("Removed " + trainCar.name + " at " + i);
@@ -317,6 +425,51 @@ public class GameUIManager : MonoBehaviour
         GameObject trainCar = null;
         trainCars.TryGetValue(index, out trainCar);
         return trainCar;
+    }
+
+    public GameObject getHorseSet(int index)
+    {
+        horseSets.TryGetValue(index, out GameObject horseSet);
+        return horseSet;
+    }
+
+    public GameObject getHorsePositionByCharacter(Character c)
+    {
+        charactersOnHorses.TryGetValue(c, out GameObject horsePosition);
+        return horsePosition;
+    }
+
+    public GameObject getHorseByCharacter(Character c)
+    {
+        charactersOnHorses.TryGetValue(c, out GameObject horsePosition);
+        horsePosition = horsePosition.transform.parent.gameObject;
+        return horsePosition;
+    }
+
+    public void adjustHorseSpacing(GameObject horseSet)
+    {
+        //Remember to ignore button
+        switch (horseSet.transform.childCount - 1)
+        {
+            case 6:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -129;
+                break;
+            case 5:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -127;
+                break;
+            case 4:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -124;
+                break;
+            case 3:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -119;
+                break;
+            case 2:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -102;
+                break;
+            case 1:
+                horseSetCaboose.GetComponent<VerticalLayoutGroup>().spacing = -102;
+                break;
+        }
     }
 
     //Get a train car's loot strip - true for its roof, false for its interior
@@ -373,11 +526,11 @@ public class GameUIManager : MonoBehaviour
     {
         if (isRoof)
         {
-            return stagecoach.transform.GetChild(2).gameObject;
+            return stagecoach.transform.GetChild(3).gameObject;
         }
         else
         {
-            return stagecoach.transform.GetChild(0).gameObject;
+            return stagecoach.transform.GetChild(1).gameObject;
         }
 
     }

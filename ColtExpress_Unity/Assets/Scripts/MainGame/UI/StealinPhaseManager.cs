@@ -153,6 +153,11 @@ public class StealinPhaseManager : MonoBehaviour
 
             (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
 
+            if (position.Item2 == -1)
+            {
+                EventSystem.current.currentSelectedGameObject.GetComponent<Image>().raycastTarget = false;
+            }
+
             var definition = new
             {
                 eventName = "MoveMessage",

@@ -149,5 +149,6 @@ public enum GameStatus
     Schemin,
     Stealin,
     FinalizingCard,
-    Completed
+    Completed,
+    HorseAttack
 }

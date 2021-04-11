@@ -121,6 +121,30 @@ public class CommunicationAPI
                 }
             }
         }
+        else if (action == "updateHorses")
+        {
+            List<Character> l = new List<Character>();
+            ((List<Player>)args[1]).ForEach(x => l.Add(x.getBandit()));
+            var definition = new
+            {
+                eventName = action,
+                horseCount = ((List<AttackPosition>)args[0]).Count,
+                players = l
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+            
+        }
         else if (action == "updatePlayerHand")
         {
         //"updatePlayerHand" updates the hand of the player sent
@@ -260,24 +284,24 @@ public class CommunicationAPI
         {
             // "horseAttackUpdate" gives an update of the position of
             // all the players during the horse attack using a list of HorseAttack objects
-            foreach (AttackPosition ap in (List<AttackPosition>) args[0]) {
-                var definition = new {
-                    eventName = action,
-                    positions = ap
-                };
+            
+            var definition = new {
+                eventName = action,
+                positions = (List<AttackPosition>)args[0]
+            };
 
-                if (cli == null)
-                {
-                    //Serialize parameters as a array with first element being the action
-                    MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
 
-                }
-                else
-                {
-                    //Serialize parameters as a array with first element being the action
-                    MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
-                }
             }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+            
         }
         else if (action == "updateCurrentPlayer")
         //"updateCurrentPlayer"  visually updates the current player

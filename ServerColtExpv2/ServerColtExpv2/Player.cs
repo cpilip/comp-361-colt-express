@@ -188,7 +188,7 @@ namespace GameUnitSpace {
         public int getLeastPurseValue() {
             int min = 10000;
             foreach (GameItem i in this.possessions) {
-                if (i.getType == ItemType.Purse && i.getValue() < min) {
+                if (i.getType() == ItemType.Purse && i.getValue() < min) {
                     min = i.getValue();
                 }
             }
