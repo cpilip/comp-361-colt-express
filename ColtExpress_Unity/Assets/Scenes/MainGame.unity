@@ -1703,6 +1703,7 @@ GameObject:
   - component: {fileID: 205661230}
   - component: {fileID: 205661229}
   - component: {fileID: 205661231}
+  - component: {fileID: 205661232}
   m_Layer: 0
   m_Name: Horse Tracks
   m_TagString: Untagged
@@ -1786,6 +1787,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updateHorseAttack
+--- !u!114 &205661232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205661227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb56b6b10060a0c4eb5fb1b30cf7fdb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: updateCarHasAHorse
 --- !u!1 &210111686
 GameObject:
   m_ObjectHideFlags: 0

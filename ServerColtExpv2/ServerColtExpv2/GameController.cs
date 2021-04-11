@@ -455,7 +455,7 @@ class GameController
             currentPlayer.setPosition(p);
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
             //TODO new message 
-            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", p.getTrainCar(), true);
+            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", getIndexByTrainCar(p.getTrainCar()), currentPlayer.getBandit());
             currentPlayer.setOnAHorse(false);
 
             bool flag = true;
@@ -975,6 +975,7 @@ class GameController
                     }
                 case ActionKind.Ride:
                     {
+                       
                         if (currentPlayer.getPosition().getTrainCar().hasHorseAtCarLevel())
                         {
                             //set current player on a horse 
@@ -997,8 +998,12 @@ class GameController
 
                             //setting the on a horse action to false.
                             currentPlayer.getPosition().getTrainCar().setHasAHorse(false);
-                            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", currentPlayer.getPosition().getTrainCar(), false);
-
+                        } else
+                        {
+                            // Empty
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
                         }
                         break;
                     }
@@ -1458,6 +1463,7 @@ class GameController
                         GameItem anItem2 = new GameItem(ItemType.Purse, 250);
                         anItem2.setPosition(myTrain[1].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Normal);
+                        aW.setPosition(myTrain[1].getInside());
                         break;
                     }
                 //intializing loots in second wagon
@@ -1470,6 +1476,7 @@ class GameController
                         GameItem anItem2 = new GameItem(ItemType.Ruby, 500);
                         anItem2.setPosition(myTrain[2].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Old);
+                        aW.setPosition(myTrain[2].getInside());
                         break;
                     }
                 //intializing loots in third wagon
@@ -1480,6 +1487,7 @@ class GameController
                         GameItem anItem1 = new GameItem(ItemType.Purse, 500);
                         anItem1.setPosition(myTrain[3].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Normal);
+                        aW.setPosition(myTrain[3].getInside());
                         break;
                     }
                 //intializing loots in 4th wagon
@@ -1494,6 +1502,7 @@ class GameController
                         GameItem anItem3 = new GameItem(ItemType.Purse, 250);
                         anItem1.setPosition(myTrain[4].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Normal);
+                        aW.setPosition(myTrain[4].getInside());
                         break;
                     }
                 //intializing loots in 5th wagon
@@ -1510,6 +1519,7 @@ class GameController
                         GameItem anItem4 = new GameItem(ItemType.Purse, 250);
                         anItem1.setPosition(myTrain[5].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Normal);
+                        aW.setPosition(myTrain[5].getInside());
                         break;
                     }
                 //intializing loots in 6th wagon
@@ -1518,6 +1528,7 @@ class GameController
                         GameItem anItem = new GameItem(ItemType.Purse, 500);
                         anItem.setPosition(myTrain[6].getInside());
                         Whiskey aW = new Whiskey(WhiskeyKind.Normal);
+                        aW.setPosition(myTrain[6].getInside());
                         break;
                     }
             }
@@ -2100,13 +2111,15 @@ class GameController
         {
             if (anItem is Whiskey)
             {
-                if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
+                if (((Whiskey)anItem).getWhiskeyKind() == WhiskeyKind.Unknown)
                 {
                     return (Whiskey)anItem;
+                    break;
                 } 
                 else if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
                 {
                     return (Whiskey)anItem;
+                    break;
                 }
             }
         }

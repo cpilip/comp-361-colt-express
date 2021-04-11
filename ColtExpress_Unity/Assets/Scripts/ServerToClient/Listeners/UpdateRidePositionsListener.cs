@@ -48,9 +48,19 @@ public class UpdateRidePositionsListener : UIEventListenable
                     break;
                 }
             }
+        } 
+        else if (horseSet.transform.childCount == 2)
+        {
+            if (horseSet.transform.GetChild(0).GetChild(0).childCount == 0)
+            {
+                //Empty horse found
+                horsePosition = horseSet.transform.GetChild(0).GetChild(0).gameObject;
+                Debug.LogError("Free horse " + horsePosition.name);
+            }
         }
 
         GameUIManager.gameUIManagerInstance.getCharacterObject(c).transform.parent = horsePosition.transform;
+        GameUIManager.gameUIManagerInstance.remapCharacterAndHorse(c, horsePosition);
 
         foreach (int index in i)
         {

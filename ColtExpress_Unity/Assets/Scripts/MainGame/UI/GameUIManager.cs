@@ -159,6 +159,11 @@ public class GameUIManager : MonoBehaviour
 
         getStagecoachPosition(true).GetComponent<Button>().enabled = false;
 
+        s_image = getStagecoachPosition(false).GetComponent<Image>();
+        s_image.color = new Color(s_image.color.r, s_image.color.g, s_image.color.b, 0f);
+
+        getStagecoachPosition(false).GetComponent<Button>().enabled = false;
+
     }
 
     public bool getShotgunByShotgunButton(GameObject shotgunButton)
@@ -268,7 +273,7 @@ public class GameUIManager : MonoBehaviour
     //Grab all horse objects
     public void initializeHorses(List<Character> players)
     {
-        //Add number of horses
+        //Add number of horse sets from locomotive
         for (int i = 0; i < players.Count; i++)
         {
             horseSets.Add(i, horseTrack.transform.GetChild(i).gameObject);
@@ -279,6 +284,9 @@ public class GameUIManager : MonoBehaviour
             Destroy(horseSetCaboose.transform.GetChild(i).gameObject);
             horseTrack.transform.GetChild(i).gameObject.SetActive(false);
         }
+
+        //Add caboose at end
+        horseSets.Add(players.Count, horseSetCaboose);
 
         //Put all the bandits on the free horses
         for (int i = 0; i < players.Count; i++)
@@ -427,6 +435,12 @@ public class GameUIManager : MonoBehaviour
         return trainCar;
     }
 
+    public GameObject remapCharacterAndHorse(Character c, GameObject horsePosition)
+    {
+        charactersOnHorses.Remove(c);
+        charactersOnHorses.Add(c, horsePosition);
+        return horsePosition;
+    }
     public GameObject getHorseSet(int index)
     {
         horseSets.TryGetValue(index, out GameObject horseSet);

@@ -8,7 +8,8 @@ public class MoveStageCoachListener : UIEventListenable
 
     public override void updateElement(string data)
     {
-        
+
+        atIndex++;
         if (atIndex < GameUIManager.gameUIManagerInstance.getNumTrainCars())
         {
             GameObject adjacentCar = GameUIManager.gameUIManagerInstance.getTrainCar(atIndex);
@@ -16,7 +17,6 @@ public class MoveStageCoachListener : UIEventListenable
 
             this.transform.position = coordinates;
 
-            atIndex++;
         }
         
     }

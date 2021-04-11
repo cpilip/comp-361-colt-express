@@ -183,14 +183,14 @@ public class UpdateTrainListener : UIEventListenable
             }
             if (m == ItemType.Whiskey)
             {
-                value = trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
+                value = trainCarInteriorLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text;
                 num = Int32.Parse(value.Substring(1));
                 num++;
-                trainCarRoofLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
+                trainCarInteriorLoot.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = String.Format("x{0}", num);
 
                 if (num > 0)
                 {
-                    trainCarRoofLoot.transform.GetChild(0).gameObject.SetActive(true);
+                    trainCarInteriorLoot.transform.GetChild(0).gameObject.SetActive(true);
                 }
             }
         }
