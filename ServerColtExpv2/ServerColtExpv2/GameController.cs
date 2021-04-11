@@ -452,8 +452,10 @@ class GameController
 
         else if (topOfPile.getKind().Equals(ActionKind.Ride))
         {
+            
             currentPlayer.setPosition(p);
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
+            currentPlayer.getPosition().getTrainCar().addAHorse();
             //TODO new message 
             CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", getIndexByTrainCar(p.getTrainCar()), currentPlayer.getBandit());
             currentPlayer.setOnAHorse(false);
@@ -998,6 +1000,7 @@ class GameController
 
                             //setting the on a horse action to false.
                             currentPlayer.getPosition().getTrainCar().setHasAHorse(false);
+                            currentPlayer.getPosition().getTrainCar().removeAHorse();
                         } else
                         {
                             // Empty
@@ -1051,8 +1054,8 @@ class GameController
                 p.setPosition(this.myTrain[pos].getInside());
                 p.setOnAHorse(false);
 
-
                 this.myTrain[pos].setHasAHorse(true);
+                this.myTrain[pos].addAHorse();
             }
 
             // Update the train for all the players
@@ -1724,7 +1727,7 @@ class GameController
             else
             {
                 // Add 1-3 distance forward or backwards
-                for (int i = 1; i < 3; i++)
+                for (int i = 1; i < 4; i++)
                 {
                     try
                     {

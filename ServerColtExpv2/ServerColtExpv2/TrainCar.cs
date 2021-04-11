@@ -13,6 +13,7 @@ namespace PositionSpace
         [JsonProperty]
         private Position roof;
         private bool hasAHorse;
+        private int numHorses;
         public TrainCar(bool isLocomotive)
         {
             this.inside = new Position(this, Floor.Inside);
@@ -59,8 +60,23 @@ namespace PositionSpace
             hasAHorse = b;
         }
 
+        public void addAHorse()
+        {
+            this.numHorses++;
+        }
+
+        public void removeAHorse()
+        {
+            this.numHorses--;
+        }
+
+        public int getNumOfHorses()
+        {
+            return this.numHorses;
+        }
+
         public bool hasHorseAtCarLevel(){
-            return hasAHorse;
+            return (numHorses == 0) ? false : true;
         }
     }
 
