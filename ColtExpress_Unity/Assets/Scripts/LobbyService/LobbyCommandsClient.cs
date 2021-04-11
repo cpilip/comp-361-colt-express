@@ -135,6 +135,8 @@ public class LobbyCommandsClient
         caller.StartCoroutine(deleteRequest(url, true));
     }
 
+    // Methods for general requests
+
     private IEnumerator getRequest(string url, bool auth) 
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
@@ -145,6 +147,7 @@ public class LobbyCommandsClient
                 string header = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("bgp-client-name:bgp-client-pw"));
                 webRequest.SetRequestHeader("Authorization", header);
             }
+
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError)

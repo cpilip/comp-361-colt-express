@@ -895,7 +895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -580, y: -319.99997}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &955317022
@@ -954,7 +954,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0964599140cb0d32a17deaad2cf932c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyCommand: {fileID: 0}
 --- !u!1 &987010907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,8 +1349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e4748565a11e069b9def625a7986e2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  username: {fileID: 0}
-  password: {fileID: 0}
 --- !u!1 &1258193305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1364,7 @@ GameObject:
   - component: {fileID: 1258193312}
   - component: {fileID: 1258193311}
   - component: {fileID: 1258193310}
+  - component: {fileID: 1258193313}
   m_Layer: 5
   m_Name: LogInButton
   m_TagString: Untagged
@@ -1437,8 +1435,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 955317023}
-        m_MethodName: debugOnline
+      - m_Target: {fileID: 1258193313}
+        m_MethodName: logIn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1623,6 +1621,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1258193313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258193305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682c4bf0d4283382a8507d2544e37e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameField: {fileID: 1112781385}
+  passwordField: {fileID: 1497839433}
+  IDPrefab: {fileID: 0}
 --- !u!1 &1278114279
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,9 +20,9 @@ public class LogIn : MonoBehaviour
         StartCoroutine(wait(1));
     }
 
-    private IEnumerator wait(float time){
+    private IEnumerator wait(float time) {
         LobbyCommands.signIn(this, usernameField.GetComponent<TMP_InputField>().text, passwordField.GetComponent<TMP_InputField>().text);
-        // LobbyCommands.debugOnline(this);
+
         GameObject id;
         if (GameObject.Find("ID") == null) {
             id = (GameObject)Instantiate(IDPrefab);
@@ -36,8 +36,10 @@ public class LogIn : MonoBehaviour
             yield return new WaitForSeconds(time);
             response = LobbyCommands.getResponse();
         }
+
         Debug.Log("Resp : "+ response);
         SignInResponse json = JsonUtility.FromJson<SignInResponse>(response);
+        
         if (json.access_token == null){
             Debug.Log("Sign In failed, try again");
         } else {
