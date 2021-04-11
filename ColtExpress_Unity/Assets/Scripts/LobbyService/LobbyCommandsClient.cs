@@ -68,20 +68,6 @@ public class LobbyCommandsClient
         caller.StartCoroutine(getRequest(url, true));
     }
 
-    public void registerGameService(MonoBehaviour caller, string location, int maxPlayers, int minPlayers, string name, string webSupport, string token)
-    {
-        string requestData = JsonUtility.ToJson(new RegisterGameRequest(location, maxPlayers.ToString(), minPlayers.ToString(), name, webSupport), true);
-        string url = string.Format("http://{0}/api/gameservices/{1}?access_token={2}", connectionIP, name, token);
-        caller.StartCoroutine(putRequest(url, requestData, true, true));
-    }
-
-    public void unregisterGameService(MonoBehaviour caller, string name, string token) 
-    {
-        string url = string.Format("http://{0}/api/gameservices/{1}?access_token={2}", connectionIP, name, token);
-
-        caller.StartCoroutine(deleteRequest(url, true));
-    }
-
     public void getGameServices(MonoBehaviour caller)
     {
         string url = string.Format("http://{0}/api/gameservices", connectionIP);
