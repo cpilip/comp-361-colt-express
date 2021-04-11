@@ -614,6 +614,29 @@ public class CommunicationAPI
                 MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
             }
         }
+        else if (action == "moveGameItem")
+        {
+            
+            var definition = new
+            {
+                eventName = action,
+                gameItem = (GameItem)args[0],
+                position = (Position)args[1],
+                trainCarIndex = (int)args[2]
+            };
+
+            if (cli == null)
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToAllClients(JsonConvert.SerializeObject(definition, settings));
+
+            }
+            else
+            {
+                //Serialize parameters as a array with first element being the action
+                MyTcpListener.sendToClient(cli, JsonConvert.SerializeObject(definition, settings));
+            }
+        }
         else if (action == "updateMovePositions" || action == "updatePunchPositions")
         {
             var definition = new

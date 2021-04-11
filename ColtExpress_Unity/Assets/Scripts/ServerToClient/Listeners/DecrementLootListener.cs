@@ -70,7 +70,7 @@ public class DecrementLootListener : UIEventListenable
                 break;
         }
 
-        Debug.Log("[DecrementLootListener] Decremented " + l + "for player " + c + ".");
+        Debug.Log("[DecrementLootListener] Decremented " + l.getType() + "for player " + c + ".");
 
     }
 }

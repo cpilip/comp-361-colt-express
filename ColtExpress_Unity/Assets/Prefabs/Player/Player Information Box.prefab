@@ -87,6 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisWhiskeyTypeUsed: 0
+  allowedForPunch: 0
 --- !u!1 &2759939372631045168
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisWhiskeyTypeUsed: 0
+  allowedForPunch: 0
 --- !u!114 &4656096750388625983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,6 +1065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisWhiskeyTypeUsed: 0
+  allowedForPunch: 0
 --- !u!1001 &165926938385464249
 PrefabInstance:
   m_ObjectHideFlags: 0

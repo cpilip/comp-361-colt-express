@@ -153,7 +153,8 @@ public class StealinPhaseManager : MonoBehaviour
 
             (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
 
-            if (position.Item2 == -1)
+            //If this is the stagecoach roof, disable raycasting 
+            if (position.Item2 == -1 && position.Item1 == false)
             {
                 EventSystem.current.currentSelectedGameObject.GetComponent<Image>().raycastTarget = false;
             }
@@ -173,6 +174,12 @@ public class StealinPhaseManager : MonoBehaviour
         {
             notInPunch = true;
             (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
+
+            //If this is the stagecoach roof, disable raycasting 
+            if (position.Item2 == -1 && position.Item1 == false)
+            {
+                EventSystem.current.currentSelectedGameObject.GetComponent<Image>().raycastTarget = false;
+            }
 
             if (punchLoot == ItemType.Whiskey)
             {
@@ -252,9 +259,10 @@ public class StealinPhaseManager : MonoBehaviour
         notInPunch = false;
         Character target = Character.Marshal;
 
-        Debug.Log("[UpdatePossTargetsPunchListener] Player chose: " + target.ToString());
         if (GameUIManager.gameUIManagerInstance.getShotgunByShotgunButton(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject))
         {
+
+            Debug.Log("[UpdatePossTargetsPunchListener] Player chose: Shotgun");
             //Shotgun punched
             var definition = new
             {
@@ -296,15 +304,17 @@ public class StealinPhaseManager : MonoBehaviour
                 isLoot = true;
             }
 
+            Debug.LogError(GameUIManager.gameUIManagerInstance.gameObject.name);
+
             //Strongbox
             string value = targetprofile.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
             int num = Int32.Parse(value.Substring(1));
 
             if (num > 0)
             {
-                targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                targetprofile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<Button>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
                 isLoot = true;
             }
 
@@ -314,9 +324,9 @@ public class StealinPhaseManager : MonoBehaviour
 
             if (num > 0)
             {
-                targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<UIShiny>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                targetprofile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<Button>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
                 isLoot = true;
             }
 
@@ -326,12 +336,14 @@ public class StealinPhaseManager : MonoBehaviour
 
             if (num > 0)
             {
-                targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<UIShiny>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().enabled = true;
-                targetprofile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+                targetprofile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<Button>().enabled = true;
+                targetprofile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
                 isLoot = true;
             }
 
+
+            Debug.Log("[UpdatePossTargetsPunchListener] Player chose: " + target.ToString());
             GameUIManager.gameUIManagerInstance.clearPunchTargets();
             GameUIManager.gameUIManagerInstance.togglePunchShotgunButton(false);
 
@@ -395,23 +407,27 @@ public class StealinPhaseManager : MonoBehaviour
                 break;
         }
 
+        //Whiskey
         punchTargetProfile.transform.GetChild(3).GetChild(0).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = false;
         punchTargetProfile.transform.GetChild(3).GetChild(1).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = false;
         punchTargetProfile.transform.GetChild(3).GetChild(2).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = false;
 
-        punchTargetProfile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<UIShiny>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(1).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+        //Inventory
+        punchTargetProfile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(1).GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
 
-        punchTargetProfile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<UIShiny>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(2).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+        punchTargetProfile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(2).GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
 
-        punchTargetProfile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<UIShiny>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().enabled = false;
-        punchTargetProfile.transform.GetChild(2).GetChild(3).gameObject.GetComponent<Button>().onClick.AddListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
+        punchTargetProfile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<UIShiny>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<Button>().enabled = false;
+        punchTargetProfile.transform.GetChild(2).GetChild(3).GetChild(0).gameObject.GetComponent<Button>().onClick.RemoveListener(GameUIManager.gameUIManagerInstance.gameObject.GetComponent<StealinPhaseManager>().playerChoseLootPunch);
        
         GameUIManager.gameUIManagerInstance.lockSidebar();
+
+        Debug.Log("[UpdatePossTargetsPunchListener] Player chose: " + punchLoot.ToString());
 
         var definition = new {
             eventName = "PunchPositionsRequestMessage",

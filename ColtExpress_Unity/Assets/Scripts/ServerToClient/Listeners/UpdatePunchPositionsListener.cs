@@ -28,6 +28,11 @@ public class UpdatePunchPositionsListener : UIEventListenable
             if (index == -1)
             {
                 gamePosition = GameUIManager.gameUIManagerInstance.getStagecoachPosition(positions[positionsIndex].isRoof());
+
+                if (positions[positionsIndex].isRoof())
+                {
+                    gamePosition.GetComponent<Image>().raycastTarget = true;
+                }
             }
             else
             {

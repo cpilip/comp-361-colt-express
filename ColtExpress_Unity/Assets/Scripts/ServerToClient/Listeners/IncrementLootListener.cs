@@ -69,7 +69,7 @@ public class IncrementLootListener : UIEventListenable
                 break;
         }
 
-        Debug.Log("[DecrementLootListener] Decremented " + l + "for player " + c + ".");
+        Debug.Log("[IncrementLootListener] Incremented " + l.getType() + "for player " + c + ".");
 
     }
 }

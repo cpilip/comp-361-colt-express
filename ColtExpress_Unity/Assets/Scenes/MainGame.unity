@@ -6029,6 +6029,7 @@ GameObject:
   - component: {fileID: 718402324}
   - component: {fileID: 718402323}
   - component: {fileID: 718402326}
+  - component: {fileID: 718402328}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6350,6 +6351,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: updateHorses
+--- !u!114 &718402328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718402308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e38244190a7ca4a99dd5b2dcbdbfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: moveGameItem
 --- !u!1 &727441901
 GameObject:
   m_ObjectHideFlags: 0
@@ -11268,7 +11282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.8117647, b: 0.35686275, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -272,7 +272,7 @@ class MyTcpListener
                     HostageChar hostage = o.SelectToken("chosenHostage").ToObject<HostageChar>();
                     aController.chosenHostage(hostage);
 
-                }
+                } 
             }
 
         }
