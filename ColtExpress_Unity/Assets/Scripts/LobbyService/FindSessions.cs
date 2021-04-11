@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
 
 
@@ -27,24 +28,33 @@ public class FindSessions : MonoBehaviour
     }
 
     private IEnumerator findGamesWait(float time){
+
+        // Issue lobby service request
         LobbyCommands.getSessions(this);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
 
-        SessionsInformation responseParsed = JsonConvert.DeserializeObject<SessionsInformation>(response);
+        // Parse response
+        JObject o = JObject.Parse(response);
+        JObject sessions = JObject.Parse(o.SelectToken("sessions").ToString());
+        
+        Dictionary<string, SessionInformation> data = new Dictionary<string, SessionInformation>();
 
-        Debug.Log(responseParsed.sessions);
+        foreach (var session in sessions) { 
+            string name = session.Key;
+            JToken value = session.Value;
+            SessionInformation sessInfo = value.ToObject<SessionInformation>();
 
-        List<string> currentSessions = new List<string>();
-        foreach (string sessInfo in responseParsed.sessions.Keys) {
-            currentSessions.Add(sessInfo);
+            data.Add(name, sessInfo);
         }
 
-        Debug.Log(currentSessions.Count);
+        foreach(string s in data.Keys) {
+            Debug.Log(s);
+        }
 
-        sessionsDropDown.ClearOptions();
-        sessionsDropDown.AddOptions(currentSessions);
+        // sessionsDropDown.ClearOptions();
+        // sessionsDropDown.AddOptions(currentSessions);
         // GameObject.Find("GameChooser").GetComponent<GameList>().setGames(currentSessions); 
     }
 

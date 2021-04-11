@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SessionsInformation
-{
-    public Dictionary<string, SessionInformation> sessions {get; set;}
-}
 
 public class SessionInformation
 {

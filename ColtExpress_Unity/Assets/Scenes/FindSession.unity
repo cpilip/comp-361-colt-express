@@ -515,52 +515,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355617644}
   m_CullTransparentMesh: 0
---- !u!1 &360548506
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 360548507}
-  - component: {fileID: 360548508}
-  m_Layer: 0
-  m_Name: SessionFinder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &360548507
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360548506}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 501.5, y: 195.80469, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &360548508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360548506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 448254d0a03e244b7bb265d794c3a90d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionsDropDown: {fileID: 1083175487}
-  SessionPrefab: {fileID: 4881302208983576364, guid: 16cc549db78a78efca68c73f1414d66b,
-    type: 3}
 --- !u!1 &416571981
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,7 +840,6 @@ GameObject:
   - component: {fileID: 677931734}
   - component: {fileID: 677931736}
   - component: {fileID: 677931735}
-  - component: {fileID: 677931737}
   m_Layer: 5
   m_Name: GameChooser
   m_TagString: Untagged
@@ -951,21 +904,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677931733}
   m_CullTransparentMesh: 0
---- !u!114 &677931737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677931733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a818828186998492ea82779731251c82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Games: []
-  ButtonPrefab: {fileID: 5532189820119137470, guid: c2d1133c247f27f44883a21424da2c97,
-    type: 3}
 --- !u!1 &706110265
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,6 +1116,7 @@ GameObject:
   - component: {fileID: 857902111}
   - component: {fileID: 857902110}
   - component: {fileID: 857902109}
+  - component: {fileID: 857902112}
   m_Layer: 5
   m_Name: RefreshButton
   m_TagString: Untagged
@@ -1248,7 +1187,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 360548508}
+      - m_Target: {fileID: 857902112}
         m_MethodName: findGames
         m_Mode: 1
         m_Arguments:
@@ -1296,6 +1235,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857902107}
   m_CullTransparentMesh: 0
+--- !u!114 &857902112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857902107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f826cb4a66284386e9c7b29be5d16af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sessionsDropDown: {fileID: 1083175487}
+  SessionPrefab: {fileID: 4881302208983576364, guid: 4b7266610fb9fbe61a63a10e33c24308,
+    type: 3}
 --- !u!1 &1008176612
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,11 +1592,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d3a6c83ccd258da899bd3644219746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameName: {fileID: 355617644}
-  MinPlayers: {fileID: 0}
-  MaxPlayers: {fileID: 0}
-  CurrentlyInLobby: {fileID: 416571981}
-  Ping: {fileID: 672188077}
 --- !u!1 &1155142581
 GameObject:
   m_ObjectHideFlags: 0
@@ -2363,7 +2312,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 360548508}
+      - m_Target: {fileID: 0}
         m_MethodName: joinSession
         m_Mode: 1
         m_Arguments:

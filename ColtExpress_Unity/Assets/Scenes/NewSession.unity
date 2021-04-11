@@ -1074,8 +1074,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -125, y: 73}
-  m_SizeDelta: {x: 200, y: 30}
+  m_AnchoredPosition: {x: -134.4, y: 73}
+  m_SizeDelta: {x: 218.69434, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &719124631
 MonoBehaviour:
@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Name of Session: '
+  m_text: 'Name of Save Game: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1159,7 +1159,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 4.0059705, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1565,7 +1565,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1169537149}
         m_MethodName: createLobby
         m_Mode: 1
         m_Arguments:
@@ -1625,8 +1625,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946ce69ff1ff7b675b11ddde0de84e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SavedGameText: {fileID: 0}
-  SessionPrefab: {fileID: 0}
+  SavedGameText: {fileID: 183316041}
+  SessionPrefab: {fileID: 4881302208983576364, guid: 4b7266610fb9fbe61a63a10e33c24308,
+    type: 3}
 --- !u!1 &1473838608
 GameObject:
   m_ObjectHideFlags: 0
