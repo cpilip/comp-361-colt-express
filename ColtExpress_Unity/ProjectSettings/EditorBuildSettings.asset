@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ChooseCharacter.unity
     guid: 8400c12258b85467d9e81e68b3b87de8
+  - enabled: 1
+    path: Assets/Scenes/NewSession.unity
+    guid: 9ee7b0458a57cbe86bf7cd223dd32862
+  - enabled: 1
+    path: Assets/Scenes/FindSession.unity
+    guid: 7e4b3e20ec0c24ad38520e0d89db7ebb
   m_configObjects: {}

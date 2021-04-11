@@ -96,6 +96,16 @@ public class Switch : MonoBehaviour
         SceneManager.LoadScene("ChooseCharacter");
     }
 
+    public void goNewSession()
+    {
+        SceneManager.LoadScene("NewSession");
+    }
+
+    public void goFindSession()
+    {
+        SceneManager.LoadScene("FindSession");
+    }
+
     public void goMainMenu()
     {
         SceneManager.LoadScene("Menu");

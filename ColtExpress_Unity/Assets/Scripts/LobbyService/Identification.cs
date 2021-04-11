@@ -6,6 +6,7 @@ public class Identification : MonoBehaviour
 {
     public string currToken;
     public string refreshToken;
+    public string username;
 
     public void setToken(string token, string refToken)
     {
@@ -16,6 +17,16 @@ public class Identification : MonoBehaviour
     public string getToken()
     {
         return this.currToken;
+    }
+
+    public string getUsername()
+    {
+        return this.username;
+    }
+
+    public void setUsername(string name)
+    {
+        this.username = name;
     }
 
     void Start()
