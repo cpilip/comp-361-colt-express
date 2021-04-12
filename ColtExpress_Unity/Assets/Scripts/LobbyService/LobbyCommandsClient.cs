@@ -115,6 +115,11 @@ public class LobbyCommandsClient
         caller.StartCoroutine(getRequest(url, true));
     }
 
+    public void getSession(MonoBehaviour caller, string sessionId) {
+        string url = string.Format("http://{0}/api/sessions/{1}", connectionIP, sessionId);
+        caller.StartCoroutine(getRequest(url, true));
+    }
+
     public void joinSession(MonoBehaviour caller, string sessionID, string name, string token)
     {
         string data = "";

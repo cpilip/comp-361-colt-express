@@ -27,7 +27,6 @@ public class FindSessions : MonoBehaviour
     void Start()
     {   
         findGames();
-        // InvokeRepeating("updateGames", 0.5f, 0.5f);
     }
 
     public void findGames()
@@ -113,6 +112,7 @@ public class FindSessions : MonoBehaviour
             Debug.Log(s);
             dropdownKeys.Add(s);
         }
+
 
         sessionsDropDown.GetComponent<Dropdown>().ClearOptions();
         sessionsDropDown.GetComponent<Dropdown>().AddOptions(dropdownKeys);
