@@ -17,7 +17,12 @@ public class Switch : MonoBehaviour
 
   public void playGame()
   {
-    SceneManager.LoadScene("Play");
+    // Redirect to sign in if player is not logged in
+    if (GameObject.Find("ID") != null) {
+      SceneManager.LoadScene("Play");
+    } else {
+      SceneManager.LoadScene("SignIn");
+    }
   }
 
   public void signIn()

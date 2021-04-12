@@ -50,7 +50,6 @@ public class UpdateLobby : MonoBehaviour
         time += Time.deltaTime;
  
         if (time >= interpolationPeriod) {
-            Debug.Log("Calling function");
             time = 0.0f;
             StartCoroutine(updatePlayersWait(1.0f));
         }
@@ -90,7 +89,6 @@ public class UpdateLobby : MonoBehaviour
 
     private void updateNames(List<string> names) {
         for (int i = 0 ; i < names.Count ; i++) {
-            Debug.Log(names[i]);
             playerTexts[i].text = names[i];
         }
     }
@@ -115,7 +113,6 @@ public class UpdateLobby : MonoBehaviour
 
     private IEnumerator updatePlayersWait(float time)
     {
-        Debug.Log("Here");
         bool creator = GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().getCreator();
         string sessionID = GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().getSessionId();
 
@@ -123,7 +120,6 @@ public class UpdateLobby : MonoBehaviour
         LobbyCommands.getSession(this, sessionID);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
-        Debug.Log(response);
 
         // Parse the response from the server
         SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
