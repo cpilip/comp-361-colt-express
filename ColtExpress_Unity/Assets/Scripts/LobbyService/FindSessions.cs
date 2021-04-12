@@ -7,27 +7,81 @@ using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
 
 
-
 public class FindSessions : MonoBehaviour
 {
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 
     List<string> gameSessions;
-    public Dropdown sessionsDropDown;
 
-    public Object SessionPrefab; 
+    public Dropdown sessionsDropDown;
+    public GameObject sessionText;
+    public GameObject currentInLobbyText;
+    public GameObject pingText;
+
+    public Dictionary<string, SessionInformation> data;
+
+    public Object SessionPrefab;
+
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
         findGames();
+        // InvokeRepeating("updateGames", 0.5f, 0.5f);
     }
 
-    public void findGames() {
+    public void findGames()
+    {
         StartCoroutine(findGamesWait(1));
     }
 
-    private IEnumerator findGamesWait(float time){
+    IEnumerator StartPing(string ip)
+    {
+        WaitForSeconds f = new WaitForSeconds(0.05f);
+        Ping p = new Ping(ip);
+        while (p.isDone == false)
+        {
+            yield return f;
+        }
+        Debug.Log("Ping is done   " + p.time);
+        PingFinished(p);
+    }
+
+
+    public void PingFinished(Ping p)
+    {
+        Text pText = pingText.GetComponent<Text>();
+        pText.text = "" + p.time + " ms";
+    }
+
+    public void DropdownValueChanged(Dropdown change)
+    {
+        string val = change.GetComponent<Dropdown>().options[change.value].text;
+
+        Text sText = sessionText.GetComponent<Text>();
+        Text cText = currentInLobbyText.GetComponent<Text>();
+        Text pText = pingText.GetComponent<Text>();
+
+        if (val.Equals("select game..."))
+        {
+            sText.text = "--";
+            cText.text = "--";
+            pText.text = "--";
+        }
+        else
+        {
+            // Update creator name
+            sText.text = data[val].creator;
+            // Update number of players
+            int numPlayers = data[val].players.Count;
+            cText.text = "" + numPlayers + "/6";
+            // update player ping
+            StartCoroutine(StartPing("74.125.224.72"));
+        }
+    }
+
+    private IEnumerator findGamesWait(float time)
+    {
 
         // Issue lobby service request
         LobbyCommands.getSessions(this);
@@ -38,10 +92,12 @@ public class FindSessions : MonoBehaviour
         // Parse response
         JObject o = JObject.Parse(response);
         JObject sessions = JObject.Parse(o.SelectToken("sessions").ToString());
-        
-        Dictionary<string, SessionInformation> data = new Dictionary<string, SessionInformation>();
 
-        foreach (var session in sessions) { 
+        this.data = new Dictionary<string, SessionInformation>();
+
+        // Populate the dictionary with the info about all the current sessions
+        foreach (var session in sessions)
+        {
             string name = session.Key;
             JToken value = session.Value;
             SessionInformation sessInfo = value.ToObject<SessionInformation>();
@@ -49,24 +105,35 @@ public class FindSessions : MonoBehaviour
             data.Add(name, sessInfo);
         }
 
-        foreach(string s in data.Keys) {
+        // Add all the available sessions to dropdown 
+        List<string> dropdownKeys = new List<string>();
+        dropdownKeys.Add("select game...");
+        foreach (string s in data.Keys)
+        {
             Debug.Log(s);
+            dropdownKeys.Add(s);
         }
 
+        sessionsDropDown.GetComponent<Dropdown>().ClearOptions();
+        sessionsDropDown.GetComponent<Dropdown>().AddOptions(dropdownKeys);
     }
 
-    public void joinSession() {
+    public void joinSession()
+    {
         GameObject sessionId;
 
-        if (GameObject.Find("sessionId") == null) {
+        if (GameObject.Find("sessionId") == null)
+        {
             sessionId = (GameObject)Instantiate(SessionPrefab);
             sessionId.name = "sessionId";
-        } else {
+        }
+        else
+        {
             sessionId = GameObject.Find("SessionId");
         }
 
         string sessIdStr = this.sessionsDropDown.options[sessionsDropDown.value].text;
-        string urName = GameObject.Find("ID").GetComponent<Identification>().getName();
+        string urName = GameObject.Find("ID").GetComponent<Identification>().getUsername();
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
 
         sessionId.GetComponent<SessionPrefabScript>().setSessionId(sessIdStr);

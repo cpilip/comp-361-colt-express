@@ -22,7 +22,7 @@ public class CreateLobby : MonoBehaviour
 
     public void leaveLobby() {
         GameObject sessionId = GameObject.Find("SessionId");
-        boolean creator = sessionId.GetComponent<SessionPrefabScript>().getCreator();
+        bool creator = sessionId.GetComponent<SessionPrefabScript>().getCreator();
         if (creator) {
             StartCoroutine(waitDelete(1));
         } else {
@@ -32,7 +32,7 @@ public class CreateLobby : MonoBehaviour
 
     private IEnumerator waitDelete(float time) {
         
-        if (GameObject.Find("sessionId") != null) {
+        if (GameObject.Find("sessionId") == null) {
             Debug.Log("we have a problem");
         }
 
@@ -46,12 +46,13 @@ public class CreateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+        SceneManager.LoadScene ("Play");
 
     }
 
     private IEnumerator waitLeave(float time) {
         
-        if (GameObject.Find("sessionId") != null) {
+        if (GameObject.Find("sessionId") == null) {
             Debug.Log("we have a problem");
         }
 
@@ -66,6 +67,7 @@ public class CreateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+        SceneManager.LoadScene ("Play");
 
     }
 
@@ -99,8 +101,9 @@ public class CreateLobby : MonoBehaviour
         }
 
         sessionId.GetComponent<SessionPrefabScript>().setSessionId(response);
-        sessionId.GetComponent<SessionPrefabScript>().setUsername(urName);
         sessionId.GetComponent<SessionPrefabScript>().setCreator(true);
+
+        SceneManager.LoadScene ("Lobby");
     }
     
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 public class SessionPrefabScript : MonoBehaviour
 {
     public string sessionID;
-    public boolean isCreator;
+    public bool isCreator;
 
-    public setCreator(boolean b) {
+    public void setCreator(bool b) {
         this.isCreator = b;
     }
 
-    public boolean getCreator() {
+    public bool getCreator() {
         return this.isCreator;
     }
 
@@ -20,7 +20,7 @@ public class SessionPrefabScript : MonoBehaviour
         this.sessionID = id;
     }
 
-    public string getId()
+    public string getSessionId()
     {
         return this.sessionID;
     }
