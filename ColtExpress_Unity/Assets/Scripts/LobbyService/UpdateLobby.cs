@@ -26,6 +26,9 @@ public class UpdateLobby : MonoBehaviour
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
     private List<Text> playerTexts;
 
+     private float time = 0.0f;
+    public float interpolationPeriod = 2.0f;
+
     void Start()
     {
         // Initialize all the text updates to easily update them
@@ -38,13 +41,19 @@ public class UpdateLobby : MonoBehaviour
         playerTexts.Add(Player6Text.GetComponent<Text>());
 
         StartCoroutine(initPlayersWait(1));
-        InvokeRepeating("updatePlayersWait", 0.5f, 0.5f);
+        // InvokeRepeating("updatePlayersWait", 0.5f, 0.5f);
     }
 
     void Update()
     {
         // Update all the names of the players currently in the lobby
-        // updatePlayersWait(1);
+        time += Time.deltaTime;
+ 
+        if (time >= interpolationPeriod) {
+            Debug.Log("Calling function");
+            time = 0.0f;
+            StartCoroutine(updatePlayersWait(1.0f));
+        }
     }
 
     public void launchSession(){
@@ -103,7 +112,7 @@ public class UpdateLobby : MonoBehaviour
         PingText.GetComponent<Text>().text = "Ping: " + p.time;
     }
 
-    private IEnumerator updatePlayersWait()
+    private IEnumerator updatePlayersWait(float time)
     {
         Debug.Log("Here");
         bool creator = GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().getCreator();
@@ -111,7 +120,7 @@ public class UpdateLobby : MonoBehaviour
 
         // Call lobby service to create session
         LobbyCommands.getSession(this, sessionID);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
 
