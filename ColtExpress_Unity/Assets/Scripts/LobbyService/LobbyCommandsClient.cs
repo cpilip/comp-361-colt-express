@@ -130,7 +130,7 @@ public class LobbyCommandsClient
     public void launchSession(MonoBehaviour caller, string sessionID, string token)
     {
         // WWWForm form = new WWWForm();
-        string form = "";
+        string form = "emptyData";
         string url = string.Format("http://{0}/api/sessions/{1}?access_token={2}", connectionIP, sessionID, token);
         caller.StartCoroutine(postRequest(url, form, true));
     }

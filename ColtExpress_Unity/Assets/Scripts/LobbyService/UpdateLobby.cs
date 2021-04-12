@@ -152,7 +152,7 @@ public class UpdateLobby : MonoBehaviour
             Debug.Log("we have a problem");
         }
 
-        GameObject sessionId = GameObject.Find("SessionId");
+        GameObject sessionId = GameObject.Find("sessionId");
         string id = sessionId.GetComponent<SessionPrefabScript>().getSessionId();
 
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
