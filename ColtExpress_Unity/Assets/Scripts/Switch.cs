@@ -17,7 +17,7 @@ public class Switch : MonoBehaviour
 
   public void playGame()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+    SceneManager.LoadScene("Play");
   }
 
   public void signIn()

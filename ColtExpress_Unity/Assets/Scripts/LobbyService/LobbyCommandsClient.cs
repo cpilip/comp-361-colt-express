@@ -82,8 +82,9 @@ public class LobbyCommandsClient
 
     public void createSession(MonoBehaviour caller, string token, string creator, string game, string savegame)
     {
-        // string pass = password.GetComponent<TMP_InputField>().text;
-        string url = string.Format("http://{0}/api/sessions?access_token={1}", connectionIP, UnityWebRequest.UnEscapeURL(token));
+        Debug.Log(token);
+
+        string url = string.Format("http://{0}/api/sessions?access_token={1}", connectionIP, token);
         Debug.Log(url);
 
         // WWWForm formData = new WWWForm();
