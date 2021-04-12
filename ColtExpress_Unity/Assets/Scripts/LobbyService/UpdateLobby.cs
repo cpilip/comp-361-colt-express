@@ -120,7 +120,7 @@ public class UpdateLobby : MonoBehaviour
         LobbyCommands.getSession(this, sessionID);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
-        
+
         try {
              // Parse the response from the server
             SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
@@ -133,6 +133,7 @@ public class UpdateLobby : MonoBehaviour
             if (sessInfo.launched)
             {
                 Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
+                SceneManager.LoadScene("MainGame");
             }
             else
             {
@@ -143,7 +144,6 @@ public class UpdateLobby : MonoBehaviour
             GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
             SceneManager.LoadScene("Play");
         }
-
        
     }
 
@@ -157,11 +157,13 @@ public class UpdateLobby : MonoBehaviour
 
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
         LobbyCommands.launchSession(this, id, token);
-            
+        
         // Call lobby service to delete session
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+        SceneManager.LoadScene("MainGame");
+
         Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
     }
 
