@@ -128,6 +128,11 @@ public class UpdateLobby : MonoBehaviour
         // Parse the response from the server
         SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
 
+        int rest = 6 - sessInfo.players.Count;
+        for (int i = 0 ; i < rest ; i++) { 
+            sessInfo.players.Add("--");
+        }
+
         if (sessInfo.launched)
         {
             Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
