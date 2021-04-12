@@ -90,6 +90,7 @@ public class UpdateLobby : MonoBehaviour
 
     private void updateNames(List<string> names) {
         for (int i = 0 ; i < names.Count ; i++) {
+            Debug.Log(names[i]);
             playerTexts[i].text = names[i];
         }
     }
