@@ -122,7 +122,7 @@ public class LobbyCommandsClient
 
     public void joinSession(MonoBehaviour caller, string sessionID, string name, string token)
     {
-        string data = "";
+        string data = "emptyRequest";
         string url = string.Format("http://{0}/api/sessions/{1}/players/{2}?access_token={3}", connectionIP, sessionID, name, token);
         caller.StartCoroutine(putRequest(url, data, true, false));
     }

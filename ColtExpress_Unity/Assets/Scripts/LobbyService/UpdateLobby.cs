@@ -37,13 +37,14 @@ public class UpdateLobby : MonoBehaviour
         playerTexts.Add(Player5Text.GetComponent<Text>());
         playerTexts.Add(Player6Text.GetComponent<Text>());
 
-        StartCoroutine(initPlayersWait(0.5f));
+        StartCoroutine(initPlayersWait(1));
         InvokeRepeating("updatePlayersWait", 0.5f, 0.5f);
     }
 
     void Update()
     {
         // Update all the names of the players currently in the lobby
+        // updatePlayersWait(1);
     }
 
     public void launchSession(){
@@ -69,7 +70,11 @@ public class UpdateLobby : MonoBehaviour
         // Parse the response from the server
         SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
 
-        SaveGameText.GetComponent<Text>().text = "Using savegame: " + sessInfo.savegameid;
+        Debug.Log(sessInfo.savegameid);
+        Debug.Log(sessInfo.players[0]);
+
+        Text tmp = SaveGameText.GetComponent<Text>();
+        tmp.text = "Using savegame: " + sessInfo.savegameid;
         StartCoroutine(StartPing("74.125.224.72"));
         updateNames(sessInfo.players);
     }
@@ -95,18 +100,18 @@ public class UpdateLobby : MonoBehaviour
 
     private void PingFinished(Ping p)
     {
-        Text pText = PingText.GetComponent<Text>();
-        pText.text = "" + p.time + " ms";
+        PingText.GetComponent<Text>().text = "Ping: " + p.time;
     }
 
-    private IEnumerator updatePlayersWait(float time)
+    private IEnumerator updatePlayersWait()
     {
+        Debug.Log("Here");
         bool creator = GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().getCreator();
         string sessionID = GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().getSessionId();
 
         // Call lobby service to create session
         LobbyCommands.getSession(this, sessionID);
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(1);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
 

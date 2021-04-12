@@ -12,7 +12,7 @@ public class LeaveLobby : MonoBehaviour
 
 
     public void leaveLobby() {
-        GameObject sessionId = GameObject.Find("SessionId");
+        GameObject sessionId = GameObject.Find("sessionId");
         bool creator = sessionId.GetComponent<SessionPrefabScript>().getCreator();
         if (creator) {
             StartCoroutine(waitDelete(1));
@@ -27,7 +27,7 @@ public class LeaveLobby : MonoBehaviour
             Debug.Log("we have a problem");
         }
 
-        GameObject sessionId = GameObject.Find("SessionId");
+        GameObject sessionId = GameObject.Find("sessionId");
         string id = sessionId.GetComponent<SessionPrefabScript>().getSessionId();
 
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
@@ -47,7 +47,7 @@ public class LeaveLobby : MonoBehaviour
             Debug.Log("we have a problem");
         }
 
-        GameObject sessionId = GameObject.Find("SessionId");
+        GameObject sessionId = GameObject.Find("sessionId");
         string id = sessionId.GetComponent<SessionPrefabScript>().getSessionId();
         string name = GameObject.Find("ID").GetComponent<Identification>().getUsername();
 

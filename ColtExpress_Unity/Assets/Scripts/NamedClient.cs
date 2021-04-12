@@ -42,7 +42,7 @@ public class NamedClient : MonoBehaviour
     void Update()
     {
         //Listen for messages from the server
-        getFromServer();
+        // getFromServer();
     }
 
     public void sendToServer(string message)

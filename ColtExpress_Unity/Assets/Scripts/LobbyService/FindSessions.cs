@@ -122,6 +122,15 @@ public class FindSessions : MonoBehaviour
     {
         GameObject sessionId;
 
+        string sessIdStr = this.sessionsDropDown.options[sessionsDropDown.value].text;
+        string urName = GameObject.Find("ID").GetComponent<Identification>().getUsername();
+        string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
+
+        LobbyCommands.joinSession(this, sessIdStr, urName, token);
+
+        string response = LobbyCommands.getResponse();
+        Debug.Log(response);
+
         if (GameObject.Find("sessionId") == null)
         {
             sessionId = (GameObject)Instantiate(SessionPrefab);
@@ -129,16 +138,12 @@ public class FindSessions : MonoBehaviour
         }
         else
         {
-            sessionId = GameObject.Find("SessionId");
+            sessionId = GameObject.Find("sessionId");
         }
-
-        string sessIdStr = this.sessionsDropDown.options[sessionsDropDown.value].text;
-        string urName = GameObject.Find("ID").GetComponent<Identification>().getUsername();
-        string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
 
         sessionId.GetComponent<SessionPrefabScript>().setSessionId(sessIdStr);
         sessionId.GetComponent<SessionPrefabScript>().setCreator(false);
-        LobbyCommands.joinSession(this, sessIdStr, token, urName);
+        
         SceneManager.LoadScene("Lobby");
     }
 }
