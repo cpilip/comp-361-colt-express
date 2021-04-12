@@ -121,8 +121,15 @@ public class UpdateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
 
-        // Parse the response from the server
-        SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
+        try {
+             // Parse the response from the server
+            SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
+        } catch (JsonReaderException e) {
+            GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+            GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
+            SceneManager.LoadScene("Play");
+        }
+       
 
         int rest = 6 - sessInfo.players.Count;
         for (int i = 0 ; i < rest ; i++) { 

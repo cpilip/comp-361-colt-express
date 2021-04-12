@@ -37,6 +37,10 @@ public class LeaveLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
+
         SceneManager.LoadScene ("Play");
 
     }
@@ -58,6 +62,10 @@ public class LeaveLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
+
         SceneManager.LoadScene ("Play");
 
     }
