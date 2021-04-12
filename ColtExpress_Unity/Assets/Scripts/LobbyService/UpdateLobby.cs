@@ -5,20 +5,22 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class UpdateLobby : MonoBehaviour
 {
 
-    GameObject Player1Text;
-    GameObject Player2Text;
-    GameObject Player3Text;
-    GameObject Player4Text;
-    GameObject Player5Text;
-    GameObject Player6Text;
-    GameObject SaveGameText;
-    GameObject PingText;
+    public GameObject Player1Text;
+    public GameObject Player2Text;
+    public GameObject Player3Text;
+    public GameObject Player4Text;
+    public GameObject Player5Text;
+    public GameObject Player6Text;
+    public GameObject SaveGameText;
+    public GameObject PingText;
 
-    Button StartButton;
+    public Button StartButton;
 
 
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
@@ -35,7 +37,8 @@ public class UpdateLobby : MonoBehaviour
         playerTexts.Add(Player5Text.GetComponent<Text>());
         playerTexts.Add(Player6Text.GetComponent<Text>());
 
-        StartCoroutine(initPlayersWait());
+        StartCoroutine(initPlayersWait(0.5f));
+        InvokeRepeating("updatePlayersWait", 0.5f, 0.5f);
     }
 
     void Update()
@@ -44,7 +47,7 @@ public class UpdateLobby : MonoBehaviour
     }
 
     public void launchSession(){
-
+        StartCoroutine(launchSessionWait(0.5f));
     }
 
     private IEnumerator initPlayersWait(float time)
@@ -112,7 +115,7 @@ public class UpdateLobby : MonoBehaviour
 
         if (sessInfo.launched)
         {
-            // LAUNCH THE GAME HERE
+            Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
         }
         else
         {
@@ -120,8 +123,22 @@ public class UpdateLobby : MonoBehaviour
         }
     }
 
-    private IEnumerator launchSession(float time) {
+    private IEnumerator launchSessionWait(float time) {
+        if (GameObject.Find("sessionId") == null) {
+            Debug.Log("we have a problem");
+        }
 
+        GameObject sessionId = GameObject.Find("SessionId");
+        string id = sessionId.GetComponent<SessionPrefabScript>().getSessionId();
+
+        string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
+        LobbyCommands.launchSession(this, id, token);
+            
+        // Call lobby service to delete session
+        yield return new WaitForSeconds(time);
+        string response = LobbyCommands.getResponse();
+        Debug.Log(response);
+        Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
     }
 
 }
