@@ -45,7 +45,7 @@ public class CreateLobby : MonoBehaviour
             sessionId = (GameObject)Instantiate(SessionPrefab);
             sessionId.name = "sessionId";
         } else {
-            sessionId = GameObject.Find("SessionId");
+            sessionId = GameObject.Find("sessionId");
         }
 
         sessionId.GetComponent<SessionPrefabScript>().setSessionId(response);
