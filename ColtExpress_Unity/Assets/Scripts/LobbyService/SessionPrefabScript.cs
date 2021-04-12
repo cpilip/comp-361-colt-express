@@ -5,7 +5,15 @@ using UnityEngine;
 public class SessionPrefabScript : MonoBehaviour
 {
     public string sessionID;
-    public string name;
+    public boolean isCreator;
+
+    public setCreator(boolean b) {
+        this.isCreator = b;
+    }
+
+    public boolean getCreator() {
+        return this.isCreator;
+    }
 
     public void setSessionId(string id)
     {

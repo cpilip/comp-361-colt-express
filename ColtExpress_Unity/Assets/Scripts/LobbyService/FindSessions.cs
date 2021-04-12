@@ -53,13 +53,11 @@ public class FindSessions : MonoBehaviour
             Debug.Log(s);
         }
 
-        // sessionsDropDown.ClearOptions();
-        // sessionsDropDown.AddOptions(currentSessions);
-        // GameObject.Find("GameChooser").GetComponent<GameList>().setGames(currentSessions); 
     }
 
     public void joinSession() {
         GameObject sessionId;
+
         if (GameObject.Find("sessionId") == null) {
             sessionId = (GameObject)Instantiate(SessionPrefab);
             sessionId.name = "sessionId";
@@ -68,12 +66,12 @@ public class FindSessions : MonoBehaviour
         }
 
         string sessIdStr = this.sessionsDropDown.options[sessionsDropDown.value].text;
-        string urName = sessionId.GetComponent<SessionPrefabScript>().name;
+        string urName = GameObject.Find("ID").GetComponent<Identification>().getName();
         string token = GameObject.Find("ID").GetComponent<Identification>().getToken();
 
         sessionId.GetComponent<SessionPrefabScript>().setSessionId(sessIdStr);
+        sessionId.GetComponent<SessionPrefabScript>().setCreator(false);
         LobbyCommands.joinSession(this, sessIdStr, token, urName);
-
         SceneManager.LoadScene("Lobby");
     }
 }
