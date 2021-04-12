@@ -50,6 +50,10 @@ public class LogIn : MonoBehaviour
         } else {
             Debug.Log(json.access_token);
             Debug.Log(json.refresh_token);
+
+            Debug.Log("Expires in " + json.expires_in);
+
+            id.GetComponent<Identification>().setRefreshTime(json.expires_in);
             id.GetComponent<Identification>().setToken(UnityWebRequest.EscapeURL(json.access_token), UnityWebRequest.EscapeURL(json.refresh_token));
             id.GetComponent<Identification>().setUsername(usernameField.GetComponent<TMP_InputField>().text);
             mText.text = "Sign in successful";

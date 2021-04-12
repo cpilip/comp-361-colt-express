@@ -22,13 +22,7 @@ public class LobbyCommandsClient
 
     public void signIn(MonoBehaviour caller, string user, string pass) 
     {
-        // string pass = password.GetComponent<TMP_InputField>().text;
         string url = string.Format("http://{0}/oauth/token?grant_type=password&username={1}&password={2}", connectionIP, user, pass);
-
-        // WWWForm formData = new WWWForm();
-        // formData.AddField("user_oauth_approval", "true");
-        // formData.AddField("_csrf", "19beb2db-3807-4dd5-9f64-6c733462281b");
-        // formData.AddField("authorize", "true");
 
         string formData = "nothing";
 
@@ -139,6 +133,13 @@ public class LobbyCommandsClient
     {
         string url = string.Format("http://{0}/api/sessions/{1}/players/{2}?access_token={3}", connectionIP, sessionID, name, token);
         caller.StartCoroutine(deleteRequest(url, true));
+    }
+
+    public void refreshToken(MonoBehaviour caller, string refreshToken) {
+        string url = string.Format("http://{0}/oauth/token?grant_type=refresh_token&refresh_token={1}", connectionIP, refreshToken);
+        string formData = "nothing";
+
+        caller.StartCoroutine(postRequest(url, formData, true));
     }
 
     // Methods for general requests
