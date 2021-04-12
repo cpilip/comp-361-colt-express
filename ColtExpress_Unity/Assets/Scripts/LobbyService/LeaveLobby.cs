@@ -38,7 +38,7 @@ public class LeaveLobby : MonoBehaviour
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
 
-        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator(false);
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
         SceneManager.LoadScene ("Play");
@@ -63,7 +63,7 @@ public class LeaveLobby : MonoBehaviour
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
 
-        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+        GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator(false);
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
         SceneManager.LoadScene ("Play");

@@ -120,30 +120,31 @@ public class UpdateLobby : MonoBehaviour
         LobbyCommands.getSession(this, sessionID);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
-
+        
         try {
              // Parse the response from the server
             SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
+
+             int rest = 6 - sessInfo.players.Count;
+            for (int i = 0 ; i < rest ; i++) { 
+                sessInfo.players.Add("--");
+            }
+
+            if (sessInfo.launched)
+            {
+                Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
+            }
+            else
+            {
+                updateNames(sessInfo.players);
+            }
         } catch (JsonReaderException e) {
-            GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator("");
+            GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator(false);
             GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
             SceneManager.LoadScene("Play");
         }
+
        
-
-        int rest = 6 - sessInfo.players.Count;
-        for (int i = 0 ; i < rest ; i++) { 
-            sessInfo.players.Add("--");
-        }
-
-        if (sessInfo.launched)
-        {
-            Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
-        }
-        else
-        {
-            updateNames(sessInfo.players);
-        }
     }
 
     private IEnumerator launchSessionWait(float time) {
