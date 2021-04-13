@@ -13,6 +13,12 @@ using RoundSpace;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using HostageSpace;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using WebApi;
 
 
 // Enter the listening loop.
@@ -47,7 +53,13 @@ class MyTcpListener
     public static Byte[] bytes = new Byte[256];
 
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
-    public static void Main()
+    public static void Main(string[] args)
+    {
+        // Wait for put/delete request from lobby service
+        WebApi.Startup.CreateHostBuilder(args).Build().Run();
+    }
+
+    public static void playGame(string saveFile, int numPlayers)
     {
         TcpListener server = null;
         try
