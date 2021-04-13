@@ -5,6 +5,8 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using GameUnitSpace;
+using System.Net;
+
 
 public class NamedClient : MonoBehaviour
 {
