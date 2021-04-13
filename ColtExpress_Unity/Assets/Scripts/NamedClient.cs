@@ -18,8 +18,16 @@ public class NamedClient : MonoBehaviour
     private static string buffer = "";
     private bool connected = false;
 
-    public void connectToServer()
+    public void connectToServer() {
+        StartCoroutine(connectToServerWait());
+    }
+
+    public IEnumerator connectToServerWait()
     {
+        Debug.Log("Connecting to server in 3 seconds...");
+        yield return new WaitForSeconds(3);
+        Debug.Log("Connecting to server...");
+
         //Open a connection to the server automatically upon uponing the game executable
         try
         {
@@ -46,6 +54,8 @@ public class NamedClient : MonoBehaviour
         connected = true;
 
     }
+
+
 
     void Update()
     {

@@ -132,8 +132,6 @@ public class UpdateLobby : MonoBehaviour
 
             if (sessInfo.launched)
             {
-                yield return new WaitForSeconds(3);
-
                 Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
                 GameObject.Find("EventManager").GetComponent<NamedClient>().connectToServer();
                 SceneManager.LoadScene("ChooseCharacter");
@@ -165,8 +163,6 @@ public class UpdateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
-
-        yield return new WaitForSeconds(3);
 
         Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
 
