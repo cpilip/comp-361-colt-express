@@ -36,7 +36,7 @@ public class NamedClient : MonoBehaviour
         {
             //Create a TcpClient; "server" must be an IP running the corresponding server executable
             IPEndPoint ipLocalEndPoint = new IPEndPoint(serverLong, port);
-            TcpClient tcpClientA = new TcpClient (ipLocalEndPoint);
+            TcpClient thisClient = new TcpClient (ipLocalEndPoint);
             Debug.Log("1");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
