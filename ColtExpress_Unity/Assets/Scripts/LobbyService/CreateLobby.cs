@@ -30,7 +30,7 @@ public class CreateLobby : MonoBehaviour
         Debug.Log(token);
 
         // Call lobby service to create session
-        LobbyCommands.createSession(this, token, urName, "ColtExpress", name);
+        LobbyCommands.createSession(this, token, urName, "ColtExpress2", name);
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
