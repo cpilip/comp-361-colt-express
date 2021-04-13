@@ -14,8 +14,7 @@ public class NamedClient : MonoBehaviour
 
     private static TcpClient thisClient;
     private static NetworkStream stream;
-    public string server = "52.152.132.200";
-    public long serverLong = 882410696;
+    public string serverIP = "52.152.132.200";
     public int port = 80;
 
     private static string buffer = "";
@@ -34,9 +33,10 @@ public class NamedClient : MonoBehaviour
         //Open a connection to the server automatically upon uponing the game executable
         try
         {
-            //Create a TcpClient; "server" must be an IP running the corresponding server executable
-            IPEndPoint ipLocalEndPoint = new IPEndPoint(serverLong, port);
-            TcpClient thisClient = new TcpClient (ipLocalEndPoint);
+            //Create a TcpClient; "serverIP" must be an IP running the corresponding server executable
+            IPAddress serverAddr = IPAddress.Parse(serverIP);
+            IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
+            TcpClient thisClient = new TcpClient (serverEndPoint);
             Debug.Log("1");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
