@@ -59,8 +59,9 @@ class MyTcpListener
         WebApi.Startup.CreateHostBuilder(args).Build().Run();
     }
 
-    public static void playGame(string saveFile, int numPlayers)
+    public static void playGame(string saveGame, int numPlayers)
     {
+        Console.WriteLine("Called playGame for " + numPlayers + " players");
         TcpListener server = null;
         try
         {

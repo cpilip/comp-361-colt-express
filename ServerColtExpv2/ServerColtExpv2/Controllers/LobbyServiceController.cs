@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+
 
 namespace WebApi.Controllers
 {
@@ -23,6 +27,8 @@ namespace WebApi.Controllers
         {
             string json = System.Text.Json.JsonSerializer.Serialize(body);
             Console.WriteLine(json);
+            LaunchGameJson o = JObject.Parse(json).ToObject<LaunchGameJson>();
+            MyTcpListener.playGame(o.savegame, o.players.Count);
             return "startgame";
         }
 
