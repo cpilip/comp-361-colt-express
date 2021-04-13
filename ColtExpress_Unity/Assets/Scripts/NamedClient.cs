@@ -13,7 +13,7 @@ public class NamedClient : MonoBehaviour
     private static TcpClient thisClient;
     private static NetworkStream stream;
     public string server = "52.152.132.200";
-    public int port = "80";
+    public int port = 80;
 
     private static string buffer = "";
     private bool connected = false;
