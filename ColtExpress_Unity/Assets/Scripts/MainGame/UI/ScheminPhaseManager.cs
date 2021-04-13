@@ -170,6 +170,7 @@ public class ScheminPhaseManager : MonoBehaviour
                     }
 
                     Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + w + "].");
+                    GameUIManager.gameUIManagerInstance.whiskeyWasUsed = true;
 
                     var definition = new
                     {

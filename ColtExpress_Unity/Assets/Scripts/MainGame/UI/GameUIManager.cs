@@ -73,6 +73,7 @@ public class GameUIManager : MonoBehaviour
     //Other important information
     public bool isNormalTurn = false;
     public bool isTunnelTurn = false;
+    public bool isTurmoilTurn = false;
     public bool whiskeyWasUsed = false;
 
     //Loaded sprites
@@ -387,7 +388,7 @@ public class GameUIManager : MonoBehaviour
             cabooseRoofLoot.transform.parent.position = lastTrainCarCoordinates;
             cabooseInteriorLoot.transform.parent.position = lastTrainCarCoordinates;
 
-           // Debug.Log(caboose.name + " now at " + lastTrainCarCoordinates);
+            // Debug.Log(caboose.name + " now at " + lastTrainCarCoordinates);
 
             //Disable the rest of the cars and remove them from the map
             for (int i = index; i <= 5; i++)
@@ -639,6 +640,7 @@ public class GameUIManager : MonoBehaviour
         }
 
         card.GetComponent<Image>().sprite = cardSprite;
+        card.GetComponent<CardID>().isHidden = false;
     }
 
     //Create a new in-game bullet card object - true for in the deck, or false for the discard pile
@@ -689,17 +691,31 @@ public class GameUIManager : MonoBehaviour
             turnMenu.transform.GetChild(1).gameObject.SetActive(true);
             turnMenu.transform.GetChild(2).gameObject.SetActive(true);
             turnMenu.transform.GetChild(3).gameObject.SetActive(isNormalTurn && playerHasWhiskey());
-            
+
         }
     }
 
     public bool playerHasWhiskey()
     {
         //3 - Usables, all children disabled?
-        return (getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(0).gameObject.activeSelf &&
-                getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(1).gameObject.activeSelf &&
-                getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(2).gameObject.activeSelf
-                );
+        bool usable = false;
+        if (getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(0).gameObject.activeSelf)
+        {
+            usable = true;
+        }
+
+        if (getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(1).gameObject.activeSelf)
+        {
+            usable = true;
+        }
+
+        if (getPlayerProfileObject(NamedClient.c).transform.GetChild(3).GetChild(2).gameObject.activeSelf)
+        {
+            usable = true;
+        }
+    
+        return usable;
+
     }
 
 

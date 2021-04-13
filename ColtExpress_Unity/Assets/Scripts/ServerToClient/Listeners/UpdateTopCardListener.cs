@@ -10,6 +10,7 @@ public class UpdateTopCardListener : UIEventListenable
 {
     private Sprite hiddenCardBack;
     public GameObject playedCards;
+    public static int turmoilCardsPlayed = 0;
 
     public override void updateElement(string data)
     {
@@ -45,6 +46,15 @@ public class UpdateTopCardListener : UIEventListenable
         {
             topCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/hiddenCard");
             topCard.GetComponent<CardID>().isHidden = true;
+        }
+
+        //If topcard was played during a turmoil turn
+        if (GameUIManager.gameUIManagerInstance.isTurmoilTurn)
+        {
+            topCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/hiddenCard");
+            topCard.GetComponent<CardID>().isHidden = true;
+            //Count how many were played, in case someone chose to draw
+            turmoilCardsPlayed++;
         }
 
         //If most recent added card brought the total > 7, set the first visible back card invisible

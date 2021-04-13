@@ -240,11 +240,9 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "decrementWhiskey", currentPlayer.getBandit(), aKind);
             }
 
+            currentPlayer.setGetsAnotherAction(true);
             drawCards();
-
-
-            //TO SPECIFIC PLAYER
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
+            //Falls into endOfTurn(), where hasAnotherAction is sent as true + both
 
         }
         else if (aKind.Equals(WhiskeyKind.Old))
@@ -261,11 +259,9 @@ class GameController
             }
 
             currentPlayer.setGetsAnotherAction(true);
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", currentPlayerIndex, true);
-            // TODO need to ask player to play a Card ?
-
             //TO SPECIFIC PLAYER
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
+            //CardMessage, which then goes playActionCard() and then endOfTurn() (hasAnotherAction is sent as true + both)
 
         }
         //If the kind is unknown, the player has at least one full whiskey
@@ -282,9 +278,9 @@ class GameController
 
             if (aW.getWhiskeyKind().Equals(WhiskeyKind.Normal))
             {
-                
+
+                currentPlayer.setGetsAnotherAction(true);
                 drawCards();
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateHasAnotherAction", this.currentPlayer.getBandit(), true, "play");
             }
             else if (aW.getWhiskeyKind().Equals(WhiskeyKind.Old))
             {
@@ -373,7 +369,7 @@ class GameController
         {
             currentPlayer.setHasSpecialAbility(false);
             //TODO new message 
-            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "specialAbilityDisabled");
+            CommunicationAPI.sendMessageToClient(null, "specialAbilityDisabled", this.currentPlayer.getBandit());
         }
 
 
@@ -668,7 +664,14 @@ class GameController
         if (loot is Whiskey)
         {
             currentPlayer.addToPossessions(loot);
-            CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", currentPlayer.getBandit(), loot);
+            if (((Whiskey)loot).getWhiskeyStatus() == WhiskeyStatus.Full)
+            {
+
+                CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", currentPlayer.getBandit(), WhiskeyKind.Unknown);
+            } else
+            {
+                CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", currentPlayer.getBandit(), ((Whiskey)loot).getWhiskeyKind());
+            }
         }
         else {
             currentPlayer.addToPossessions(loot);
@@ -2114,11 +2117,13 @@ class GameController
         {
             if (anItem is Whiskey)
             {
-                if (((Whiskey)anItem).getWhiskeyKind() == WhiskeyKind.Unknown)
+                //If the requested kind was Unknown, then find the first instance of a Full Whiskey
+                if (aKind == WhiskeyKind.Unknown && ((Whiskey)anItem).getWhiskeyStatus() == WhiskeyStatus.Full)
                 {
                     return (Whiskey)anItem;
                     break;
                 } 
+                //Otherwise, there must be a dropped visible Normal or Old whiskey at the location - meaning they should be HALF-FULL
                 else if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
                 {
                     return (Whiskey)anItem;
