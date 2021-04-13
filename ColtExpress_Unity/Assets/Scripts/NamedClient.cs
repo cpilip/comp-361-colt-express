@@ -13,6 +13,7 @@ public class NamedClient : MonoBehaviour
     private static TcpClient thisClient;
     private static NetworkStream stream;
     public string server = "52.152.132.200";
+    public long serverLong = 882410696;
     public int port = 80;
 
     private static string buffer = "";
@@ -32,7 +33,8 @@ public class NamedClient : MonoBehaviour
         try
         {
             //Create a TcpClient; "server" must be an IP running the corresponding server executable
-            thisClient = new TcpClient(server, port);
+            IPEndPoint ipLocalEndPoint = new IPEndPoint(serverLong, port);
+            TcpClient tcpClientA = new TcpClient (ipLocalEndPoint);
             Debug.Log("1");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
