@@ -133,7 +133,8 @@ public class UpdateLobby : MonoBehaviour
             if (sessInfo.launched)
             {
                 Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
-                SceneManager.LoadScene("MainGame");
+                GameObject.Find("EventManager").GetComponent<NamedClient>().connectToServer();
+                SceneManager.LoadScene("ChooseCharacter");
             }
             else
             {
@@ -162,9 +163,11 @@ public class UpdateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
-        SceneManager.LoadScene("MainGame");
 
         Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
+
+        GameObject.Find("EventManager").GetComponent<NamedClient>().connectToServer();
+        SceneManager.LoadScene("ChooseCharacter");
     }
 
 }

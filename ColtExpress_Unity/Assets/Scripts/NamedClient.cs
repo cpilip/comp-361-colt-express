@@ -12,12 +12,13 @@ public class NamedClient : MonoBehaviour
 
     private static TcpClient thisClient;
     private static NetworkStream stream;
-    public string server;
-    public int port;
+    public string server = "52.152.132.200";
+    public int port = "80";
 
     private static string buffer = "";
+    private bool connected = false;
 
-    void Start()
+    public void connectToServer()
     {
         //Open a connection to the server automatically upon uponing the game executable
         try
@@ -36,13 +37,16 @@ public class NamedClient : MonoBehaviour
         {
             Console.WriteLine("SocketException: {0}", e);
         }
+        connected = true;
 
     }
 
     void Update()
     {
-        //Listen for messages from the server
-        // getFromServer();
+        if (connected){
+            //Listen for messages from the server
+            getFromServer();
+        }
     }
 
     public void sendToServer(string message)
