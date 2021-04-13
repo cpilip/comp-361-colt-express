@@ -125,13 +125,15 @@ public class UpdateLobby : MonoBehaviour
              // Parse the response from the server
             SessionInformation sessInfo = JObject.Parse(response).ToObject<SessionInformation>();
 
-             int rest = 6 - sessInfo.players.Count;
+            int rest = 6 - sessInfo.players.Count;
             for (int i = 0 ; i < rest ; i++) { 
                 sessInfo.players.Add("--");
             }
 
             if (sessInfo.launched)
             {
+                yield return new WaitForSeconds(3);
+
                 Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
                 GameObject.Find("EventManager").GetComponent<NamedClient>().connectToServer();
                 SceneManager.LoadScene("ChooseCharacter");
@@ -163,6 +165,8 @@ public class UpdateLobby : MonoBehaviour
         yield return new WaitForSeconds(time);
         string response = LobbyCommands.getResponse();
         Debug.Log(response);
+
+        yield return new WaitForSeconds(3);
 
         Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
 
