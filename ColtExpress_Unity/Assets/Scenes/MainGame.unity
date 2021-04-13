@@ -1432,9 +1432,9 @@ Transform:
   m_LocalScale: {x: 0.5930319, y: 0.5930319, z: 0.5930319}
   m_Children:
   - {fileID: 337841794}
-  - {fileID: 1976880698}
   - {fileID: 205661228}
   - {fileID: 1644182491}
+  - {fileID: 1976880698}
   m_Father: {fileID: 644892954}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1469,6 +1469,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Loot Strip (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 635599254886213917, guid: f439dda3e4806bf46a0d543d53dc3c51,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1381016623629236107, guid: f439dda3e4806bf46a0d543d53dc3c51,
         type: 3}
@@ -1535,6 +1540,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3680643722732118566, guid: f439dda3e4806bf46a0d543d53dc3c51,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3680643722732118569, guid: f439dda3e4806bf46a0d543d53dc3c51,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1548,7 +1558,7 @@ PrefabInstance:
     - target: {fileID: 3680643722732118569, guid: f439dda3e4806bf46a0d543d53dc3c51,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 23.641993
       objectReference: {fileID: 0}
     - target: {fileID: 3680643722732118569, guid: f439dda3e4806bf46a0d543d53dc3c51,
         type: 3}
@@ -1819,7 +1829,7 @@ RectTransform:
   - {fileID: 991201458}
   - {fileID: 1768300533}
   m_Father: {fileID: 173019962}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5482,6 +5492,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 599626120}
+  - component: {fileID: 599626121}
   m_Layer: 0
   m_Name: Stagecoach
   m_TagString: Untagged
@@ -5513,6 +5524,19 @@ RectTransform:
   m_AnchoredPosition: {x: 335.1, y: -319.94}
   m_SizeDelta: {x: 47.6, y: 237.6}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &599626121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599626119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d508327370e9fc840b4eef2696eef594, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: moveStageCoach
 --- !u!1 &628519174
 GameObject:
   m_ObjectHideFlags: 0
@@ -13755,7 +13779,7 @@ RectTransform:
   m_Children:
   - {fileID: 599626120}
   m_Father: {fileID: 173019962}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -17642,7 +17666,7 @@ RectTransform:
   - {fileID: 327681972}
   - {fileID: 95460197}
   m_Father: {fileID: 173019962}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

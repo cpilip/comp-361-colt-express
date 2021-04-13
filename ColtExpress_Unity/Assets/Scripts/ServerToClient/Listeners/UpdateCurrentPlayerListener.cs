@@ -29,7 +29,12 @@ public class UpdateCurrentPlayerListener : UIEventListenable
         //Otherwise, reset the previous player's highlighting and update to the new player
         if (previousPlayer.HasValue)
         {
-            GameUIManager.gameUIManagerInstance.getPlayerProfileObject(previousPlayer.Value).GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 1f);
+            if (c != previousPlayer)
+            {
+                //If the current player is different from the previous player, reset the previous player's profile color 
+                //Otherwise, they're the same player
+                GameUIManager.gameUIManagerInstance.getPlayerProfileObject(previousPlayer.Value).GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 1f);
+            }
             previousPlayer = c;
 
         } else

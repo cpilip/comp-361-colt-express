@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace CardSpace {
     abstract class Card {
-        [JsonIgnore]
+        [JsonProperty]
         public readonly Player myPlayer;
 
         protected Card(Player pPlayer)

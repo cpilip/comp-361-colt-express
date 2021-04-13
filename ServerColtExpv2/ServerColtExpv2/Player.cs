@@ -196,61 +196,65 @@ namespace GameUnitSpace {
             else return min;
         }
 
-        public int getHostageValue(){
+        public int getHostageValue()
+        {
             int val = 0;
-            switch (capturedHostage.getHostageChar())
+            if (capturedHostage != null)
             {
-                case HostageChar.LadyPoodle:
+                switch (capturedHostage.getHostageChar())
                 {
-                    val += 1000;
-                    return val;
+                    case HostageChar.LadyPoodle:
+                        {
+                            val += 1000;
+                            return val;
+                        }
+                    case HostageChar.Minister:
+                        {
+                            val += 900;
+                            return val;
+                        }
+                    case HostageChar.Teacher:
+                        {
+                            val += 800;
+                            return val;
+                        }
+                    case HostageChar.Zealot:
+                        {
+                            val += 700;
+                            return val;
+                        }
+                    case HostageChar.Banker:
+                        {
+                            if (this.hasStrongBox())
+                            {
+                                val += 900;
+                            }
+                            return val;
+                        }
+                    case HostageChar.OldLady:
+                        {
+                            val += (this.getNumOfItem(ItemType.Ruby) * 500);
+                            return val;
+                        }
+                    case HostageChar.PokerPlayer:
+                        {
+                            val += (this.getNumOfItem(ItemType.Purse) * 250);
+                            return val;
+                        }
+                    case HostageChar.Photographer:
+                        {
+                            val += (this.getNumOfEnemyBulletCard() * 200);
+                            return val;
+                        }
+                    default:
+                        {
+                            return val;
+                        }
                 }
-                case HostageChar.Minister:
-                {
-                    val += 900;
-                    return val;
-                }
-                case HostageChar.Teacher:
-                {
-                    val += 800;
-                    return val;
-                }
-                case HostageChar.Zealot:
-                {
-                    val += 700;
-                    return val;
-                }
-                case HostageChar.Banker:
-                {
-                    if(this.hasStrongBox()){
-                        val += 900;
-                    }
-                    return val;
-                }
-                case HostageChar.OldLady:
-                {
-                    val += (this.getNumOfItem(ItemType.Ruby) * 500);
-                    return val;
-                }
-                case HostageChar.PokerPlayer:
-                {
-                    val += (this.getNumOfItem(ItemType.Purse) * 250);
-                    return val;
-                }
-                case HostageChar.Photographer:
-                {
-                    val += (this.getNumOfEnemyBulletCard() * 200);
-                    return val;
-                }
-                default :
-                {
-                    return val;
-                }
-
             }
-            
+            return val;
         }
-
+        
         public void shootBullet() {
             this.numOfBulletsShot = this.numOfBulletsShot + 1;
         }

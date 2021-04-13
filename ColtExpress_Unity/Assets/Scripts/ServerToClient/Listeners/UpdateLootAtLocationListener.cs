@@ -61,8 +61,9 @@ public class UpdateLootAtLocationListener : UIEventListenable
                         strongboxes++;
                         break;
                     case ItemType.Whiskey:
-                        
-                        switch(((Whiskey)item).getWhiskeyKind()) {
+                        Whiskey w = (Whiskey)item;
+
+                        switch (w.getWhiskeyKind()) {
                             case WhiskeyKind.Unknown:
                                 fullWhiskeyNum++;
                                 break;

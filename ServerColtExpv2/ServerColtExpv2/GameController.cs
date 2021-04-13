@@ -511,8 +511,6 @@ class GameController
             }
         }
        
-        
-        
         //loot is removed from victime possessions
         if (loot != null)
         {
@@ -522,18 +520,16 @@ class GameController
 
             loot.setPosition(victim.getPosition());
             //TO ALL PLAYERS
-            if ((currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse)) == false)
-            {
-                CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
-            } else
+            if ((currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse)) == true)
             {
                 CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
+            } else
+            {
+                CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
             }
         }
 
         victim.setPosition(dest);
-
-        //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest, getIndexByTrainCar(dest.getTrainCar()));
 
         //if the marshal is at position dest, victim: bullet card in deck + sent to the roof 
