@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Identification : MonoBehaviour
 {
@@ -10,13 +11,15 @@ public class Identification : MonoBehaviour
 
     private float initTime;
 
+    private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
+
     private float time = 0.0f;
     private float interpolationPeriod = 1750.0f;
 
     void Update() {
         // Update all the names of the players currently in the lobby
         time += Time.deltaTime;
- 
+
         if (time >= interpolationPeriod) {
             time = 0.0f;
             StartCoroutine(refreshWait(1.0f));
@@ -40,7 +43,7 @@ public class Identification : MonoBehaviour
         } else {
             Debug.Log("Refreshed Token! Expires in " + json.expires_in);
             this.setToken(UnityWebRequest.EscapeURL(json.access_token), UnityWebRequest.EscapeURL(json.refresh_token));
-            this.setUsername(usernameField.GetComponent<TMP_InputField>().text);
+            // this.setUsername(usernameField.GetComponent<TMP_InputField>().text);
             this.interpolationPeriod = json.expires_in;
         }
     }
