@@ -25,23 +25,23 @@ public class NamedClient : MonoBehaviour
         {
             //Create a TcpClient; "server" must be an IP running the corresponding server executable
             thisClient = new TcpClient(server, port);
-            Debug.log("1");
+            Debug.Log("1");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
            
         }
         catch (ArgumentNullException e)
         {
-                        Debug.log("2");
+            Debug.Log("2");
             Console.WriteLine("ArgumentNullException: {0}", e);
         }
         catch (SocketException e)
         {
-            Debug.log("3");
+            Debug.Log("3");
 
             Console.WriteLine("SocketException: {0}", e);
         }
-                    Debug.log("4");
+        Debug.Log("4");
 
         connected = true;
 
