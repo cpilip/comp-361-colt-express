@@ -33,23 +33,24 @@ public class NamedClient : MonoBehaviour
         //Open a connection to the server automatically upon uponing the game executable
         try
         {
-            //Create a TcpClient; "serverIP" must be an IP running the corresponding server executable
+            // Create a TcpClient; "serverIP" must be an IP running the corresponding server executable
             // // IPAddress serverAddr = IPAddress.Parse(serverIP);
             // Debug.Log("1");
             // IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
             // Debug.Log("2");
             // TcpClient thisClient = new TcpClient(serverEndPoint);
-            // TcpClient thisClient = new TcpClient(serverIP, port);
-            // Debug.Log("3");
-            // //Obtain the corresponding stream
-            // stream = thisClient.GetStream();
-            // Debug.Log("4");
+            
+            TcpClient thisClient = new TcpClient(serverIP, port);
+            Debug.Log("3");
+            //Obtain the corresponding stream
+            stream = thisClient.GetStream();
+            Debug.Log("4");
 
-            // Use socket to skip DNS lookup
-            Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(this.serverIP), this.port);
-            sock.Connect(ipep);
-            stream = new NetworkStream(sock);           
+            // // Use socket to skip DNS lookup
+            // Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            // IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(this.serverIP), this.port);
+            // sock.Connect(ipep);
+            // stream = new NetworkStream(sock);           
         }
         catch (ArgumentNullException e)
         {
