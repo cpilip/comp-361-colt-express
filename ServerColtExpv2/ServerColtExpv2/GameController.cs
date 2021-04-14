@@ -25,8 +25,8 @@ enum GameStatus
 
 class GameController
 {
-    private static GameController myGameController = new GameController();
-    private int totalPlayer = 3;
+    private static GameController myGameController;
+    private readonly int totalPlayer;
     private Boolean endOfGame;
     private GameStatus aGameStatus;
     private Round currentRound;
@@ -50,7 +50,7 @@ class GameController
     private bool shotGunCheckResponse = false;
     Player previousCurrentPlayerFromShotgun;
 
-    private GameController()
+    private GameController(int numPlayers)
     {
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
@@ -59,14 +59,18 @@ class GameController
         this.endOfGame = false;
         this.endHorseAttack = false;
         this.horseAttackCounter = 0;
+        this.totalPlayer = numPlayers;
     }
 
     public static void setNumPlayers(int numPlayers){
-        this.totalPlayer = numPlayers;
+        myGameController = new GameController(numPlayers);
     }
 
     public static GameController getInstance()
     {
+        if (myGameController == null) {
+            throw new InvalidOperationException("You need to set the number of players first.");
+        }
         return myGameController;
     }
 
