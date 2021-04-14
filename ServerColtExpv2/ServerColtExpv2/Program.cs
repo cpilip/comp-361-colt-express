@@ -46,6 +46,8 @@ class MyTcpListener
     public static Dictionary<Player, TcpClient> players = new Dictionary<Player, TcpClient>();
     public static Byte[] bytes = new Byte[256];
 
+    public static bool allPlayersInitialized = false;
+
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
     public static void Main()
     {
@@ -99,16 +101,21 @@ class MyTcpListener
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
 
-            // Listen to all players for their character selection
-            foreach (TcpClient cli in clientStreams.Keys)
+            while (allPlayersInitialized == false)
             {
-                Character c = JsonConvert.DeserializeObject<Character>(getFromClient(cli));
-                currentClient = cli;
-                aController.chosenCharacter(c);
-
-                Player p = aController.getPlayerByCharacter(c);
-                //players.Add(p, cli);
+                foreach (TcpClient cli in clientStreams.Keys)
+                {
+                    currentClient = cli;
+                    string res = getCharacterFromCurrentClient();
+                    if (res != null)
+                    {
+                        Character c = JsonConvert.DeserializeObject<Character>(res);
+                        aController.chosenCharacter(c);
+                    }
+                }
             }
+
+            aController.allCharactersChosen();
 
             while (!aController.getEndHorseAttack()) {
                 string res = getFromClient(players[aController.getCurrentPlayer()]);
@@ -221,8 +228,6 @@ class MyTcpListener
 
                     aController.chosenPosition(pos);
                 }
-                //TODO hostage message 
-                
                 else if (eventName.Equals("CardMessage"))
                 {
                     // Get index; -1 if player timed out
@@ -230,24 +235,36 @@ class MyTcpListener
                     if (index != -1)
                     {
                         ActionCard crd = aController.getCardByIndex(index);
+                        bool ghostChoseToHide = false;
+                        bool photographerHideDisabled = false;
 
                         try
                         {
-                            bool ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
+                            ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
 
-                            aController.playActionCard(crd, ghostChoseToHide);
                         }
                         catch
                         {
 
-                            aController.playActionCard(crd, false);
                         }
+
+                        try
+                        {
+                            photographerHideDisabled = o.SelectToken("photogapherHideDisabled").ToObject<bool>();
+
+                        }
+                        catch
+                        {
+
+                        }
+                        
+                        aController.playActionCard(crd, ghostChoseToHide, photographerHideDisabled);
 
                     } 
                     else
                     {
                         //Player timed out
-                        aController.playActionCard(null, false);
+                        aController.playActionCard(null, false, false);
                     }
                 }
                 else if (eventName.Equals("DrawMessage"))
@@ -315,6 +332,11 @@ class MyTcpListener
     public static void addPlayerWithClient(Player p)
     {
         players.Add(p, currentClient);
+    }
+
+    public static void informClient(bool alreadyChosen)
+    {
+        CommunicationAPI.sendMessageToClient(currentClient, "characterAlreadyChosen", alreadyChosen);
     }
 
     public static void sendToClient(string data)
@@ -403,6 +425,36 @@ class MyTcpListener
         // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
+    }
+
+    public static string getCharacterFromCurrentClient()
+    {
+        clientStreams.TryGetValue(currentClient, out NetworkStream streamToReadFrom);
+
+        int i;
+        string data = null;
+
+        if (streamToReadFrom.DataAvailable)
+        {
+            //i = number of bytes read
+            do
+            {
+                i = streamToReadFrom.Read(bytes, 0, bytes.Length);
+                // Translate data bytes to a ASCII string.
+                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+
+
+            } while (streamToReadFrom.DataAvailable);
+
+            clients.TryGetValue(currentClient, out string fromClientatIP);
+
+            Console.WriteLine("Received {0} from {1}", data, "client");
+            // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+
+            return data;
+        }
+        return data;
+        
     }
 
 

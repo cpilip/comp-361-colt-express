@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SelectManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class SelectManager : MonoBehaviour
     private Vector3 OffScreen;
     private int characterIndex = 1;
     private readonly string selectedCharacter = "SelectedCharacter";
+    public GameObject selectCharacterButton;
 
     private void Awake() {
         CharacterPosition = Bella.transform.position;
@@ -147,6 +149,9 @@ public class SelectManager : MonoBehaviour
     public void startButton() {
 
         int getCharacter = PlayerPrefs.GetInt(selectedCharacter);
+
+        selectCharacterButton.GetComponent<Button>().interactable = false;
+
         switch (getCharacter)
         {
             case 1:
@@ -184,8 +189,6 @@ public class SelectManager : MonoBehaviour
                 break;
 
         }
-
-        SceneManager.LoadScene(8);
     }
 
 }

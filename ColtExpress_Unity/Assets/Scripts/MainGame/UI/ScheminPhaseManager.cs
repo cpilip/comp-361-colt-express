@@ -296,7 +296,8 @@ public class ScheminPhaseManager : MonoBehaviour
                     {
                         eventName = "CardMessage",
                         index = i,
-                        ghostChoseToHide = ghostHidden
+                        ghostChoseToHide = ghostHidden,
+                        photographerHideDisabled = GameUIManager.gameUIManagerInstance.photographerHideDisabled
                     };
 
                     ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);

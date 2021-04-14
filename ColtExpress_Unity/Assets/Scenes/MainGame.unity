@@ -6832,6 +6832,7 @@ MonoBehaviour:
   isTurmoilTurn: 0
   whiskeyWasUsed: 0
   abilityDisabled: 0
+  photographerHideDisabled: 0
   currentTurnIndex: 0
 --- !u!114 &718402314
 MonoBehaviour:
@@ -21433,6 +21434,7 @@ GameObject:
   - component: {fileID: 6600991086092993953}
   - component: {fileID: 6600991086092993955}
   - component: {fileID: 6600991086092993954}
+  - component: {fileID: 6600991086092993956}
   m_Layer: 5
   m_Name: Side Board
   m_TagString: Untagged
@@ -21604,6 +21606,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventName: actionCantBePlayed
   actionCantBePlayedPopup: {fileID: 104186293}
+--- !u!114 &6600991086092993956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600991086092993943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76e48cce7e984414d8de507bbe954643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventName: hideDisabled
 --- !u!224 &7867464141650009469
 RectTransform:
   m_ObjectHideFlags: 0

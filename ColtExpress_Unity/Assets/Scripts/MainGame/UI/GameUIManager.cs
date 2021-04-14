@@ -79,6 +79,7 @@ public class GameUIManager : MonoBehaviour
     public bool isTurmoilTurn = false;
     public bool whiskeyWasUsed = false;
     public bool abilityDisabled = false;
+    public bool photographerHideDisabled = false;
 
     public (bool, ActionKind) actionBlocked = (false, ActionKind.Marshal);
 
@@ -907,6 +908,7 @@ public class GameUIManager : MonoBehaviour
         isTurmoilTurn = false;
         whiskeyWasUsed = false;
         abilityDisabled = false;
+        photographerHideDisabled = false;
 
         actionBlocked = (false, ActionKind.Marshal);
 

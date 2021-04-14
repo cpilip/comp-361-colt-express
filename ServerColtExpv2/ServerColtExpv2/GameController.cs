@@ -73,20 +73,35 @@ class GameController
         * Public utility methods
     */
 
+
     public void chosenCharacter(Character aChar)
     {
-
         //adding a new player to the list of players 
-        Player tmp = new Player(aChar);
-        this.players.Add(tmp);
+        if (getPlayerByCharacter(aChar) != null)
+        {
+            MyTcpListener.informClient(true);
+            Console.WriteLine("A player picked an already chosen character.");
+        }
+        else
+        {
+            Player tmp = new Player(aChar);
+            this.players.Add(tmp);
 
-        MyTcpListener.addPlayerWithClient(tmp);
+            MyTcpListener.addPlayerWithClient(tmp);
+            MyTcpListener.informClient(false);
+            Console.WriteLine("A player picked a character.");
+        }
 
-        Console.WriteLine("A player picked a character.");
-
-        //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
         if (players.Count == totalPlayer)
         {
+            MyTcpListener.allPlayersInitialized = true;
+        }
+    }
+    public void allCharactersChosen()
+    {
+        //if all players are here (HARD-CODED, usually is players.Count == totalPlayers )
+        if (players.Count == totalPlayer)
+        {  
             initializeGameBoard();
 
             //Send all Player objects
@@ -196,7 +211,7 @@ class GameController
         return null;
     }
 
-    public void playActionCard(ActionCard c, bool ghostChoseToHide)
+    public void playActionCard(ActionCard c, bool ghostChoseToHide, bool photographerHideDisabled)
     {
         if (c == null)
         {
@@ -209,11 +224,22 @@ class GameController
             this.currentRound.addToPlayedCards(c);
             if (this.currentPlayer.getBandit() == Character.Ghost && this.currentPlayer.getHasSpecialAbility())
             {
-                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), ghostChoseToHide);
+                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), ghostChoseToHide, false);
             } 
+            else if (this.currentPlayer.getHostage() != null)
+            {
+                if (this.currentPlayer.getHostage().getHostageChar() == HostageChar.Photographer)
+                {
+                    CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), false, true);
+                }
+                else
+                {
+                    CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), false, false);
+                }
+            }
             else
             {
-                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), false);
+                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), false, false);
             }
             this.currentPlayer.hand.Remove(c);
         }
@@ -378,6 +404,12 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "specialAbilityDisabled", this.currentPlayer.getBandit());
         }
 
+        if (retrievedHostage.getHostageChar().Equals(HostageChar.PokerPlayer))
+        {
+            currentPlayer.setHasSpecialAbility(false);
+            //TODO new message 
+            CommunicationAPI.sendMessageToClient(null, "hideDisabled", this.currentPlayer.getBandit());
+        }
 
         currentPlayer.setWaitingForInput(false);
 

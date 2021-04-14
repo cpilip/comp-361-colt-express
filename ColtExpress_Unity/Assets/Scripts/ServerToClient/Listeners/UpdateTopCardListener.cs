@@ -65,6 +65,14 @@ public class UpdateTopCardListener : UIEventListenable
             topCard.GetComponent<CardID>().playedByGhost = true;
         }
 
+        bool photographerHideDisabled = o.SelectToken("photographerHideDisabled").ToObject<bool>();
+        if (photographerHideDisabled)
+        {
+            GameUIManager.gameUIManagerInstance.flipCardObject(from, card, topCard);
+            topCard.GetComponent<CardID>().playedByGhost = false;
+            topCard.GetComponent<CardID>().isHidden = false;
+        }
+
         //Remove the Draggable component
         Destroy(topCard.GetComponent<Draggable>());
 

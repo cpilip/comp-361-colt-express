@@ -237,7 +237,7 @@ public class CommunicationAPI
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
 
         }
-        else if (action == "updateCurrentPlayer" || action == "updateFirstPlayer" || action == "specialAbilityDisabled")
+        else if (action == "updateCurrentPlayer" || action == "updateFirstPlayer" || action == "specialAbilityDisabled" || action == "hideDisabled")
         {
             var definition = new
             {
@@ -301,7 +301,8 @@ public class CommunicationAPI
                 eventName = action,
                 fromPlayer = (Character)args[0],
                 card = (ActionKind)args[1],
-                ghostChoseToHide = (bool)args[2]
+                ghostChoseToHide = (bool)args[2],
+                photographerHideDisabled = (bool)args[3]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
@@ -447,6 +448,16 @@ public class CommunicationAPI
             {
                 eventName = action,
                 actionKind = (ActionKind)args[0]
+            };
+
+            JSONmessage = JsonConvert.SerializeObject(definition, settings);
+        }
+        else if (action == "characterAlreadyChosen")
+        {
+            var definition = new
+            {
+                eventName = action,
+                characterAlreadyChosen = (bool)args[0]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
