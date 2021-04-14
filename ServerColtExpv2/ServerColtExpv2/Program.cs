@@ -55,13 +55,14 @@ class MyTcpListener
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
     public static void Main(string[] args)
     {
-        while (true) {
-            Console.WriteLine("Start Listening for LS request");
-            // Wait for put/delete request from lobby service
-            WebApi.Startup.CreateHostBuilder(args).Build().Run();
-            Console.WriteLine("Stopped Listening for LS request");
-            playGame("", 2);
-        }
+        WebApi.Startup.CreateHostBuilder(args).Build().Run();
+        // while (true) {
+        //     Console.WriteLine("Start Listening for LS request");
+        //     // Wait for put/delete request from lobby service
+        //     WebApi.Startup.CreateHostBuilder(args).Build().Run();
+        //     Console.WriteLine("Stopped Listening for LS request");
+        //     playGame("", 2);
+        // }
     }
 
     public static void playGame(string saveGame, int numPlayers)
@@ -116,6 +117,7 @@ class MyTcpListener
 
             //MAIN GAME STARTS HERE
 
+            GameController.setNumPlayers(numPlayers);
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
 
