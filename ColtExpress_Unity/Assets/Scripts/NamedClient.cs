@@ -26,8 +26,8 @@ public class NamedClient : MonoBehaviour
 
     public IEnumerator connectToServerWait()
     {
-        Debug.Log("Connecting to server in 3 seconds...");
-        yield return new WaitForSeconds(10);
+        Debug.Log("Connecting to server in 2 seconds...");
+        yield return new WaitForSeconds(2);
         Debug.Log("Connecting to server...");
 
         //Open a connection to the server automatically upon uponing the game executable

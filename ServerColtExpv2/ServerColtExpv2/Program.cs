@@ -102,9 +102,11 @@ class MyTcpListener
 
                 currentClient = client;
 
+                Console.WriteLine("New player connected");
+
 
                 //Verify against lobby service
-                if (clients.Count == 3)
+                if (clients.Count == numPlayers)
                 {
                     haveAllConnections = true;
                 }
