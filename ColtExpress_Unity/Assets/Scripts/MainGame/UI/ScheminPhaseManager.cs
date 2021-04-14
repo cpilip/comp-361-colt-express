@@ -25,6 +25,7 @@ public class ScheminPhaseManager : MonoBehaviour
     private static int endOfBlock;
     private bool alreadyInFirst;
 
+    private bool ghostHidden = false;
     void Start()
     {
         firstDisplayedCardIndex = 0;
@@ -231,9 +232,35 @@ public class ScheminPhaseManager : MonoBehaviour
     public void playCard()
     {
         //Unlock hand and hide turn menu
-        GameUIManager.gameUIManagerInstance.unlockHand();
-        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+        
 
+        if (NamedClient.c == Character.Ghost && GameUIManager.gameUIManagerInstance.abilityDisabled == false && GameUIManager.gameUIManagerInstance.currentTurnIndex == 0)
+        {
+            GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+            GameUIManager.gameUIManagerInstance.toggleGhostMenu(true);
+
+        } else
+        {
+            GameUIManager.gameUIManagerInstance.unlockHand();
+            GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+            StartCoroutine("playingCard");
+        }
+
+    }
+
+    public void GhostYes()
+    {
+        ghostHidden = true;
+        GameUIManager.gameUIManagerInstance.toggleGhostMenu(false);
+        GameUIManager.gameUIManagerInstance.unlockHand();
+        StartCoroutine("playingCard");
+    }
+
+    public void GhostNo()
+    {
+        ghostHidden = false;
+        GameUIManager.gameUIManagerInstance.toggleGhostMenu(false);
+        GameUIManager.gameUIManagerInstance.unlockHand();
         StartCoroutine("playingCard");
     }
 
@@ -268,7 +295,8 @@ public class ScheminPhaseManager : MonoBehaviour
                     var definition = new
                     {
                         eventName = "CardMessage",
-                        index = i
+                        index = i,
+                        ghostChoseToHide = ghostHidden
                     };
 
                     ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);

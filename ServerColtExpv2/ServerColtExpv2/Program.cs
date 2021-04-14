@@ -230,12 +230,24 @@ class MyTcpListener
                     if (index != -1)
                     {
                         ActionCard crd = aController.getCardByIndex(index);
-                        aController.playActionCard(crd);
+
+                        try
+                        {
+                            bool ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
+
+                            aController.playActionCard(crd, ghostChoseToHide);
+                        }
+                        catch
+                        {
+
+                            aController.playActionCard(crd, false);
+                        }
+
                     } 
                     else
                     {
                         //Player timed out
-                        aController.playActionCard(null);
+                        aController.playActionCard(null, false);
                     }
                 }
                 else if (eventName.Equals("DrawMessage"))

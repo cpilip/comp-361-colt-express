@@ -44,7 +44,7 @@ public class UpdateRidePositionsListener : UIEventListenable
                 {
                     //Empty horse found
                     horsePosition = horseSet.transform.GetChild(j).GetChild(0).gameObject;
-                    Debug.LogError("Free horse " + horsePosition.name);
+                    //Debug.LogError("Free horse " + horsePosition.name);
                     break;
                 }
             }
@@ -55,7 +55,7 @@ public class UpdateRidePositionsListener : UIEventListenable
             {
                 //Empty horse found
                 horsePosition = horseSet.transform.GetChild(0).GetChild(0).gameObject;
-                Debug.LogError("Free horse " + horsePosition.name);
+                //Debug.LogError("Free horse " + horsePosition.name);
             }
         }
 

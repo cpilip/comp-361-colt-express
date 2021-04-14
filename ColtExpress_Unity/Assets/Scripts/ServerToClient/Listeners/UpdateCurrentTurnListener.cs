@@ -23,7 +23,7 @@ public class UpdateCurrentTurnListener : UIEventListenable
 
         JObject o = JObject.Parse(data);
         int t = o.SelectToken("currentTurn").ToObject<int>();
-
+        GameUIManager.gameUIManagerInstance.currentTurnIndex = t;
         this.transform.GetChild(t).GetComponent<Image>().color = new Color(1.000f, 0.933f, 0.427f, 0.914f);
 
         //If true, turn before the listener was called was turmoil
@@ -35,7 +35,11 @@ public class UpdateCurrentTurnListener : UIEventListenable
             while (UpdateTopCardListener.turmoilCardsPlayed > 0)
             {
                 GameObject card = playedCards.transform.GetChild(cardCount).gameObject;
-                GameUIManager.gameUIManagerInstance.flipCardObject(card.GetComponent<CardID>().c, card.GetComponent<CardID>().kind, card);
+
+                if (card.GetComponent<CardID>().playedByGhost == false)
+                {
+                    GameUIManager.gameUIManagerInstance.flipCardObject(card.GetComponent<CardID>().c, card.GetComponent<CardID>().kind, card);
+                }
                 cardCount--;
                 UpdateTopCardListener.turmoilCardsPlayed--;
             }

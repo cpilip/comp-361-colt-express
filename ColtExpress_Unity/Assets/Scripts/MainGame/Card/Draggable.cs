@@ -43,12 +43,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 this.transform.SetSiblingIndex(parentToReturnTo.childCount - 1);
 
-                Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
+                //Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
             } else
             {
 
                 this.transform.SetSiblingIndex(originalIndex);
-                Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
+                //Debug.LogError("IN " + parentToReturnTo + " - INDEX " + this.transform.GetSiblingIndex());
             }
         } 
 

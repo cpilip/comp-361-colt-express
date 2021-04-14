@@ -46,14 +46,15 @@ public class UpdatePlayerHandListener : UIEventListenable
                     //Call the appropriate card object function
                     if (card.GetType() == typeof(BulletCard))
                     {
-                        if (card.belongsTo() == null)
+                        BulletCard pewpewCard = c.ToObject<BulletCard>();
+                        if (pewpewCard.belongsTo() == null)
                         {
-                            GameUIManager.gameUIManagerInstance.createCardObject(null, ((BulletCard)card).getNumBullets(), true);
+                            GameUIManager.gameUIManagerInstance.createCardObject(null, pewpewCard.getNumBullets(), true);
                         } 
                         else
                         {
 
-                            GameUIManager.gameUIManagerInstance.createCardObject(card.belongsTo().getBandit(), ((BulletCard)card).getNumBullets(), true);
+                            GameUIManager.gameUIManagerInstance.createCardObject(pewpewCard.belongsTo().getBandit(), pewpewCard.getNumBullets(), true);
                         }
 
                     }
@@ -66,10 +67,17 @@ public class UpdatePlayerHandListener : UIEventListenable
 
                 Debug.Log(GameUIManager.gameUIManagerInstance.deck.transform.childCount);
 
+                int cardsToShow = 6;
+                if (GameUIManager.gameUIManagerInstance.deck.transform.childCount < 6)
+                {
+                    cardsToShow = GameUIManager.gameUIManagerInstance.deck.transform.childCount;
+                }
+
                 //Activate the six cards
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < cardsToShow; i++)
                 {
                     GameUIManager.gameUIManagerInstance.deck.transform.GetChild(i).gameObject.SetActive(true);
+
                 }
 
             }

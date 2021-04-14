@@ -72,7 +72,7 @@ public class MoveGameUnitListener : UIEventListenable
                 }
             } else
             {
-                Debug.LogError("[MoveGameUnitListener] DOES NOT HANDLE HORSE POSITIONS CURRENTLY.");
+                //Debug.LogError("[MoveGameUnitListener] DOES NOT HANDLE HORSE POSITIONS CURRENTLY.");
             }
 
         } else

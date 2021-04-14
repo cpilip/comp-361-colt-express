@@ -25,7 +25,7 @@ public class UpdateHorseAttackListener : UIEventListenable
             //Convert position to work with set - server returns 0, 1.. with 0 as caboose but 0 is locomotive
             int pos = (p.getPosition() == 0) ? positions.Count : positions.Count + 1 - 1 - p.getPosition();
 
-            Debug.LogError(pos);
+            //Debug.LogError(pos);
          
 
             if (p.hasStopped() == false)

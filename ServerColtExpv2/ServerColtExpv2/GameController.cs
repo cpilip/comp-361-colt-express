@@ -196,7 +196,7 @@ class GameController
         return null;
     }
 
-    public void playActionCard(ActionCard c)
+    public void playActionCard(ActionCard c, bool ghostChoseToHide)
     {
         if (c == null)
         {
@@ -207,8 +207,14 @@ class GameController
         if (c.isCanBePlayed())
         {
             this.currentRound.addToPlayedCards(c);
-            //TODO see with Christina
-            CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind());
+            if (this.currentPlayer.getBandit() == Character.Ghost && this.currentPlayer.getHasSpecialAbility())
+            {
+                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), ghostChoseToHide);
+            } 
+            else
+            {
+                CommunicationAPI.sendMessageToClient(null, "updateTopCard", c.belongsTo().getBandit(), c.getKind(), false);
+            }
             this.currentPlayer.hand.Remove(c);
         }
         currentPlayer.setWaitingForInput(false);
@@ -376,7 +382,7 @@ class GameController
         currentPlayer.setWaitingForInput(false);
 
         CommunicationAPI.sendMessageToClient(null, "updateHostageName", currentPlayer.getBandit(), retrievedHostage.getHostageChar());
-
+        this.currentRound.getTopOfPlayedCards();
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
 
@@ -482,7 +488,7 @@ class GameController
 
             if (p.isInStageCoach(myStageCoach))
             {
-                if (availableHostages.Count() != 0)
+                if (availableHostages.Count() != 0 && currentPlayer.getHostage() == null)
                 {
 
                     CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
@@ -885,16 +891,14 @@ class GameController
                             //if he ends up inside the StageCoach, he chooses a hostage (if there are any left)
                             if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
                             {
-                                if (availableHostages.Count() != 0)
+                                if (availableHostages.Count() != 0 && this.currentPlayer.getHostage() == null)
                                 {
                                     this.aGameStatus = GameStatus.FinalizingCard;
-                                    CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
+                                    //CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                                     this.currentPlayer.setWaitingForInput(true);
                                     //TODO new massage
                                     CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
-                                    this.currentRound.getTopOfPlayedCards();
-                                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 } else
                                 {
                                     this.currentRound.getTopOfPlayedCards();
@@ -1320,7 +1324,7 @@ class GameController
                     CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
                     //setting the next First player and game status of the game
-                    this.firstPlayerIndex = (this.firstPlayerIndex == totalPlayer - 1) ? 0 : firstPlayerIndex++;
+                    this.firstPlayerIndex = (this.firstPlayerIndex == totalPlayer - 1) ? 0 : (firstPlayerIndex + 1);
                     this.currentPlayer = this.players[firstPlayerIndex];
                     this.currentPlayerIndex = this.players.IndexOf(currentPlayer);
                     //TO ALL PLAYERS
@@ -1689,6 +1693,22 @@ class GameController
                 }
             }
 
+
+            try
+            {
+                TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar)];
+                // Add adjacent possible positions at the front of current position
+                possPos.Add(tmp.getInside());
+                if (myStageCoach.getAdjacentCar().Equals(tmp))
+                {
+                    possPos.Add(myStageCoach.getInside());
+                }
+            }
+            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+            {
+                
+            }
+
         }
         //if the player is inside or on the roof of the stagecoach
         else if (p.getPosition().isInStageCoach(myStageCoach))
@@ -1877,9 +1897,20 @@ class GameController
         TrainCar playerCar = p.getPosition().getTrainCar();
 
         //Move the target to the floor of an adjacent car
-        
+
         //True if floor (not roof_
-        if(p.getPosition().isInside())
+        if (p.getPosition().isInStageCoach(myStageCoach))
+        {
+            if (p.getPosition().isInside())
+            {
+                possPos.Add(myStageCoach.getAdjacentCar().getInside());
+            }
+            else
+            {
+                possPos.Add(myStageCoach.getAdjacentCar().getRoof());
+            }
+        } 
+        else if (p.getPosition().isInside())
         {
             //if the playerCar is adjacent to the stageCoach, add inside of the stage coach 
             if (myStageCoach.getAdjacentCar().Equals(playerCar))

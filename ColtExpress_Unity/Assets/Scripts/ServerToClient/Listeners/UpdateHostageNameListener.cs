@@ -51,10 +51,9 @@ public class UpdateHostageNameListener : UIEventListenable
             case (HostageChar.Photographer):
                 displayHostageName = "Photographer";
                 break;
-    
         }
 
-        GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = h.ToString();
+        GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c).transform.GetChild(4).GetComponent<TextMeshProUGUI>().text = displayHostageName;
 
         Debug.Log("[UpdateHostageNameListener] Player: " + c.ToString() + " has " + h.ToString());
 

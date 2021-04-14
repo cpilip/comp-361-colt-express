@@ -67,7 +67,7 @@ public class UpdateLootAtLocationListener : UIEventListenable
                         listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Whiskey:
-                        listOfLootTokensEnumerator.MoveNext();
+                        
                         JToken q = ((JToken)listOfLootTokensEnumerator.Current);
                         Whiskey w = q.ToObject<Whiskey>();
 
@@ -82,7 +82,8 @@ public class UpdateLootAtLocationListener : UIEventListenable
                                 oldWhiskeyNum++;
                                 break;
                         }
-
+                        
+                        listOfLootTokensEnumerator.MoveNext();
                         break;
 
                 }

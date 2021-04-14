@@ -37,6 +37,7 @@ public class GameUIManager : MonoBehaviour
 
     //Menus
     public GameObject turnMenu;
+    public GameObject ghostMenu;
     public GameObject hostageMenu;
     public GameObject horseAttackMenu;
     public GameObject punchShotgunButton;
@@ -78,7 +79,11 @@ public class GameUIManager : MonoBehaviour
     public bool isTunnelTurn = false;
     public bool isTurmoilTurn = false;
     public bool whiskeyWasUsed = false;
+    public bool abilityDisabled = false;
+
     public (bool, ActionKind) actionBlocked = (false, ActionKind.Marshal);
+
+    public int currentTurnIndex = 0;
 
     //Loaded sprites
     public static Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
@@ -122,6 +127,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    
     public void clearPunchTargets()
     {
         List<GameObject> flattenList = playerProfiles.Values.ToList();
@@ -219,6 +225,11 @@ public class GameUIManager : MonoBehaviour
     {
         horseAttackMenu.SetActive(isVisible);
     }
+
+    public void toggleGhostMenu(bool isVisible)
+    {
+        ghostMenu.SetActive(isVisible);
+    }
     public (bool, int) getTrainCarIndexByPosition(GameObject trainCarPosition)
     {
         List<int> flattenList = trainCars.Keys.ToList();
@@ -310,7 +321,7 @@ public class GameUIManager : MonoBehaviour
         {
             //Parent bandit on free horse
             getCharacterObject(players[i]).transform.SetParent(horseSetCaboose.transform.GetChild(i).transform.GetChild(0).transform);
-            Debug.LogError("Parented " + players[i] + " on " + horseSetCaboose.transform.GetChild(i).gameObject.name);
+            //Debug.LogError("Parented " + players[i] + " on " + horseSetCaboose.transform.GetChild(i).gameObject.name);
             getCharacterObject(players[i]).transform.localScale = scale;
 
             //Add mapping
@@ -675,7 +686,7 @@ public class GameUIManager : MonoBehaviour
         } else
         {
             //Grab the corresponding bullet card sprite
-            loadedSprites.TryGetValue(c.ToString().ToLower() + "_cards_" + num, out newCardSprite);
+            loadedSprites.TryGetValue(c.ToString().ToLower() + "_bullet_cards_" + num, out newCardSprite);
 
 
         }

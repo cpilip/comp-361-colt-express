@@ -584,11 +584,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectFactor: 0.5
-  m_Width: 0.99
+  m_Width: 0.274
   m_Rotation: 135
   m_Softness: 1
-  m_Brightness: 0.421
-  m_Gloss: 0.016
+  m_Brightness: 0.623
+  m_Gloss: 0.241
   m_EffectArea: 0
   m_Player:
     play: 1

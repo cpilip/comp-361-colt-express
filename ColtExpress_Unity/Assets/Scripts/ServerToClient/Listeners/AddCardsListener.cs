@@ -40,15 +40,21 @@ public class AddCardsListener : UIEventListenable
             //Call the appropriate card object function
             if (card.GetType() == typeof(BulletCard))
             {
-                //TODO PLAYER MUST BE FROM PLAYER WHO SHOT
-                GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((BulletCard)card).getNumBullets(), true);
+                if (card.belongsTo() == null)
+                {
+                    GameUIManager.gameUIManagerInstance.createCardObject(null, ((BulletCard)card).getNumBullets(), true);
+                }
+                else
+                {
+
+                    GameUIManager.gameUIManagerInstance.createCardObject(card.belongsTo().getBandit(), ((BulletCard)card).getNumBullets(), true);
+                }
             }
             else
             {
                 GameUIManager.gameUIManagerInstance.createCardObject(NamedClient.c, ((ActionCard)card).getKind(), true);
             }
             count++;
-
         }
 
         if (GameUIManager.gameUIManagerInstance.actionBlocked.Item1 == true)

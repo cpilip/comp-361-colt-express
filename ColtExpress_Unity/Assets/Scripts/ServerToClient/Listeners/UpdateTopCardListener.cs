@@ -57,6 +57,14 @@ public class UpdateTopCardListener : UIEventListenable
             turmoilCardsPlayed++;
         }
 
+        bool ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
+        if (ghostChoseToHide && from == Character.Ghost)
+        {
+            topCard.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/hiddenCard");
+            topCard.GetComponent<CardID>().isHidden = true;
+            topCard.GetComponent<CardID>().playedByGhost = true;
+        }
+
         //Remove the Draggable component
         Destroy(topCard.GetComponent<Draggable>());
 

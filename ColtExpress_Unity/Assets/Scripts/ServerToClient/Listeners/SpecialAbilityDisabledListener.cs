@@ -21,6 +21,11 @@ public class SpecialAbilityDisabledListener : UIEventListenable
 
         GameUIManager.gameUIManagerInstance.getPlayerProfileObject(c).transform.GetChild(6).gameObject.SetActive(true);
 
+        if (NamedClient.c == c)
+        {
+            GameUIManager.gameUIManagerInstance.abilityDisabled = true;
+        }
+
         Debug.Log("[Special] Player: " + c);
 
     }

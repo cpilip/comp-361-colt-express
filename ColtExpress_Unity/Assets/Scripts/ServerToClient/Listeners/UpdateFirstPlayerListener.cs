@@ -29,8 +29,16 @@ public class UpdateFirstPlayerListener : UIEventListenable
         //Otherwise, reset the previous first player's start and update to the new first player
         if (previousPlayer.HasValue)
         {
-            GameUIManager.gameUIManagerInstance.getPlayerProfileObject(previousPlayer.Value).transform.GetChild(5).gameObject.SetActive(false);
-            previousPlayer = c;
+            if (previousPlayer.Value == c)
+            {
+                previousPlayer = c;
+            }
+            else
+            {
+                GameUIManager.gameUIManagerInstance.getPlayerProfileObject(previousPlayer.Value).transform.GetChild(5).gameObject.SetActive(false);
+                previousPlayer = c;
+            }
+            
         }
         else
         {

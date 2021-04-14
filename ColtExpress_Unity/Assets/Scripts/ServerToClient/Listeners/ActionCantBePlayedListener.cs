@@ -46,31 +46,16 @@ public class ActionCantBePlayedListener : UIEventListenable
 
         Debug.Log("[ActionCantBePlayedListener] Informed the player that " + k.ToString() + "can no longer be played.");
 
+        actionCantBePlayedPopup.SetActive(true);
+
         StartCoroutine("displayingActionCantBePlayedPopup");
 
     }
 
     private IEnumerator displayingActionCantBePlayedPopup()
     {
-        DateTime start = DateTime.Now;
-        TimeSpan overall = new TimeSpan(0, 0, 3);
-        bool timeToDisappear = false;
-
-        actionCantBePlayedPopup.SetActive(true);
-
-        while (timeToDisappear == false)
-        {
-            if ((DateTime.Now) - start > overall)
-            {
-                actionCantBePlayedPopup.SetActive(false);
-                timeToDisappear = true;
-                yield return null;
-            }
-            else
-            {
-                yield break;
-            }
-        }
+        yield return new WaitForSeconds(3);
+        actionCantBePlayedPopup.SetActive(false);
     }
 
 }

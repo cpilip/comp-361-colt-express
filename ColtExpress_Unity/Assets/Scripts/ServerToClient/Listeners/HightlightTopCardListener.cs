@@ -52,7 +52,7 @@ public class HightlightTopCardListener : UIEventListenable
         if (topCard.GetComponent<CardID>().isHidden)
         {
             GameUIManager.gameUIManagerInstance.flipCardObject(topCard.GetComponent<CardID>().c, topCard.GetComponent<CardID>().kind, topCard);
-            Debug.LogError("card flipped");
+            //Debug.LogError("card flipped");
             topCard.GetComponent<CardID>().isHidden = false;
         }
 

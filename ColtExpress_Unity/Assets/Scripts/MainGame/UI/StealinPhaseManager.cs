@@ -304,8 +304,7 @@ public class StealinPhaseManager : MonoBehaviour
                 isLoot = true;
             }
 
-            Debug.LogError(GameUIManager.gameUIManagerInstance.gameObject.name);
-
+           
             //Strongbox
             string value = targetprofile.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text;
             int num = Int32.Parse(value.Substring(1));

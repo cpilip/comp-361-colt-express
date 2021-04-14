@@ -300,7 +300,8 @@ public class CommunicationAPI
             {
                 eventName = action,
                 fromPlayer = (Character)args[0],
-                card = (ActionKind)args[1]
+                card = (ActionKind)args[1],
+                ghostChoseToHide = (bool)args[2]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
