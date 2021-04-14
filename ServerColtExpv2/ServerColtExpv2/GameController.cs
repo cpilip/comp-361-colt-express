@@ -50,24 +50,26 @@ class GameController
     private bool shotGunCheckResponse = false;
     Player previousCurrentPlayerFromShotgun;
 
-    private GameController()
+    private GameController(int numPlayers)
     {
         this.players = new List<Player>();
         this.myTrain = new List<TrainCar>();
         this.rounds = new List<Round>();
         this.availableHostages = new List<Hostage>();
-        totalPlayer = 3;
+        this.totalPlayer = numPlayers;
         this.endOfGame = false;
         this.endHorseAttack = false;
         this.horseAttackCounter = 0;
+    }
+
+    public static void setNumPlayers(int numPlayers){
+        myGameController = new GameController(numPlayers);
     }
 
     public static GameController getInstance()
     {
         return myGameController;
     }
-
-
 
     /**
         * Public utility methods
