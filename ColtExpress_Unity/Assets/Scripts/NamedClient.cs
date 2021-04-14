@@ -45,11 +45,13 @@ public class NamedClient : MonoBehaviour
         catch (ArgumentNullException e)
         {
             Debug.Log("2");
+            Debug.Log(e.Message);
             Console.WriteLine("ArgumentNullException: {0}", e);
         }
         catch (SocketException e)
         {
             Debug.Log("3");
+            Debug.Log(e.Message);
 
             Console.WriteLine("SocketException: {0}", e);
         }
