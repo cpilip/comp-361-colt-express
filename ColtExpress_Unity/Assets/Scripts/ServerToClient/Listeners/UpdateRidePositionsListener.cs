@@ -70,10 +70,7 @@ public class UpdateRidePositionsListener : UIEventListenable
             {
                 gamePosition = GameUIManager.gameUIManagerInstance.getStagecoachPosition(positions[positionsIndex].isRoof());
 
-                if (positions[positionsIndex].isRoof())
-                {
-                    gamePosition.GetComponent<Image>().raycastTarget = true;
-                }
+                
             }
             else
             {
@@ -87,6 +84,8 @@ public class UpdateRidePositionsListener : UIEventListenable
             positionsIndex++;
 
         }
+
+        
         Debug.Log("[UpdateRidePositionsListener] Moves now visible and on a horse.");
     }
 }

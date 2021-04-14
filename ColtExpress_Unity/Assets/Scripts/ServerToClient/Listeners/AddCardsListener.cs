@@ -51,6 +51,11 @@ public class AddCardsListener : UIEventListenable
 
         }
 
+        if (GameUIManager.gameUIManagerInstance.actionBlocked.Item1 == true)
+        {
+            GameUIManager.gameUIManagerInstance.blockActionCards(GameUIManager.gameUIManagerInstance.actionBlocked.Item2);
+        }
+
         if (cardIterator != null && count > 0)
         {
             cardIterator.GetComponent<UIShiny>().Play();

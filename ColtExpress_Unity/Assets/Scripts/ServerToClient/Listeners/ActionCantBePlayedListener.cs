@@ -30,9 +30,16 @@ public class ActionCantBePlayedListener : UIEventListenable
         if (k == ActionKind.Punch)
         {
             text += "Punch Action Card anymore.";
+            GameUIManager.gameUIManagerInstance.actionBlocked = (true, ActionKind.Punch);
         } else if (k == ActionKind.Ride)
         {
             text += "Ride Action Card anymore.";
+            GameUIManager.gameUIManagerInstance.actionBlocked = (true, ActionKind.Ride);
+        }
+
+        if (GameUIManager.gameUIManagerInstance.actionBlocked.Item1 == true)
+        {
+            GameUIManager.gameUIManagerInstance.blockActionCards(GameUIManager.gameUIManagerInstance.actionBlocked.Item2);
         }
 
         actionCantBePlayedPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = text;

@@ -16,8 +16,15 @@ public class MoveStageCoachListener : UIEventListenable
             Vector3 coordinates = new Vector3(adjacentCar.transform.position.x, this.transform.position.y, this.transform.position.z);
 
             this.transform.position = coordinates;
-            GameUIManager.gameUIManagerInstance.getStageCoachLoot(true).transform.position = coordinates;
-            GameUIManager.gameUIManagerInstance.getStageCoachLoot(false).transform.position = coordinates;
+
+            GameObject stagecoachLootRoof = GameUIManager.gameUIManagerInstance.getStageCoachLoot(true);
+            coordinates = new Vector3(coordinates.x, stagecoachLootRoof.transform.position.y, stagecoachLootRoof.transform.position.z);
+            stagecoachLootRoof.transform.position = coordinates;
+
+            GameObject stagecoachLootInterior = GameUIManager.gameUIManagerInstance.getStageCoachLoot(false);
+            coordinates = new Vector3(coordinates.x, stagecoachLootInterior.transform.position.y, stagecoachLootInterior.transform.position.z);
+            stagecoachLootInterior.transform.position = coordinates;
+
 
         }
 

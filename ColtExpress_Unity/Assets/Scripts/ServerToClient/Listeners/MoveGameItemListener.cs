@@ -53,7 +53,7 @@ public class MoveGameItemListener : UIEventListenable
                 index = 5;
                 break;
             case ItemType.Whiskey:
-                Whiskey w = (g as Whiskey);
+                Whiskey w = o.SelectToken("gameItem").ToObject<Whiskey>();
 
                 switch (w.getWhiskeyKind())
                 {

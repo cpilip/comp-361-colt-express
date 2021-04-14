@@ -12,6 +12,9 @@ using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
 {
+    //Grayscale shader material
+    public Material grayscaleShaderMaterial;
+
     //Game object locations for major scripts
     public GameObject gameControllerLocation;
     public GameObject playerProfileLocation;
@@ -75,6 +78,7 @@ public class GameUIManager : MonoBehaviour
     public bool isTunnelTurn = false;
     public bool isTurmoilTurn = false;
     public bool whiskeyWasUsed = false;
+    public (bool, ActionKind) actionBlocked = (false, ActionKind.Marshal);
 
     //Loaded sprites
     public static Dictionary<string, Sprite> loadedSprites = new Dictionary<string, Sprite>();
@@ -269,6 +273,18 @@ public class GameUIManager : MonoBehaviour
 
         characters.Add(c, newPlayer);
         return newPlayer;
+    }
+
+    public void blockActionCards(ActionKind kindToBlock)
+    {
+        foreach (Transform c in deck.transform)
+        {
+            if (c.gameObject.GetComponent<CardID>().kind == kindToBlock)
+            {
+                Destroy(c.gameObject.GetComponent<Draggable>());
+                c.gameObject.GetComponent<Image>().material = grayscaleShaderMaterial;
+            }
+        }
     }
 
     //Grab all horse objects
@@ -604,6 +620,8 @@ public class GameUIManager : MonoBehaviour
         newCard.transform.localScale = scale;
 
         newCard.SetActive(false);
+
+
 
         return newCard;
     }

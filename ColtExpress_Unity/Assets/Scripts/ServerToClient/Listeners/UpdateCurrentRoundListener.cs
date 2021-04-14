@@ -52,9 +52,11 @@ public class UpdateCurrentRoundListener : UIEventListenable
         EndOfRoundEvent roundEvent = o.SelectToken("roundEvent").ToObject<EndOfRoundEvent>();
 
         //Destroy all previous turn prefabs
-        foreach (Transform child in turnsLocation.transform)
+        int childCount = turnsLocation.transform.childCount;
+        while (childCount > 0)
         {
-            GameObject.Destroy(child.gameObject);
+            GameObject.DestroyImmediate(turnsLocation.transform.GetChild(0).gameObject);
+            childCount--;
         }
 
         //Initialize new prefabs

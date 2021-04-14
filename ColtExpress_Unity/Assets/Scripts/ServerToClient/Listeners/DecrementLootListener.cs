@@ -54,13 +54,14 @@ public class DecrementLootListener : UIEventListenable
                 playerProfile.transform.GetChild(2).GetChild(3).GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = String.Format("x{0}", num);
                 break;
             case ItemType.Whiskey:
-                ((Whiskey)l).getWhiskeyKind();
 
+                Whiskey w = o.SelectToken("loot").ToObject<Whiskey>();
+                
                 var definition = new
                 {
                     eventName = "decrementWhiskey",
                     player = c,
-                    whiskey = ((Whiskey)l).getWhiskeyKind()
+                    whiskey = w.getWhiskeyKind()
                 };
 
                 EventManager.TriggerEvent("decrementWhiskey", JsonConvert.SerializeObject(definition));

@@ -376,7 +376,7 @@ class GameController
         currentPlayer.setWaitingForInput(false);
 
         CommunicationAPI.sendMessageToClient(null, "updateHostageName", currentPlayer.getBandit(), retrievedHostage.getHostageChar());
-        this.currentRound.getTopOfPlayedCards();
+
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
 
@@ -453,7 +453,15 @@ class GameController
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
             currentPlayer.getPosition().getTrainCar().addAHorse();
             //TODO new message 
-            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", getIndexByTrainCar(p.getTrainCar()), currentPlayer.getBandit());
+
+            int index = getIndexByTrainCar(p.getTrainCar());
+            //Player must have ended up in the stagecoach
+            if (index == -1)
+            {
+                index = getIndexByTrainCar(myStageCoach.getAdjacentCar());
+            }
+
+            CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", index, currentPlayer.getBandit());
             currentPlayer.setOnAHorse(false);
 
             bool flag = true;
@@ -479,6 +487,11 @@ class GameController
 
                     CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
+                } else
+                {
+                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+
+                    this.endOfCards();
                 }
             }
             else
@@ -516,7 +529,19 @@ class GameController
         {
             victim.possessions.Remove(loot);
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
+
+            if (loot is Whiskey)
+            {
+                if (((Whiskey)loot).getWhiskeyStatus() == WhiskeyStatus.Full)
+                {
+                    //Want to decrement unknown whiskey
+                    Whiskey w = new Whiskey(WhiskeyKind.Unknown);
+                    CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), w);
+                } else
+                {
+                    CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
+                }
+            }
 
             loot.setPosition(victim.getPosition());
             //TO ALL PLAYERS
@@ -525,7 +550,22 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
             } else
             {
-                CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
+                if (loot is Whiskey)
+                {
+                    //Want to move an unknown in if Full
+                    if (((Whiskey)loot).getWhiskeyStatus() == WhiskeyStatus.Full)
+                    {
+                        Whiskey w = new Whiskey(WhiskeyKind.Unknown);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameItem", w, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
+                    }
+                    else
+                    {
+                        CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
+                    }
+                } else
+                {
+                    CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
+                }
             }
         }
 
@@ -853,6 +893,13 @@ class GameController
                                     //TODO new massage
                                     CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
+                                    this.currentRound.getTopOfPlayedCards();
+                                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                                } else
+                                {
+                                    this.currentRound.getTopOfPlayedCards();
+                                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                                    this.endOfCards();
                                 }
                             }
                             else
@@ -1204,7 +1251,7 @@ class GameController
                 else
                 {
                     this.currentTurn = this.currentRound.getTurns()[nextTurnIndex];
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", nextTurnIndex);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(this.currentTurn));
 
                     if (this.currentTurn.getType() == TurnType.Switching)
                     {

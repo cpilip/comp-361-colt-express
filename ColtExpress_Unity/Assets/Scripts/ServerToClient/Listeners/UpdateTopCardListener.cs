@@ -57,6 +57,9 @@ public class UpdateTopCardListener : UIEventListenable
             turmoilCardsPlayed++;
         }
 
+        //Remove the Draggable component
+        Destroy(topCard.GetComponent<Draggable>());
+
         //If most recent added card brought the total > 7, set the first visible back card invisible
         if (playedCards.transform.childCount >= 8)
         {

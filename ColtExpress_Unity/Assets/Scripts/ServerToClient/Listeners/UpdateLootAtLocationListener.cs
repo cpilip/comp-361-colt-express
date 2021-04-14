@@ -27,6 +27,9 @@ public class UpdateLootAtLocationListener : UIEventListenable
         int index = o.SelectToken("index").ToObject<int>();
         bool refresh = o.SelectToken("refresh").ToObject<bool>();
 
+        IEnumerable listOfLootTokens = o.SelectToken("items").Children();
+        var listOfLootTokensEnumerator = listOfLootTokens.GetEnumerator();
+
         if (refresh)
         {
             GameObject lootPosition = null;
@@ -53,15 +56,20 @@ public class UpdateLootAtLocationListener : UIEventListenable
                 {
                     case ItemType.Purse:
                         purses++;
+                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Ruby:
                         rubies++;
+                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Strongbox:
                         strongboxes++;
+                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Whiskey:
-                        Whiskey w = (Whiskey)item;
+                        listOfLootTokensEnumerator.MoveNext();
+                        JToken q = ((JToken)listOfLootTokensEnumerator.Current);
+                        Whiskey w = q.ToObject<Whiskey>();
 
                         switch (w.getWhiskeyKind()) {
                             case WhiskeyKind.Unknown:
@@ -80,8 +88,6 @@ public class UpdateLootAtLocationListener : UIEventListenable
                 }
             }
 
-            string value = "";
-            int num = 0;
             foreach (Transform t in lootPosition.transform)
             {
                 switch (t.name)

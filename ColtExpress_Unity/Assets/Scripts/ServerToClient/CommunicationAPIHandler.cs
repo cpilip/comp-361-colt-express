@@ -34,6 +34,7 @@ namespace ClientCommunicationAPIHandler
             typeof(TrainCar),
             typeof(Turn),
             typeof(Character)
+            
         }
         };
 
@@ -141,6 +142,9 @@ namespace ClientCommunicationAPIHandler
 
 
     }
+
+
+    
 
 }
 public enum GameStatus

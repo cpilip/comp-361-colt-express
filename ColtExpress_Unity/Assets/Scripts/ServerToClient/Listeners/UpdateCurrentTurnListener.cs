@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UpdateCurrentTurnListener : UIEventListenable
 {
-    private static int previousTurn = 0;
+    private static GameObject previousTurn;
     private static TurnType previousTurnType;
     public GameObject playedCards;
     public override void updateElement(string data)
@@ -55,13 +55,17 @@ public class UpdateCurrentTurnListener : UIEventListenable
         //GameUIManager.gameUIManagerInstance.hasAnotherAction = (this.transform.GetChild(t).gameObject.name == "SpeedingUp") ? true : false;
 
         Debug.Log("[UpdateCurrentTurnListener] Turn: " + t);
-
-        t = (t == 0) ? (this.transform.childCount - 1) : t - 1;
-        previousTurn = t;
-
-        this.transform.GetChild(t).GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 1f);
-
         
+
+        if (previousTurn == null)
+        {
+            previousTurn = this.transform.GetChild(t).gameObject;
+        } 
+        else
+        {
+            previousTurn.GetComponent<Image>().color = new Color(1.000f, 1f, 1f, 1f);
+            previousTurn = this.transform.GetChild(t).gameObject;
+        }
 
     }
 }

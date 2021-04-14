@@ -16,7 +16,7 @@ public class FinalGameScoresListener : UIEventListenable
     public override void updateElement(string data)
     {
         SceneManager.LoadScene("FinalScores");
-        scoreParent = GameObject.FindGameObjectWithTag("Scores");
+        scoreParent = GameObject.FindWithTag("Scores");
 
         JObject o = JObject.Parse(data);
         List<KeyValuePair<Player, int>> scores = o.SelectToken("scores").ToObject<List<KeyValuePair<Player, int>>>();

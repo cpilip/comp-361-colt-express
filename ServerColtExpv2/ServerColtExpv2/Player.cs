@@ -317,13 +317,25 @@ namespace GameUnitSpace {
 
         public void actionCantBePlayedinHand(ActionKind aKind){
             foreach (ActionCard c in hand){
-                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+                if (c.GetType() == typeof(ActionCard))
+                {
+                    if (((ActionCard)c).getKind().Equals(aKind))
+                    {
+                        ((ActionCard)c).cantBePlayedAnymore();
+                    }
+                }
             }
         }
 
         public void actionCantBePlayed(ActionKind aKind){
-            foreach (ActionCard c in discardPile){
-                if(c.getKind().Equals(aKind)) c.cantBePlayedAnymore();
+            foreach (Card c in discardPile){
+                if (c.GetType() == typeof(ActionCard))
+                {
+                    if (((ActionCard)c).getKind().Equals(aKind))
+                    {
+                        ((ActionCard)c).cantBePlayedAnymore();
+                    }
+                }
             }
         }
 

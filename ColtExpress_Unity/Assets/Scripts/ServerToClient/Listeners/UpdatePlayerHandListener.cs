@@ -74,6 +74,12 @@ public class UpdatePlayerHandListener : UIEventListenable
 
             }
 
+            //Block any action cards that are Ride or Punch if the client has the appropriate hostage
+            if (GameUIManager.gameUIManagerInstance.actionBlocked.Item1 == true)
+            {
+                GameUIManager.gameUIManagerInstance.blockActionCards(GameUIManager.gameUIManagerInstance.actionBlocked.Item2);
+            }
+
             Debug.Log("[UpdatePlayerHandListener] Player hand updated for " + player + ".");
         }
     }

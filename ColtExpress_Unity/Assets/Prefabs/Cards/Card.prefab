@@ -93,6 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentToReturnTo: {fileID: 0}
   originalIndex: 0
+  fromDeck: 1
 --- !u!225 &5513559504549008612
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -138,6 +139,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBulletCard: 0
+  isHidden: 0
+  kind: 0
+  c: 0
 --- !u!114 &2575955722262200025
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,11 +24,12 @@ public class UpdatePunchPositionsListener : UIEventListenable
         foreach (int index in i)
         {
             GameObject gamePosition = null;
-            //Stagecoach roof
+            //Stagecoach 
             if (index == -1)
             {
                 gamePosition = GameUIManager.gameUIManagerInstance.getStagecoachPosition(positions[positionsIndex].isRoof());
 
+                //If roof, make sure to enable raycasting
                 if (positions[positionsIndex].isRoof())
                 {
                     gamePosition.GetComponent<Image>().raycastTarget = true;
