@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class UpdateCurrentTurnListener : UIEventListenable
 {
     private static GameObject previousTurn;
-    private static TurnType previousTurnType;
     public GameObject playedCards;
     public override void updateElement(string data)
     {

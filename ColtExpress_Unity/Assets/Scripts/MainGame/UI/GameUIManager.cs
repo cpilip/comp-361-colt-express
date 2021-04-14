@@ -61,7 +61,6 @@ public class GameUIManager : MonoBehaviour
     private Dictionary<Character, GameObject> characters = new Dictionary<Character, GameObject>();
     private Dictionary<Character, GameObject> playerProfiles = new Dictionary<Character, GameObject>();
     private Dictionary<int, GameObject> trainCars = new Dictionary<int, GameObject>();
-    private List<GameObject> freeHorses = new List<GameObject>();
     private Dictionary<Character, GameObject> charactersOnHorses = new Dictionary<Character, GameObject>();
     private Dictionary<HostageChar, GameObject> hostageMap = new Dictionary<HostageChar, GameObject>();
     private Dictionary<int, GameObject> horseSets = new Dictionary<int, GameObject>();
@@ -856,7 +855,9 @@ public class GameUIManager : MonoBehaviour
         Sprite[] sprites = Resources.LoadAll<Sprite>("Sprites");
 
         foreach (Sprite s in sprites) {
+           
             loadedSprites.Add(s.name, s);
+            
         }
 
         HostageChar hostage;
@@ -888,4 +889,29 @@ public class GameUIManager : MonoBehaviour
         DontDestroyOnLoad(gameUIManager);
     }
 
+    public void reset()
+    {
+
+        numPlayers = 0;
+        characters.Clear();
+        playerProfiles.Clear();
+        trainCars.Clear();
+        charactersOnHorses.Clear();
+        hostageMap.Clear();
+        horseSets.Clear();
+        trainCarRoofLoot.Clear();
+   
+        //Other important information
+        isNormalTurn = false;
+        isTunnelTurn = false;
+        isTurmoilTurn = false;
+        whiskeyWasUsed = false;
+        abilityDisabled = false;
+
+        actionBlocked = (false, ActionKind.Marshal);
+
+        currentTurnIndex = 0;
+        loadedSprites.Clear();
+    
+    }
 }

@@ -6693,7 +6693,6 @@ GameObject:
   - component: {fileID: 718402311}
   - component: {fileID: 718402310}
   - component: {fileID: 718402309}
-  - component: {fileID: 718402313}
   - component: {fileID: 718402312}
   - component: {fileID: 718402327}
   - component: {fileID: 718402325}
@@ -6834,18 +6833,6 @@ MonoBehaviour:
   whiskeyWasUsed: 0
   abilityDisabled: 0
   currentTurnIndex: 0
---- !u!114 &718402313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718402308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f14dc3a33029754f8bc304d2cdb7890, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &718402314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7022,7 +7009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: finalGameScores
-  scoreInformationPrefab: {fileID: 5788293621328788807, guid: 22e7d263ac364504bafb99e54e51ba78,
+  scoreInformationPrefab: {fileID: 4515118702081614282, guid: 22e7d263ac364504bafb99e54e51ba78,
     type: 3}
   scoreParent: {fileID: 0}
 --- !u!114 &718402327

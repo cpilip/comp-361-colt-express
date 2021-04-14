@@ -382,7 +382,6 @@ class GameController
         currentPlayer.setWaitingForInput(false);
 
         CommunicationAPI.sendMessageToClient(null, "updateHostageName", currentPlayer.getBandit(), retrievedHostage.getHostageChar());
-        this.currentRound.getTopOfPlayedCards();
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
 
@@ -458,8 +457,7 @@ class GameController
             currentPlayer.setPosition(p);
             currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
             currentPlayer.getPosition().getTrainCar().addAHorse();
-            //TODO new message 
-
+            
             int index = getIndexByTrainCar(p.getTrainCar());
             //Player must have ended up in the stagecoach
             if (index == -1)
@@ -474,6 +472,7 @@ class GameController
 
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, myTrain.IndexOf(p.getTrainCar()));
 
+            //If p is on the train
             if (p.hasMarshal(aMarshal))
             {
                 BulletCard b = new BulletCard(null, -1);
@@ -484,9 +483,8 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
                 CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
-            }
-
-            if (p.isInStageCoach(myStageCoach))
+            //If p is the stagecoach
+            } else if (p.isInStageCoach(myStageCoach))
             {
                 if (availableHostages.Count() != 0 && currentPlayer.getHostage() == null)
                 {
@@ -496,22 +494,8 @@ class GameController
                 } else
                 {
                     CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-
                     this.endOfCards();
                 }
-            }
-            else
-            {
-                flag = shotgunCheck(p);
-                
-                if (flag)
-                {
-                    currentPlayer.setWaitingForInput(false);
-                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-
-                    this.endOfCards();
-                }
-
             }
         } 
 
@@ -630,6 +614,8 @@ class GameController
         CommunicationAPI.sendMessageToClient(null, "moveGameItem", shotgunStrongbox, myStageCoach.getRoof(), getIndexByTrainCar(myStageCoach));
 
         currentPlayer.setWaitingForInput(false);
+
+        this.currentRound.getTopOfPlayedCards();
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
@@ -669,7 +655,7 @@ class GameController
 
             }
             //if the target is at the back of django and is not in the cabosse, moved one car at the back.
-            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && !(targetCar.Equals(myTrain[myTrain.Count()])))
+            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && targetCar.Equals(myTrain[myTrain.Count - 1]) == false)
             {
 
                 if (target.getPosition().isInside())
@@ -684,9 +670,18 @@ class GameController
                     target.setPosition(pos);
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
                 }
-            } 
-            //Otherwise, nothing needs to be done
-           
+            }
+
+            //If Django's target's new position ended up inside with the marshal, shoot'em
+            if (currentPlayer.getPosition().isInside())
+            {
+                if (currentPlayer.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
+                {
+                    this.currentPlayer.addToDiscardPile(new BulletCard(null, -1));
+                    this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
+                }
+            }
         }
 
         //TO ALL PLAYERS
@@ -862,7 +857,7 @@ class GameController
 
                             if (flag)
                             {
-                                 this.currentRound.getTopOfPlayedCards();
+                                this.currentRound.getTopOfPlayedCards();
                                 CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 this.endOfCards();
                             }
@@ -886,10 +881,7 @@ class GameController
                                 this.currentRound.getTopOfPlayedCards();
                                 CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                                 this.endOfCards();
-                            }
-
-                            //if he ends up inside the StageCoach, he chooses a hostage (if there are any left)
-                            if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
+                            } else if (this.currentPlayer.getPosition().isInStageCoach(myStageCoach))
                             {
                                 if (availableHostages.Count() != 0 && this.currentPlayer.getHostage() == null)
                                 {
@@ -897,6 +889,7 @@ class GameController
                                     //CommunicationAPI.sendMessageToClient(null, "updateGameStatus", GameStatus.FinalizingCard);
                                     this.currentPlayer.setWaitingForInput(true);
                                     //TODO new massage
+                                    this.currentRound.getTopOfPlayedCards();
                                     CommunicationAPI.sendMessageToClient(null, "availableHostages", availableHostages);
                                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                                 } else
@@ -1456,7 +1449,7 @@ class GameController
         //Sorted list to send to clients
         var myList = scores.ToList();
         myList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
-
+        myList.Reverse();
 
         //TO ALL PLAYERS
         CommunicationAPI.sendMessageToClient(null, "finalGameScores", myList, maxPlayer);
@@ -2195,13 +2188,11 @@ class GameController
                 if (aKind == WhiskeyKind.Unknown && ((Whiskey)anItem).getWhiskeyStatus() == WhiskeyStatus.Full)
                 {
                     return (Whiskey)anItem;
-                    break;
                 } 
                 //Otherwise, there must be a dropped visible Normal or Old whiskey at the location - meaning they should be HALF-FULL
                 else if (((Whiskey)anItem).getWhiskeyKind() == aKind && ((Whiskey)anItem).getWhiskeyStatus() == aStatus)
                 {
                     return (Whiskey)anItem;
-                    break;
                 }
             }
         }

@@ -12,17 +12,25 @@ public class FinalGameScoresListener : UIEventListenable
 {
     public GameObject scoreInformationPrefab;
     public GameObject scoreParent;
+    private string dataForParse;
+
+    void Start()
+    {
+        
+    }
 
     public override void updateElement(string data)
     {
-        SceneManager.LoadScene("FinalScores");
-        
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "FinalScores")
-        {
-            scoreParent = GameObject.Find("Canvas/ScoreList");
-        }
+        dataForParse = data;
 
-        JObject o = JObject.Parse(data);
+        StartCoroutine("LoadScene");
+    }
+
+    private void continueWithScores()
+    {
+        scoreParent = GameObject.Find("ScoreList");
+
+        JObject o = JObject.Parse(dataForParse);
         List<KeyValuePair<Player, int>> scores = o.SelectToken("scores").ToObject<List<KeyValuePair<Player, int>>>();
         Player gunslinger = o.SelectToken("gunslinger").ToObject<Player>();
 
@@ -51,5 +59,20 @@ public class FinalGameScoresListener : UIEventListenable
         }
 
         Debug.Log("[FinalGameScoresListener] Scores presented.");
+    }
+
+    private IEnumerator LoadScene()
+    {
+        // Start loading the scene
+        AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync("FinalScores");
+        // Wait until the level finish loading
+        while (!asyncLoadLevel.isDone)
+        {
+            yield return null;
+        }
+        // Wait a frame so every Awake and Start method is called
+        yield return new WaitForEndOfFrame();
+
+        continueWithScores();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CardSpace;
 using Coffee.UIEffects;
+using GameUnitSpace;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections;
@@ -40,14 +41,16 @@ public class AddCardsListener : UIEventListenable
             //Call the appropriate card object function
             if (card.GetType() == typeof(BulletCard))
             {
-                if (card.belongsTo() == null)
+                Character? from = c.SelectToken("myPlayer").SelectToken("bandit").ToObject<Character>();
+                BulletCard pewpewCard = c.ToObject<BulletCard>();
+                if (from == null)
                 {
-                    GameUIManager.gameUIManagerInstance.createCardObject(null, ((BulletCard)card).getNumBullets(), true);
+                    GameUIManager.gameUIManagerInstance.createCardObject(null, pewpewCard.getNumBullets(), true);
                 }
                 else
                 {
 
-                    GameUIManager.gameUIManagerInstance.createCardObject(card.belongsTo().getBandit(), ((BulletCard)card).getNumBullets(), true);
+                    GameUIManager.gameUIManagerInstance.createCardObject(from, pewpewCard.getNumBullets(), true);
                 }
             }
             else

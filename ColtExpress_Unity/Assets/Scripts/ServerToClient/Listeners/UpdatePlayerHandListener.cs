@@ -46,15 +46,16 @@ public class UpdatePlayerHandListener : UIEventListenable
                     //Call the appropriate card object function
                     if (card.GetType() == typeof(BulletCard))
                     {
+                        Character? from = c.SelectToken("myPlayer").SelectToken("bandit").ToObject<Character>();
                         BulletCard pewpewCard = c.ToObject<BulletCard>();
-                        if (pewpewCard.belongsTo() == null)
+                        if (from == null)
                         {
                             GameUIManager.gameUIManagerInstance.createCardObject(null, pewpewCard.getNumBullets(), true);
                         } 
                         else
                         {
 
-                            GameUIManager.gameUIManagerInstance.createCardObject(pewpewCard.belongsTo().getBandit(), pewpewCard.getNumBullets(), true);
+                            GameUIManager.gameUIManagerInstance.createCardObject(from, pewpewCard.getNumBullets(), true);
                         }
 
                     }

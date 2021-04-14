@@ -98,6 +98,20 @@ public class Switch : MonoBehaviour
 
     public void goMainMenu()
     {
+
+        StartCoroutine("UnloadScene");
+    }
+
+    private IEnumerator UnloadScene()
+    {
+        GameObject MainCamera = GameUIManager.gameUIManagerInstance.gameObject;
+        GameObject EventManager = FindObjectOfType<NamedClient>().gameObject;
+
+        Destroy(MainCamera);
+        Destroy(EventManager);
+        // Wait a frame so every Awake and Start method is called
+        yield return new WaitForEndOfFrame();
+
         SceneManager.LoadScene("Menu");
     }
 
