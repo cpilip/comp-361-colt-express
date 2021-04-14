@@ -39,8 +39,10 @@ public class NamedClient : MonoBehaviour
             // IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
             // Debug.Log("2");
             // TcpClient thisClient = new TcpClient(serverEndPoint);
-            
-            TcpClient thisClient = new TcpClient(serverIP, port);
+            Debug.Log("ServerIP: " + serverIP);
+            Debug.Log("port: " + port);
+
+            thisClient = new TcpClient(serverIP, port);
             Debug.Log("3");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
