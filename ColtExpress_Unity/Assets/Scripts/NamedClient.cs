@@ -34,11 +34,12 @@ public class NamedClient : MonoBehaviour
         try
         {
             //Create a TcpClient; "serverIP" must be an IP running the corresponding server executable
-            IPAddress serverAddr = IPAddress.Parse(serverIP);
-            Debug.Log("1");
-            IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
-            Debug.Log("2");
-            TcpClient thisClient = new TcpClient(serverEndPoint);
+            // // IPAddress serverAddr = IPAddress.Parse(serverIP);
+            // Debug.Log("1");
+            // IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
+            // Debug.Log("2");
+            // TcpClient thisClient = new TcpClient(serverEndPoint);
+            TcpClient thisClient = new TcpClient(serverIP, port);
             Debug.Log("3");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
