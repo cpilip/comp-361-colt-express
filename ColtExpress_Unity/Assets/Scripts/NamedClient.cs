@@ -47,7 +47,7 @@ public class NamedClient : MonoBehaviour
 
             // Use socket to skip DNS lookup
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(this.serverIP, this.port));
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(this.serverIP), this.port);
             sock.Connect(ipep);
             stream = new NetworkStream(sock);           
         }
