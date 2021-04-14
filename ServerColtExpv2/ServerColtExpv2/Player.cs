@@ -263,6 +263,13 @@ namespace GameUnitSpace {
             return this.numOfBulletsShot;
         }
 
+        public bool hasAStrongBox(){
+            foreach (GameItem g in possessions){
+                if (g.getType() == ItemType.Strongbox) return true;
+            }
+            return false;
+        }  
+
         //For sending Action cards from the hand as a list of enumerations of ActionKind
         public List<ActionKind> getHand_actionCards()
         {
