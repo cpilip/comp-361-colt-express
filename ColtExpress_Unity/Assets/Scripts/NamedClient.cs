@@ -14,20 +14,12 @@ public class NamedClient : MonoBehaviour
 
     private static TcpClient thisClient;
     private static NetworkStream stream;
-    public string serverIP = "52.152.132.200";
-    public int port = 80;
-
+    
     private static string buffer = "";
     private bool connected = false;
 
-    public void connectToServer() {
-        StartCoroutine(connectToServerWait());
-    }
-
-    public IEnumerator connectToServerWait()
+    public IEnumerator connectToServer()
     {
-        Debug.Log("Connecting to server in 2 seconds...");
-        yield return new WaitForSeconds(2);
         Debug.Log("Connecting to server...");
 
         //Open a connection to the server automatically upon uponing the game executable
@@ -39,10 +31,8 @@ public class NamedClient : MonoBehaviour
             // IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
             // Debug.Log("2");
             // TcpClient thisClient = new TcpClient(serverEndPoint);
-            Debug.Log("ServerIP: " + serverIP);
-            Debug.Log("port: " + port);
-
-            thisClient = new TcpClient(serverIP, port);
+ 
+            thisClient = new TcpClient("52.152.132.200", 80);
             Debug.Log("3");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
