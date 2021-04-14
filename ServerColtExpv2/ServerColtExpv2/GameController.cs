@@ -1751,37 +1751,87 @@ class GameController
             }
             else //On roof
             {
-                TrainCar adjacentCar = myStageCoach.getAdjacentCar();
 
-                //Add the adjacent car's roof
-                possPos.Add(adjacentCar.getRoof());
-
-                // Add 1-2 distance forward or backwards
-                for (int i = 1; i < 3; i++)
+                if (p.getHostage() != null)
                 {
-                    try
+                    if (p.getHostage().getHostageChar() == HostageChar.OldLady)
                     {
-                        // Add adjacent positions
-                        possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) - i].getRoof());
+                        TrainCar adjacentCar = myStageCoach.getAdjacentCar();
+
+                        //Add the adjacent car's roof
+                        possPos.Add(adjacentCar.getRoof());
+
+                    } 
+                    else
+                    {
+                        TrainCar adjacentCar = myStageCoach.getAdjacentCar();
+
+                        //Add the adjacent car's roof
+                        possPos.Add(adjacentCar.getRoof());
+
+                        // Add 1-2 distance forward or backwards
+                        for (int i = 1; i < 3; i++)
+                        {
+                            try
+                            {
+                                // Add adjacent positions
+                                possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) - i].getRoof());
+                            }
+                            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                            {
+                                continue;
+                            }
+                        }
+
+                        for (int i = 1; i < 3; i++)
+                        {
+                            try
+                            {
+                                // Add adjacent positions
+                                possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) + i].getRoof());
+                            }
+                            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                            {
+                                continue;
+                            }
+                        }
                     }
-                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                } else
+                {
+                    TrainCar adjacentCar = myStageCoach.getAdjacentCar();
+
+                    //Add the adjacent car's roof
+                    possPos.Add(adjacentCar.getRoof());
+
+                    // Add 1-2 distance forward or backwards
+                    for (int i = 1; i < 3; i++)
                     {
-                        continue;
+                        try
+                        {
+                            // Add adjacent positions
+                            possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) - i].getRoof());
+                        }
+                        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                        {
+                            continue;
+                        }
+                    }
+
+                    for (int i = 1; i < 3; i++)
+                    {
+                        try
+                        {
+                            // Add adjacent positions
+                            possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) + i].getRoof());
+                        }
+                        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                        {
+                            continue;
+                        }
                     }
                 }
 
-                for (int i = 1; i < 3; i++)
-                {
-                    try
-                    {
-                        // Add adjacent positions
-                        possPos.Add(this.myTrain[this.myTrain.IndexOf(adjacentCar) + i].getRoof());
-                    }
-                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
-                    {
-                        continue;
-                    }
-                }
+                
 
             }
         }
@@ -1819,6 +1869,57 @@ class GameController
                     catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                     {
 
+                    }
+                }
+                else
+                {
+                    // Add 1-3 distance forward or backwards
+                    for (int i = 1; i < 4; i++)
+                    {
+                        try
+                        {
+                            // Add adjacent positions
+                            possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) - i].getRoof());
+                        }
+                        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                        {
+                            continue;
+                        }
+
+                        //If the first or second car is adjacent to the stagecoach, it counts as an alternate third position
+                        if (i != 3)
+                        {
+                            //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
+                            if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) - i]))
+                            {
+                                possPos.Add(myStageCoach.getRoof());
+                            }
+                        }
+
+                    }
+
+                    for (int i = 1; i < 4; i++)
+                    {
+                        try
+                        {
+                            // Add adjacent positions
+                            possPos.Add(this.myTrain[this.myTrain.IndexOf(playerCar) + i].getRoof());
+
+
+                        }
+                        catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                        {
+                            continue;
+                        }
+                        //If the first or second car is adjacent to the stagecoach, it counts as an alternate third position
+                        if (i != 3)
+                        {
+                            //if the car is adjacent to the stageCoach, add roof of the stage coach to possPos
+                            if (myStageCoach.getAdjacentCar().Equals(myTrain[myTrain.IndexOf(playerCar) + i]))
+                            {
+                                possPos.Add(myStageCoach.getRoof());
+                            }
+                        }
                     }
                 }
             }
@@ -1930,7 +2031,7 @@ class GameController
 
         //Move the target to the floor of an adjacent car
 
-        //True if floor (not roof_
+        //If in stagecoach, add appropriate floor of adjacent car
         if (p.getPosition().isInStageCoach(myStageCoach))
         {
             if (p.getPosition().isInside())
@@ -2044,7 +2145,7 @@ class GameController
                 possPlayers.AddRange(playersOnWagon);
             }
         }
-        //On roof
+        //On a roof
         else if (p.getPosition().isInside() == false)
         {
             // Look for the players in line of sight forward on roof

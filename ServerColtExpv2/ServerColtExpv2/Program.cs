@@ -243,17 +243,17 @@ class MyTcpListener
                             ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
 
                         }
-                        catch
+                        catch (Exception e) when (e is NullReferenceException)
                         {
 
                         }
 
                         try
                         {
-                            photographerHideDisabled = o.SelectToken("photogapherHideDisabled").ToObject<bool>();
+                            photographerHideDisabled = o.SelectToken("photographerHideDisabled").ToObject<bool>();
 
                         }
-                        catch
+                        catch (Exception e) when (e is NullReferenceException)
                         {
 
                         }
