@@ -18,7 +18,7 @@ public class NamedClient : MonoBehaviour
     private static string buffer = "";
     private bool connected = false;
 
-    public IEnumerator connectToServer()
+    public void connectToServer()
     {
         Debug.Log("Connecting to server...");
 
