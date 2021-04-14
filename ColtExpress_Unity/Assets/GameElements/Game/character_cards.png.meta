@@ -1,28 +1,7 @@
 fileFormatVersion: 2
-guid: 09858ec142d332646ba9b3817bf288c1
+guid: 6fabde1466d15a145b8aad1aa17c05c1
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -7901556270072963127
-    second: character_cards_0
-  - first:
-      213: 1845232795082844684
-    second: character_cards_1
-  - first:
-      213: 330650697955211964
-    second: character_cards_2
-  - first:
-      213: 8768416880747255124
-    second: character_cards_3
-  - first:
-      213: -7335990590917487225
-    second: character_cards_4
-  - first:
-      213: 1170525675068722683
-    second: character_cards_5
-  - first:
-      213: -3814464363674221683
-    second: character_cards_6
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -61,7 +40,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -92,168 +71,9 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: character_cards_0
-      rect:
-        serializedVersion: 2
-        x: 3
-        y: 557
-        width: 390
-        height: 538
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9cf5a85cf68085290800000000000000
-      internalID: -7901556270072963127
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_1
-      rect:
-        serializedVersion: 2
-        x: 401
-        y: 557
-        width: 380
-        height: 538
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c0a60de53759b9910800000000000000
-      internalID: 1845232795082844684
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_2
-      rect:
-        serializedVersion: 2
-        x: 790
-        y: 554
-        width: 380
-        height: 533
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cbafa54de05b69400800000000000000
-      internalID: 330650697955211964
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_3
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 13
-        width: 380
-        height: 535
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4559a7b22bcafa970800000000000000
-      internalID: 8768416880747255124
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_4
-      rect:
-        serializedVersion: 2
-        x: 401
-        y: 18
-        width: 381
-        height: 530
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 78551c0ec63513a90800000000000000
-      internalID: -7335990590917487225
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_5
-      rect:
-        serializedVersion: 2
-        x: 790
-        y: 18
-        width: 382
-        height: 529
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bfd02f656ea8e3010800000000000000
-      internalID: 1170525675068722683
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: character_cards_6
-      rect:
-        serializedVersion: 2
-        x: 1174
-        y: 28
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d83cfc20fdc401bc0800000000000000
-      internalID: -3814464363674221683
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

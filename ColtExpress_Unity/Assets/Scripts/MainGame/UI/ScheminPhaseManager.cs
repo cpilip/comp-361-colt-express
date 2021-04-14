@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ClientCommunicationAPI;
+using UnityEngine.UI;
+using GameUnitSpace;
 
 /* Author: Christina Pilip
  * Usage: Defines behaviour of the Phase 1 Turn Menu. 
@@ -13,12 +15,17 @@ public class ScheminPhaseManager : MonoBehaviour
     public GameObject timer;
     public GameObject discardPile;
 
+    public Button fullWhiskey;
+    public Button normalWhiskey;
+    public Button oldWhiskey;
+
     private GameObject playedCardsZone;
 
     private static int firstDisplayedCardIndex;
     private static int endOfBlock;
     private bool alreadyInFirst;
 
+    private bool ghostHidden = false;
     void Start()
     {
         firstDisplayedCardIndex = 0;
@@ -26,7 +33,6 @@ public class ScheminPhaseManager : MonoBehaviour
         alreadyInFirst = true;
         playedCardsZone = deck.transform.parent.GetChild(0).gameObject;
     }
-
 
     public void iterateCards()
     {
@@ -104,6 +110,104 @@ public class ScheminPhaseManager : MonoBehaviour
     }
 
 
+
+    // Use a whiskey
+    public void useWhiskey()
+    {
+        //Unlock sidebar and hide turn menu
+        GameUIManager.gameUIManagerInstance.unlockSidebar();
+        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+
+        StartCoroutine("usingWhiskey");
+    }
+    private IEnumerator usingWhiskey()
+    {
+        // Fancy lambda logic for figuring out when the timer coroutine finishes and the player has timed out their turn
+        bool timedOut = false;
+        bool whiskeyUsed = false;
+
+        //Retrieves Usables of player profile
+        Transform usables = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c).transform.GetChild(3);
+        fullWhiskey = usables.GetChild(0).GetComponent<Button>();
+        normalWhiskey = usables.GetChild(1).GetComponent<Button>();
+        oldWhiskey = usables.GetChild(2).GetComponent<Button>();
+
+        OnWhiskeyUsed.wasWhiskeyUsed whiskeyWasUsed = delegate () { whiskeyUsed = true; };
+
+        fullWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+        normalWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+        oldWhiskey.GetComponent<OnWhiskeyUsed>().notifyWhiskeyWasUsed += whiskeyWasUsed;
+
+        StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
+
+        while (timedOut == false || whiskeyUsed == false)
+        {
+
+            if (timedOut || whiskeyUsed)
+            {
+                //Lock sidebar
+                GameUIManager.gameUIManagerInstance.lockSidebar();
+
+                timer.GetComponent<Timer>().resetTimer();
+
+                if (whiskeyUsed)
+                {
+                    WhiskeyKind w = WhiskeyKind.Unknown;
+
+                    //Find out which whiskey type was used
+                    if (fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        fullWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        w = WhiskeyKind.Unknown;
+                    } else if (normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        normalWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        w = WhiskeyKind.Normal;
+                    }
+                    else if (oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed)
+                    {
+                        oldWhiskey.gameObject.GetComponent<OnWhiskeyUsed>().thisWhiskeyTypeUsed = false;
+                        w = WhiskeyKind.Old;
+                    }
+
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + w + "].");
+                    GameUIManager.gameUIManagerInstance.whiskeyWasUsed = true;
+
+                    var definition = new
+                    {
+                        eventName = "WhiskeyMessage",
+                        usedWhiskey = w
+                    };
+
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                }
+
+                if (timedOut)
+                {
+                    Debug.Log("[ScheminPhaseManager - UseWhiskey] You timed out.");
+
+                    var definition = new
+                    {
+                        eventName = "WhiskeyMessage",
+                    };
+
+                    ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+                }
+
+                yield break;
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+
+        Debug.LogError("[ScheminPhaseManager] Coroutine playingCard execution was borked (The player did not play a card *and* timed out. This should not happen!).");
+
+        yield break;
+
+    }
+
     // Draw and add three cards to the deck
     public void drawCard()
     {
@@ -119,17 +223,44 @@ public class ScheminPhaseManager : MonoBehaviour
             Debug.Log("[ScheminPhaseManager - DrawCard] Requested cards from server.");
             
         }
-        //Hide the turn menu and lock the hand
+        //Hide the turn/whiskey menu and lock the hand
         GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
         GameUIManager.gameUIManagerInstance.lockHand();
     }
 
+    //Play a card
     public void playCard()
     {
         //Unlock hand and hide turn menu
-        GameUIManager.gameUIManagerInstance.unlockHand();
-        GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+        
 
+        if (NamedClient.c == Character.Ghost && GameUIManager.gameUIManagerInstance.abilityDisabled == false && GameUIManager.gameUIManagerInstance.currentTurnIndex == 0)
+        {
+            GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+            GameUIManager.gameUIManagerInstance.toggleGhostMenu(true);
+
+        } else
+        {
+            GameUIManager.gameUIManagerInstance.unlockHand();
+            GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
+            StartCoroutine("playingCard");
+        }
+
+    }
+
+    public void GhostYes()
+    {
+        ghostHidden = true;
+        GameUIManager.gameUIManagerInstance.toggleGhostMenu(false);
+        GameUIManager.gameUIManagerInstance.unlockHand();
+        StartCoroutine("playingCard");
+    }
+
+    public void GhostNo()
+    {
+        ghostHidden = false;
+        GameUIManager.gameUIManagerInstance.toggleGhostMenu(false);
+        GameUIManager.gameUIManagerInstance.unlockHand();
         StartCoroutine("playingCard");
     }
 
@@ -141,7 +272,6 @@ public class ScheminPhaseManager : MonoBehaviour
 
         OnChildrenUpdated.wasChildChanged cardWasPlayed = delegate () { cardPlayed = true; };
         playedCardsZone.GetComponent<OnChildrenUpdated>().notifyChildWasChanged += cardWasPlayed;
-        
 
         StartCoroutine(timer.GetComponent<Timer>().waitForTimer(timedOut, value => timedOut = value));
 
@@ -158,15 +288,16 @@ public class ScheminPhaseManager : MonoBehaviour
                 //Do not do StopAllCoroutines(). Learned that the hard way.
                 if (cardPlayed)
                 {
-                    Debug.Log("[ScheminPhaseManager - PlayCard] You played a card.");
 
-                    //int i = clientHand.IndexOf(playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject);
-                    //Debug.Log(i);
+                    int i = playedCardsZone.transform.GetChild(playedCardsZone.transform.childCount - 1).gameObject.GetComponent<Draggable>().originalIndex;
 
+                    Debug.Log("[ScheminPhaseManager - PlayCard] You played card " + i + ".");
                     var definition = new
                     {
                         eventName = "CardMessage",
-                        index = 0
+                        index = i,
+                        ghostChoseToHide = ghostHidden,
+                        photographerHideDisabled = GameUIManager.gameUIManagerInstance.photographerHideDisabled
                     };
 
                     ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);

@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using GameUnitSpace;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SelectManager : MonoBehaviour
 {
@@ -15,10 +17,12 @@ public class SelectManager : MonoBehaviour
     private Vector3 OffScreen;
     private int characterIndex = 1;
     private readonly string selectedCharacter = "SelectedCharacter";
+    public GameObject selectCharacterButton;
 
     private void Awake() {
         CharacterPosition = Bella.transform.position;
         OffScreen = Tuco.transform.position;
+        PlayerPrefs.SetInt(selectedCharacter, 6);
     }
 
     public void NextCharacter() {
@@ -143,7 +147,48 @@ public class SelectManager : MonoBehaviour
 
 
     public void startButton() {
-        SceneManager.LoadScene(8);
+
+        int getCharacter = PlayerPrefs.GetInt(selectedCharacter);
+
+        selectCharacterButton.GetComponent<Button>().interactable = false;
+
+        switch (getCharacter)
+        {
+            case 1:
+                NamedClient.c = Character.Tuco;
+                Debug.Log("[GetCharacter] You selected Tuco.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco);
+                break;
+            case 2:
+                NamedClient.c = Character.Django;
+                Debug.Log("[GetCharacter] You selected Django.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django);
+                break;
+            case 3:
+                NamedClient.c = Character.Ghost;
+                Debug.Log("[GetCharacter] You selected Ghost.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost);
+                break;
+            case 4:
+                NamedClient.c = Character.Doc;
+                Debug.Log("[GetCharacter] You selected Doc.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Doc);
+                break;
+            case 5:
+                NamedClient.c = Character.Cheyenne;
+                Debug.Log("[GetCharacter] You selected Cheyenne.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne);
+                break;
+            case 6:
+                NamedClient.c = Character.Belle;
+                Debug.Log("[GetCharacter] You selected Belle.");
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle);
+                break;
+            default:
+                Debug.LogError("[GetCharacter] No character selected. Something went wrong!");
+                break;
+
+        }
     }
 
 }

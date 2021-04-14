@@ -15,6 +15,7 @@ public class UpdateWaitingForInputListener : UIEventListenable
                 eventName = "updateWaitingForInput",
                 currentPlayer = character,
                 waitingForInput = bool,
+                canDraw = bool
             };
         */
         JObject o = JObject.Parse(data);
@@ -24,11 +25,11 @@ public class UpdateWaitingForInputListener : UIEventListenable
         if (NamedClient.c == player)
         {
             //If SCHEMIN, unlock the turn menu
-            if (GameUIManager.gameUIManagerInstance.gameStatus)
+            if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.Schemin)
             {
                 if (waitingForInput) { 
                     GameUIManager.gameUIManagerInstance.toggleTurnMenu(true);
-                Debug.Log("[UpdateWaitingForInputListener] SCHEMING, TRUE: Turn menu visible for player " + player + ".");
+                    Debug.Log("[UpdateWaitingForInputListener] SCHEMING, TRUE: Turn menu visible for player " + player + ".");
                 }
                 else
                 {
@@ -37,10 +38,35 @@ public class UpdateWaitingForInputListener : UIEventListenable
                     Debug.Log("[UpdateWaitingForInputListener] SCHEMIN, FALSE: Turn menu hidden for player and hand locked for " + player + ".");
                 }
 
-            } else
+            } else if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.Stealin)
+            //If STEALIN, unlock the board
             {
-                Debug.Log("[UpdateWaitingForInputListener] STEALIN.");
+                if (waitingForInput)
+                {
+
+                    GameUIManager.gameUIManagerInstance.unlockBoard();
+                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, TRUE: Board unlocked.");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.lockBoard();
+                    Debug.Log("[UpdateWaitingForInputListener] STEALIN, FALSE: Board locked.");
+                }
+            } else if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.HorseAttack)
+            {
+                if (waitingForInput)
+                {
+
+                    GameUIManager.gameUIManagerInstance.toggleHorseAttackMenu(true);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, TRUE: Menu unlocked.");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.toggleHorseAttackMenu(false);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, FALSE: Menu locked.");
+                }
             }
+            //If HORSE ATTACK, display horse attack menu
         }
         
     }

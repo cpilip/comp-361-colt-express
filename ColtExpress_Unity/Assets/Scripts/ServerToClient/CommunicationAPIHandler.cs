@@ -27,12 +27,14 @@ namespace ClientCommunicationAPIHandler
             typeof(GameUnit),
             typeof(GameStatus),
             typeof(Marshal),
+            typeof(Shotgun),
             typeof(Player),
             typeof(Position),
             typeof(Round),
             typeof(TrainCar),
             typeof(Turn),
             typeof(Character)
+            
         }
         };
 
@@ -74,10 +76,83 @@ namespace ClientCommunicationAPIHandler
         }
     }
 
-}
+    public class CardConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(Card));
+        }
 
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jo = JObject.Load(reader);
+            if (jo["$type"].Value<string>() == "ActionCard")
+                return jo.ToObject<ActionCard>(serializer);
+
+            if (jo["$type"].Value<string>() == "BulletCard")
+                return jo.ToObject<BulletCard>(serializer);
+
+            return null;
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+    }
+
+    public class GameUnitConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(GameUnit));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject jo = JObject.Load(reader);
+            if (jo["$type"].Value<string>() == "Marshal")
+                return jo.ToObject<Marshal>(serializer);
+
+            if (jo["$type"].Value<string>() == "Shotgun")
+                return jo.ToObject<Shotgun>(serializer);
+
+            if (jo["$type"].Value<string>() == "Player")
+                return jo.ToObject<Player>(serializer);
+
+            return null;
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+    }
+
+
+    
+
+}
 public enum GameStatus
 {
+    ChoosingBandits,
     Schemin,
-    Stealin
+    Stealin,
+    FinalizingCard,
+    Completed,
+    HorseAttack
 }

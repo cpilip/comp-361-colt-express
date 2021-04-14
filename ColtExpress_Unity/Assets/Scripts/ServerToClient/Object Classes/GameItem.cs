@@ -8,7 +8,8 @@ namespace GameUnitSpace
     {
         Purse,
         Strongbox,
-        Ruby
+        Ruby,
+        Whiskey
     }
     
     class GameItem : GameUnit 
@@ -17,7 +18,6 @@ namespace GameUnitSpace
         private int aValue { get; set; }
         [JsonProperty]
         private ItemType aItemType { get; set; }
-        [JsonProperty]
         private Player myPlayer { get; set; }
 
 
@@ -62,5 +62,6 @@ namespace GameUnitSpace
     }
 
 }
+
 
 

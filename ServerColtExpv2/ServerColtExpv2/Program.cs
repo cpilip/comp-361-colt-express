@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 using PositionSpace;
 using CardSpace;
 using RoundSpace;
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
+using HostageSpace;
+using System.Threading;
 
 
 // Enter the listening loop.
@@ -47,6 +47,8 @@ class MyTcpListener
     public static Dictionary<Player, TcpClient> players = new Dictionary<Player, TcpClient>();
     public static Byte[] bytes = new Byte[256];
 
+    public static bool allPlayersInitialized = false;
+
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
     public static void Main()
     {
@@ -73,24 +75,24 @@ class MyTcpListener
 
             while (haveAllConnections == false)
             {
-                    //Open a stream for each client
-                    TcpClient client = server.AcceptTcpClient();
+                //Open a stream for each client
+                TcpClient client = server.AcceptTcpClient();
 
-                    IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
-                    NetworkStream currentClientStream = client.GetStream();
+                IPEndPoint remoteIpEndPoint = client.Client.RemoteEndPoint as IPEndPoint;
+                NetworkStream currentClientStream = client.GetStream();
 
-                    //Add each client mapped to IP address
-                    clients.Add(client, "" + remoteIpEndPoint.Address);
-                    clientStreams.Add(client, currentClientStream);
+                //Add each client mapped to IP address
+                clients.Add(client, "" + remoteIpEndPoint.Address);
+                clientStreams.Add(client, currentClientStream);
 
-                    currentClient = client;
+                currentClient = client;
 
 
-                    //Verify against lobby service
-                    if (clients.Count == 3)
-                    {
-                        haveAllConnections = true;
-                    }
+                //Verify against lobby service
+                if (clients.Count == 3)
+                {
+                    haveAllConnections = true;
+                }
             }
 
             Console.WriteLine("All clients successfully connected.");
@@ -100,15 +102,30 @@ class MyTcpListener
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
 
-            // Listen to all players for their character selection
-            foreach (TcpClient cli in clientStreams.Keys)
+            while (allPlayersInitialized == false)
             {
-                Character c = JsonConvert.DeserializeObject<Character>(getFromClient(cli));
-                currentClient = cli;
-                aController.chosenCharacter(c);
+                foreach (TcpClient cli in clientStreams.Keys)
+                {
+                    currentClient = cli;
+                    string res = getCharacterFromCurrentClient();
+                    if (res != null)
+                    {
+                        Character c = JsonConvert.DeserializeObject<Character>(res);
+                        aController.chosenCharacter(c);
+                    }
+                }
+            }
 
-                Player p = aController.getPlayerByCharacter(c);
-                //players.Add(p, cli);
+            Thread.Sleep(2000);
+            aController.allCharactersChosen();
+
+            while (!aController.getEndHorseAttack()) {
+                string res = getFromClient(players[aController.getCurrentPlayer()]);
+
+                JObject o = JObject.Parse(res);
+                string haAction = o.SelectToken("HorseAttackAction").ToString();
+
+                aController.chosenHorseAttackAction(haAction);
             }
 
             while (!aController.getEndOfGame())
@@ -121,9 +138,21 @@ class MyTcpListener
 
                 if (eventName.Equals("RobMessage"))
                 {
+
                     // Get item
                     ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemfromTypePosition(type);
+                    GameItem it;
+
+                    if (type == ItemType.Whiskey)
+                    {
+                        WhiskeyKind wK = o.SelectToken("whiskeyKind").ToObject<WhiskeyKind>();
+                        WhiskeyStatus wS = o.SelectToken("whiskeyStatus").ToObject<WhiskeyStatus>();
+                        it = aController.getItemfromTypePosition(wS, wK);
+                    }
+                    else
+                    {
+                        it = aController.getItemfromTypePosition(type);
+                    }
 
                     aController.chosenLoot(it);
                 }
@@ -137,20 +166,60 @@ class MyTcpListener
                 }
                 else if (eventName.Equals("PunchMessage"))
                 {
-                    // Get character
-                    Character ch = o.SelectToken("target").ToObject<Character>();
-                    Player pl = aController.getPlayerByCharacter(ch);
+                    //Look for the shotgun property
+                    try
+                    {
+                        bool isShotgun = o.SelectToken("isShotgun").ToObject<bool>();
+                        aController.choseToPunchShootgun();
+                    }
+                    catch (Exception e)
+                    {
+                        //No shotgun property
 
-                    // Get item
-                    ItemType type = o.SelectToken("item").ToObject<ItemType>();
-                    GameItem it = aController.getItemfromTypePossession(type);
+                        // Get character
+                        Character ch = o.SelectToken("target").ToObject<Character>();
+                        Player pl = aController.getPlayerByCharacter(ch);
+                        ItemType type;
+                        GameItem it;
+                        try
+                        {
+                            // Get item
+                            type = o.SelectToken("item").ToObject<ItemType>();
 
-                    // Get position
-                    int index = Int32.Parse(o.SelectToken("index").ToString());
-                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
-                    Position pos = aController.getPositionByIndex(index, inside);
+                            if (type == ItemType.Whiskey)
+                            {
+                                WhiskeyKind wK = o.SelectToken("whiskeyKind").ToObject<WhiskeyKind>();
+                                WhiskeyStatus wS = o.SelectToken("whiskeyStatus").ToObject<WhiskeyStatus>();
 
-                    aController.chosenPunchTarget(pl, it, pos);
+                                if (wK == WhiskeyKind.Unknown)
+                                {
+                                    it = pl.getAWhiskey();
+                                } else
+                                {
+                                    it = pl.getAWhiskey(wK);
+                                }
+
+                                
+                            } else
+                            {
+                                it = aController.getItemfromTypePossession(type);
+                            }
+
+                        }
+                        catch (Exception f)
+                        {
+                            //No item, but character was punched
+                            it = null;
+                        }
+                        
+                        // Get position
+                        int index = Int32.Parse(o.SelectToken("index").ToString());
+                        Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
+                        Position pos = aController.getPositionByIndex(index, inside);
+
+                        aController.chosenPunchTarget(pl, it, pos);
+                    }
+                    
                 }
                 else if (eventName.Equals("MoveMessage"))
                 {
@@ -165,15 +234,76 @@ class MyTcpListener
                 {
                     // Get index; -1 if player timed out
                     int index = Int32.Parse(o.SelectToken("index").ToString());
-                    ActionCard crd = aController.getCardByIndex(index);
+                    if (index != -1)
+                    {
+                        ActionCard crd = aController.getCardByIndex(index);
+                        bool ghostChoseToHide = false;
+                        bool photographerHideDisabled = false;
 
-                    aController.playActionCard(crd);
+                        try
+                        {
+                            ghostChoseToHide = o.SelectToken("ghostChoseToHide").ToObject<bool>();
+
+                        }
+                        catch (Exception e) when (e is NullReferenceException)
+                        {
+
+                        }
+
+                        try
+                        {
+                            photographerHideDisabled = o.SelectToken("photographerHideDisabled").ToObject<bool>();
+
+                        }
+                        catch (Exception e) when (e is NullReferenceException)
+                        {
+
+                        }
+                        
+                        aController.playActionCard(crd, ghostChoseToHide, photographerHideDisabled);
+
+                    } 
+                    else
+                    {
+                        //Player timed out
+                        aController.playActionCard(null, false, false);
+                    }
                 }
                 else if (eventName.Equals("DrawMessage"))
                 {
                     aController.drawCards();
                 }
+                else if (eventName.Equals("PunchPositionsRequestMessage"))
+                {
+                    //Return possible positions for punch to current player
+                    Character ch = o.SelectToken("target").ToObject<Character>();
+                    Player pl = aController.getPlayerByCharacter(ch);
 
+                    aController.getPossiblePunchMoves(pl);
+
+                }
+                else if (eventName.Equals("WhiskeyMessage"))
+                {
+                    // Get whiskey kind
+                    try
+                    {
+                        WhiskeyKind whiskey = o.SelectToken("usedWhiskey").ToObject<WhiskeyKind>();
+                        aController.useWhiskey(whiskey);
+                    } 
+                    catch (Exception e)
+                    {
+                        //No usedWhiskey property, meaning player timed out on choosing a whiskey
+                        //Pass null instead
+                        WhiskeyKind? whiskey = null;
+                        aController.useWhiskey(whiskey);
+                    }
+                } 
+                else if (eventName.Equals("HostageMessage"))
+                {
+                    HostageChar hostage = o.SelectToken("chosenHostage").ToObject<HostageChar>();
+                    aController.chosenHostage(hostage);
+
+                } 
             }
 
         }
@@ -204,6 +334,11 @@ class MyTcpListener
     public static void addPlayerWithClient(Player p)
     {
         players.Add(p, currentClient);
+    }
+
+    public static void informClient(bool alreadyChosen)
+    {
+        CommunicationAPI.sendMessageToClient(currentClient, "characterAlreadyChosen", alreadyChosen);
     }
 
     public static void sendToClient(string data)
@@ -292,6 +427,36 @@ class MyTcpListener
         // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
 
         return data;
+    }
+
+    public static string getCharacterFromCurrentClient()
+    {
+        clientStreams.TryGetValue(currentClient, out NetworkStream streamToReadFrom);
+
+        int i;
+        string data = null;
+
+        if (streamToReadFrom.DataAvailable)
+        {
+            //i = number of bytes read
+            do
+            {
+                i = streamToReadFrom.Read(bytes, 0, bytes.Length);
+                // Translate data bytes to a ASCII string.
+                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+
+
+            } while (streamToReadFrom.DataAvailable);
+
+            clients.TryGetValue(currentClient, out string fromClientatIP);
+
+            Console.WriteLine("Received {0} from {1}", data, "client");
+            // Console.WriteLine("Received {0} from {1}", data, fromClientatIP);
+
+            return data;
+        }
+        return data;
+        
     }
 
 

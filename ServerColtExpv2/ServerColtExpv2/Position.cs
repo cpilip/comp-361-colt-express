@@ -4,6 +4,8 @@ using System.Linq;
 using GameUnitSpace;
 using Newtonsoft.Json;
 
+
+
 namespace PositionSpace
 {
     public enum Floor
@@ -15,15 +17,18 @@ namespace PositionSpace
     {
         [JsonProperty]
         private readonly Floor floor; // **Did not implement "setFloor"; Floor passed in constructor
-        //[JsonProperty]
+        [JsonIgnore]
         private readonly TrainCar trainCar;
-        //[JsonProperty]
+        [JsonIgnore]
         private HashSet<GameUnit> units = new HashSet<GameUnit>();
 
+        /*
         public Position()
         {
 
         }
+        */
+
         public Position(TrainCar trainCar, Floor floor)
         {
             this.trainCar = trainCar;
@@ -75,6 +80,11 @@ namespace PositionSpace
                 {
                     items.Add((GameItem)unit);
                 }
+
+                if (unit.GetType().Equals(typeof(Whiskey)))
+                {
+                    items.Add((Whiskey)unit);
+                }
             }
             return items;
         }
@@ -84,7 +94,12 @@ namespace PositionSpace
             return units.Contains(m);
         }
 
-        public List<ItemType> getUnits_items()
+        public Boolean hasShotgun(Shotgun s)
+        {
+            return units.Contains(s);
+        }
+
+        public List<ItemType> getUnits_Items()
         {
             List<ItemType> l = new List<ItemType>();
             this.units.OfType<GameItem>().ToList()
@@ -92,12 +107,30 @@ namespace PositionSpace
             return l;
         }
 
-        public List<Character> getUnits_players()
+        public List<Character> getUnits_Players()
         {
             List<Character> l = new List<Character>();
             this.units.OfType<Player>().ToList()
                 .ForEach(i => l.Add(i.getBandit()));
             return l;
+        }
+
+        public bool isInStageCoach(StageCoach aSC){
+            if (this.getTrainCar().Equals(aSC)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public int getRandomPurse() {
+            foreach (GameItem it in this.getItems()) {
+                if (it.getType() == ItemType.Purse) {
+                    return it.getValue();
+                } 
+            }
+            return 0;
         }
     }
 }

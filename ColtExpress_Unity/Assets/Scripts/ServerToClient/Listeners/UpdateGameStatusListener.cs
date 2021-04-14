@@ -11,23 +11,31 @@ public class UpdateGameStatusListener : UIEventListenable
         *
             {
                 eventName = "updateGameStatus",
-                statusIs = true if Schemin', false if Stealin,
+                statusIs = GameStatus
             };
         */
 
         JObject o = JObject.Parse(data);
-        bool status = o.SelectToken("statusIs").ToObject<bool>();
+        GameStatus status = o.SelectToken("statusIs").ToObject<GameStatus>();
 
-        if (status)
-        {
-            this.transform.GetChild(0).gameObject.SetActive(true);
-        } else
+        if (status == GameStatus.Schemin)
         {
             this.transform.GetChild(0).gameObject.SetActive(false);
+            this.transform.GetChild(1).gameObject.SetActive(true);
+            this.transform.GetChild(2).gameObject.SetActive(false);
+        } else if (status == GameStatus.Stealin)
+        {
+            this.transform.GetChild(0).gameObject.SetActive(false);
+            this.transform.GetChild(1).gameObject.SetActive(false);
+            this.transform.GetChild(2).gameObject.SetActive(true);
+        } else
+        {
+            this.transform.GetChild(0).gameObject.SetActive(true);
+            this.transform.GetChild(1).gameObject.SetActive(false);
+            this.transform.GetChild(2).gameObject.SetActive(false);
         }
         GameUIManager.gameUIManagerInstance.gameStatus = status;
 
-        string gameStatus = (status) ? "SCHEMIN" : "STEALING";
-        Debug.Log("[UpdateGameStatusListener] Status: " + gameStatus);
+        Debug.Log("[UpdateGameStatusListener] Status: " + status);
     }
 }

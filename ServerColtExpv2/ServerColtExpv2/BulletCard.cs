@@ -1,12 +1,15 @@
+using GameUnitSpace;
+using Newtonsoft.Json;
 using System;
 
 namespace CardSpace
 {
     class BulletCard : Card
     {
-        private int numBullets;
+        [JsonProperty]
+        private readonly int numBullets;
 
-        public BulletCard(int num)
+        public BulletCard(Player pPlayer, int num) : base(assignPlayer(pPlayer))  
         {
             this.numBullets = num;
         }

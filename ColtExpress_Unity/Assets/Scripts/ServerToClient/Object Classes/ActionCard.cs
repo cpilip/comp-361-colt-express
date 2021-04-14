@@ -2,26 +2,32 @@ using System;
 using GameUnitSpace;
 using Newtonsoft.Json;
 
-namespace CardSpace {
-    
-    public enum ActionKind {
+namespace CardSpace
+{
+
+    public enum ActionKind
+    {
         Move,
         ChangeFloor,
         Shoot,
         Rob,
         Marshal,
-        Punch
+        Punch,
+        Ride
     }
 
-    class ActionCard:Card {
+    class ActionCard : Card
+    {
         [JsonProperty]
         private readonly ActionKind kind;
 
-        public ActionCard(ActionKind k) {
+        public ActionCard(Player pPlayer, ActionKind k) : base(assignPlayer(pPlayer))
+        {
             this.kind = k;
         }
 
-        public ActionKind getKind() {
+        public ActionKind getKind()
+        {
             return this.kind;
         }
     }
