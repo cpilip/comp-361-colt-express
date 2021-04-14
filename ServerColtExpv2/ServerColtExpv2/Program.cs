@@ -13,6 +13,7 @@ using RoundSpace;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using HostageSpace;
+using System.Threading;
 
 
 // Enter the listening loop.
@@ -115,6 +116,7 @@ class MyTcpListener
                 }
             }
 
+            Thread.Sleep(2000);
             aController.allCharactersChosen();
 
             while (!aController.getEndHorseAttack()) {

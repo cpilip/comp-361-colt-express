@@ -31,6 +31,8 @@ namespace HostageSpace
 
         //returns a list of nbOfPlayers - 1 hostages, taken at random.
         public static  List <Hostage> getSomeHostages(int nbOfPlayers){
+
+
             List <Hostage> aList = new List<Hostage>();
             aList.Add(new Hostage(HostageChar.Banker));
             aList.Add(new Hostage(HostageChar.LadyPoodle));
@@ -42,13 +44,18 @@ namespace HostageSpace
             aList.Add(new Hostage(HostageChar.Photographer));
 
             List <Hostage> bList = new List<Hostage>();
-
+            
+            //TESTING
+            bList.Add(new Hostage(HostageChar.Photographer));
+            bList.Add(new Hostage(HostageChar.PokerPlayer));
+            /*
             Random rnd = new Random ();
             int rand = rnd.Next(0,8);
             
             for (int i=0; i<nbOfPlayers-1; i++){
                 bList.Add(aList[(rand+i) % 8]);
             }
+            */
             return bList;
         }
 

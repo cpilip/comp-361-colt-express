@@ -406,7 +406,7 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "specialAbilityDisabled", this.currentPlayer.getBandit());
         }
 
-        if (retrievedHostage.getHostageChar().Equals(HostageChar.PokerPlayer))
+        if (retrievedHostage.getHostageChar().Equals(HostageChar.Photographer))
         {
             currentPlayer.setHasSpecialAbility(false);
             //TODO new message 
