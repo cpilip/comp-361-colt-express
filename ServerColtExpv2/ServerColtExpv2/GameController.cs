@@ -191,6 +191,8 @@ class GameController
             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
 
             Console.WriteLine("Finished initialization.");
+
+            CommunicationAPI.sendMessageToClient(null, "gameInitialized");
         }
     }
 
@@ -868,9 +870,14 @@ class GameController
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves, indices);
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
                         }
-                        else
+                        else if (moves.Count == 0)
                         {
                             chosenPosition(moves[0]);
+                        } else
+                        {
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
                         }
                         break;
                     }

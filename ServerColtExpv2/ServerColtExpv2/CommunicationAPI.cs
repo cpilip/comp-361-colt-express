@@ -434,7 +434,7 @@ public class CommunicationAPI
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
         }
-        else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage" || action == "moveStageCoach")
+        else if (action == "removeTopCard" || action == "highlightTopCard" || action == "updateSelectHostage" || action == "moveStageCoach" || action == "gameInitialized")
         {
             var definition = new
             {
