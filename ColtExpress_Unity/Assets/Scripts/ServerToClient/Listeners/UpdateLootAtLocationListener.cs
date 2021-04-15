@@ -52,38 +52,39 @@ public class UpdateLootAtLocationListener : UIEventListenable
 
             foreach (GameItem item in g)
             {
+                listOfLootTokensEnumerator.MoveNext();
                 switch (item.getType())
                 {
                     case ItemType.Purse:
                         purses++;
-                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Ruby:
                         rubies++;
-                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Strongbox:
                         strongboxes++;
-                        listOfLootTokensEnumerator.MoveNext();
                         break;
                     case ItemType.Whiskey:
                         
                         JToken q = ((JToken)listOfLootTokensEnumerator.Current);
                         Whiskey w = q.ToObject<Whiskey>();
 
-                        switch (w.getWhiskeyKind()) {
-                            case WhiskeyKind.Unknown:
+                        switch (w.getWhiskeyStatus()) {
+                            case WhiskeyStatus.Full:
                                 fullWhiskeyNum++;
                                 break;
-                            case WhiskeyKind.Normal:
-                                normalWhiskeyNum++;
-                                break;
-                            case WhiskeyKind.Old:
-                                oldWhiskeyNum++;
+                            case WhiskeyStatus.Half:
+                                switch (w.getWhiskeyKind())
+                                {
+                                    case WhiskeyKind.Old:
+                                        oldWhiskeyNum++;
+                                        break;
+                                    case WhiskeyKind.Normal:
+                                        normalWhiskeyNum++;
+                                        break;
+                                }
                                 break;
                         }
-                        
-                        listOfLootTokensEnumerator.MoveNext();
                         break;
 
                 }

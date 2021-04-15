@@ -40,6 +40,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject ghostMenu;
     public GameObject hostageMenu;
     public GameObject horseAttackMenu;
+    public GameObject keepMenu;
     public GameObject punchShotgunButton;
 
     //Blockers
@@ -145,6 +146,11 @@ public class GameUIManager : MonoBehaviour
     public void togglePunchShotgunButton(bool isVisible)
     {
         punchShotgunButton.SetActive(isVisible);
+    }
+
+    public void toggleKeepMenu(bool isVisible)
+    {
+        keepMenu.SetActive(isVisible);
     }
 
     public void clearMovePositions()

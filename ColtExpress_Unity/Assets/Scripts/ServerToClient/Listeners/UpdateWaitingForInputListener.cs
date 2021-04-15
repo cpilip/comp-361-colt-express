@@ -66,6 +66,20 @@ public class UpdateWaitingForInputListener : UIEventListenable
                     Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, FALSE: Menu locked.");
                 }
             }
+            else if (GameUIManager.gameUIManagerInstance.gameStatus == GameStatus.FinalizingCard)
+            {
+                if (waitingForInput)
+                {
+
+                    GameUIManager.gameUIManagerInstance.toggleKeepMenu(true);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, TRUE: Menu unlocked.");
+                }
+                else
+                {
+                    GameUIManager.gameUIManagerInstance.toggleKeepMenu(false);
+                    Debug.Log("[UpdateWaitingForInputListener] HORSEATTACK, FALSE: Menu locked.");
+                }
+            }
             //If HORSE ATTACK, display horse attack menu
         }
         
