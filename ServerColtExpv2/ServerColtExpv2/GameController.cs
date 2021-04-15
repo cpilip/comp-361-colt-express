@@ -528,6 +528,8 @@ class GameController
                 {
                     this.currentPlayer = previousCurrentPlayerFromShotgun;
                     shotGunCheckResponse = false;
+                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                    this.endOfCards();
                 }
 
             }
@@ -535,6 +537,8 @@ class GameController
             {
                 this.currentPlayer = previousCurrentPlayerFromShotgun;
                 shotGunCheckResponse = false;
+                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                this.endOfCards();
             }
 
         }
@@ -1000,6 +1004,10 @@ class GameController
                                 {
                                     this.currentPlayer = previousCurrentPlayerFromShotgun;
                                     shotGunCheckResponse = false;
+
+                                    this.currentRound.getTopOfPlayedCards();
+                                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                                    this.endOfCards();
                                 }
 
                             }
@@ -1007,6 +1015,10 @@ class GameController
                             {
                                 this.currentPlayer = previousCurrentPlayerFromShotgun;
                                 shotGunCheckResponse = false;
+
+                                this.currentRound.getTopOfPlayedCards();
+                                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                                this.endOfCards();
                             }
 
 
@@ -1227,6 +1239,7 @@ class GameController
             {
                 this.horseAttackCounter++;
             } 
+            //this.horseAttackCounter++;
         }
         else if (haAction.Equals("enter"))
         {
@@ -1237,7 +1250,7 @@ class GameController
 
        
         // Check if all players have chosen a position where to stop
-        if (this.horseAttackCounter == this.totalPlayer)
+        if (this.horseAttackPlayerCounter == this.totalPlayer)
         {
             this.endHorseAttack = true;
 

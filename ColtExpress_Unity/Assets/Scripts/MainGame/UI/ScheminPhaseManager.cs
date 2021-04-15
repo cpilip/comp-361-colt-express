@@ -353,6 +353,7 @@ public class ScheminPhaseManager : MonoBehaviour
                         photographerHideDisabled = GameUIManager.gameUIManagerInstance.photographerHideDisabled
                     };
 
+                    ghostChoseToHide = false;
                     ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
                 }
 
