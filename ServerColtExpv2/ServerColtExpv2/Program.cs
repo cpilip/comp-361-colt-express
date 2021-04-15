@@ -226,7 +226,7 @@ class MyTcpListener
                             }
                             else
                             {
-                                it = aController.getItemfromTypePossession(type);
+                                it = aController.getItemfromTypePossession(pl, type);
                             }
 
                         }

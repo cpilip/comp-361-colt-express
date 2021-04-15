@@ -581,7 +581,6 @@ class GameController
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
-                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
             //If p is the stagecoach
             } else if (p.isInStageCoach(myStageCoach))
@@ -593,7 +592,6 @@ class GameController
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                 } else
                 {
-                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                     this.endOfCards();
                 }
             }
@@ -632,13 +630,18 @@ class GameController
                     CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
                 }
             }
+            else
+            {
+                CommunicationAPI.sendMessageToClient(null, "decrementLoot", victim.getBandit(), loot);
+            }
 
             loot.setPosition(victim.getPosition());
             //TO ALL PLAYERS
             if ((currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse)) == true)
             {
                 CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
-            } else
+            } 
+            else
             {
                 if (loot is Whiskey)
                 {
@@ -652,7 +655,8 @@ class GameController
                     {
                         CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
                     }
-                } else
+                } 
+                else
                 {
                     CommunicationAPI.sendMessageToClient(null, "moveGameItem", loot, victim.getPosition(), getIndexByTrainCar(victim.getPosition().getTrainCar()));
                 }
@@ -1622,6 +1626,8 @@ class GameController
                             aShotGun.setPosition(newAdjacent.getRoof());
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, newAdjacent.getRoof(), myTrain.IndexOf(newAdjacent));
                         }
+
+
 
                     }
                 }
@@ -2958,6 +2964,19 @@ class GameController
     public GameItem getItemfromTypePossession(ItemType aType)
     {
         List<GameItem> al = this.currentPlayer.possessions;
+        foreach (GameItem anItem in al)
+        {
+            if (anItem.getType().Equals(aType))
+            {
+                return anItem;
+            }
+        }
+        return null;
+    }
+
+    public GameItem getItemfromTypePossession(Player pl, ItemType aType)
+    {
+        List<GameItem> al = pl.possessions;
         foreach (GameItem anItem in al)
         {
             if (anItem.getType().Equals(aType))

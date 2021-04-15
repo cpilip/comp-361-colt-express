@@ -2,6 +2,7 @@
 using GameUnitSpace;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,7 +47,15 @@ public class UpdatePlayerHandListener : UIEventListenable
                     //Call the appropriate card object function
                     if (card.GetType() == typeof(BulletCard))
                     {
-                        Character? from = c.SelectToken("myPlayer").SelectToken("bandit").ToObject<Character>();
+                        Character? from;
+                        try
+                        {
+                            from = c.SelectToken("myPlayer").SelectToken("bandit").ToObject<Character>();
+                        } catch (Exception e) when (e is NullReferenceException)
+                        {
+                            from = null; 
+                        }
+
                         BulletCard pewpewCard = c.ToObject<BulletCard>();
                         if (from == null)
                         {
