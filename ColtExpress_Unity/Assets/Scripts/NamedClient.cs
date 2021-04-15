@@ -5,6 +5,8 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using GameUnitSpace;
+using System.Net;
+
 
 public class NamedClient : MonoBehaviour
 {
@@ -12,37 +14,63 @@ public class NamedClient : MonoBehaviour
 
     private static TcpClient thisClient;
     private static NetworkStream stream;
-    public string server;
-    public int port;
-
+    
     private static string buffer = "";
+    private bool connected = false;
 
-    void Start()
+    public void connectToServer()
     {
+        Debug.Log("Connecting to server...");
+
         //Open a connection to the server automatically upon uponing the game executable
         try
         {
-            //Create a TcpClient; "server" must be an IP running the corresponding server executable
-            thisClient = new TcpClient(server, port);
+            // Create a TcpClient; "serverIP" must be an IP running the corresponding server executable
+            // // IPAddress serverAddr = IPAddress.Parse(serverIP);
+            // Debug.Log("1");
+            // IPEndPoint serverEndPoint = new IPEndPoint(serverAddr, port);
+            // Debug.Log("2");
+            // TcpClient thisClient = new TcpClient(serverEndPoint);
+ 
+            thisClient = new TcpClient("52.152.132.200", 80);
+            Debug.Log("3");
             //Obtain the corresponding stream
             stream = thisClient.GetStream();
-           
+            Debug.Log("4");
+
+            // // Use socket to skip DNS lookup
+            // Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            // IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(this.serverIP), this.port);
+            // sock.Connect(ipep);
+            // stream = new NetworkStream(sock);           
         }
         catch (ArgumentNullException e)
         {
+            Debug.Log("5");
+            Debug.Log(e.Message);
             Console.WriteLine("ArgumentNullException: {0}", e);
         }
         catch (SocketException e)
         {
+            Debug.Log("6");
+            Debug.Log(e.Message);
+
             Console.WriteLine("SocketException: {0}", e);
         }
+        Debug.Log("7");
+
+        connected = true;
 
     }
 
+
+
     void Update()
     {
-        //Listen for messages from the server
-        getFromServer();
+        if (connected){
+            //Listen for messages from the server
+            getFromServer();
+        }
     }
 
     public void sendToServer(string message)

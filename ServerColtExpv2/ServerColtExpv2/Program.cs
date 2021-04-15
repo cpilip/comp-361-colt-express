@@ -14,6 +14,12 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using HostageSpace;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using WebApi;
 
 
 // Enter the listening loop.
@@ -50,8 +56,21 @@ class MyTcpListener
     public static bool allPlayersInitialized = false;
 
     //Lobby Service starts Server APPLICATION or server APPLICATION is started and waiting for input from Lobby Service
-    public static void Main()
+    public static void Main(string[] args)
     {
+        WebApi.Startup.CreateHostBuilder(args).Build().Run();
+        // while (true) {
+        //     Console.WriteLine("Start Listening for LS request");
+        //     // Wait for put/delete request from lobby service
+        //     WebApi.Startup.CreateHostBuilder(args).Build().Run();
+        //     Console.WriteLine("Stopped Listening for LS request");
+        //     playGame("", 2);
+        // }
+    }
+
+    public static void playGame(string saveGame, int numPlayers)
+    {
+        Console.WriteLine("Called playGame for " + numPlayers + " players");
         TcpListener server = null;
         try
         {
@@ -87,9 +106,11 @@ class MyTcpListener
 
                 currentClient = client;
 
+                Console.WriteLine("New player connected");
+
 
                 //Verify against lobby service
-                if (clients.Count == 3)
+                if (clients.Count == numPlayers)
                 {
                     haveAllConnections = true;
                 }
@@ -99,6 +120,7 @@ class MyTcpListener
 
             //MAIN GAME STARTS HERE
 
+            GameController.setNumPlayers(numPlayers);
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
 

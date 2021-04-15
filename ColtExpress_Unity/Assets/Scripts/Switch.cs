@@ -17,7 +17,12 @@ public class Switch : MonoBehaviour
 
   public void playGame()
   {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+    // Redirect to sign in if player is not logged in
+    if (GameObject.Find("ID") != null) {
+      SceneManager.LoadScene("Play");
+    } else {
+      SceneManager.LoadScene("SignIn");
+    }
   }
 
   public void signIn()
@@ -94,6 +99,16 @@ public class Switch : MonoBehaviour
     public void getCharacter()
     {
         SceneManager.LoadScene("ChooseCharacter");
+    }
+
+    public void goNewSession()
+    {
+        SceneManager.LoadScene("NewSession");
+    }
+
+    public void goFindSession()
+    {
+        SceneManager.LoadScene("FindSession");
     }
 
     public void goMainMenu()
