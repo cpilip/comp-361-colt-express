@@ -1,4 +1,5 @@
-
+using System;
+using System.IO;
 using Newtonsoft.Json;
 using PositionSpace;
 
@@ -26,6 +27,23 @@ namespace GameUnitSpace
 
          public Position getPosition(){
             return aPosition;
+        }
+
+        public Object deserialization<T>(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string txt = File.ReadAllText(filePath);
+                //Console.WriteLine(txt);
+                var obj = JsonConvert.DeserializeObject<T>(txt);
+                return obj;
+            }
+            else
+            {
+                Console.WriteLine("Debug: file does not exist in deserialization");
+                return null;
+            }
+
         }
     }
 }

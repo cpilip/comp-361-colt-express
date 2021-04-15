@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using GameUnitSpace;
+using System.IO;
+using System;
 using Newtonsoft.Json;
 
 namespace PositionSpace
@@ -77,6 +79,42 @@ namespace PositionSpace
 
         public bool hasHorseAtCarLevel(){
             return (numHorses == 0) ? false : true;
+        }
+
+        public void serialiazation(string filePath)
+        {
+            JsonSerializer jsonSerializer = new JsonSerializer();
+            StreamWriter sw = new StreamWriter(filePath);
+            JsonWriter jsonWriter = new JsonTextWriter(sw);
+            var defination = new
+            {
+                className = "TrainCar",
+                inside = inside,
+                isLocomotive = isLocomotive,
+                roof = roof
+
+            };
+
+            jsonSerializer.Serialize(jsonWriter, defination);
+            jsonWriter.Close();
+            sw.Close();
+        }
+
+        public Object deserialization<T>(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string txt = File.ReadAllText(filePath);
+                //Console.WriteLine(txt);
+                var obj = JsonConvert.DeserializeObject<T>(txt);
+                return obj;
+            }
+            else
+            {
+                Console.WriteLine("Debug: file does not exist in deserialization");
+                return null;
+            }
+
         }
     }
 

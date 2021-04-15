@@ -18,6 +18,10 @@ namespace CardSpace {
         {
             return playerToAssign;
         }
+
+        public void serialiazation(string filePath) { }
+
+        public abstract Object deserialization<T>(string filePath);
     }
     
 }

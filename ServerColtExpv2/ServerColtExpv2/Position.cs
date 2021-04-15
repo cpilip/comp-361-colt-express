@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using GameUnitSpace;
@@ -131,6 +132,40 @@ namespace PositionSpace
                 } 
             }
             return 0;
+        }
+
+        public void serialiazation(string filePath)
+        {
+            JsonSerializer jsonSerializer = new JsonSerializer();
+            StreamWriter sw = new StreamWriter(filePath);
+            JsonWriter jsonWriter = new JsonTextWriter(sw);
+            var defination = new
+            {
+                className = "Position",
+                floor = floor
+            };
+
+            jsonSerializer.Serialize(jsonWriter, defination);
+            jsonWriter.Close();
+            sw.Close();
+        }
+
+
+        public Object deserialization<T>(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string txt = File.ReadAllText(filePath);
+                //Console.WriteLine(txt);
+                var obj = JsonConvert.DeserializeObject<T>(txt);
+                return obj;
+            }
+            else
+            {
+                Console.WriteLine("Debug: file does not exist in deserialization");
+                return null;
+            }
+
         }
     }
 }

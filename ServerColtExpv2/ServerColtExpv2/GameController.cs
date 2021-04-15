@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 using RoundSpace;
 using CardSpace;
@@ -25,33 +27,55 @@ enum GameStatus
 
 class GameController
 {
+    [JsonProperty]
     private static GameController myGameController;
+    [JsonProperty]
     private readonly int totalPlayer;
+    [JsonProperty]
     private Boolean endOfGame;
+    [JsonProperty]
     private GameStatus aGameStatus;
+    [JsonProperty]
     private Round currentRound;
+    [JsonProperty]
     private Turn currentTurn;
+    [JsonProperty]
     private List<Round> rounds;
+    [JsonProperty]
     private List<Player> players;
+    [JsonProperty]
     private Player currentPlayer;
+    [JsonProperty]
     private Player playerPtrForStarting;
+    [JsonProperty]
     private int currentPlayerIndex;
+    [JsonProperty]
     private int firstPlayerIndex;
+    [JsonProperty]
     private List<TrainCar> myTrain;
+    [JsonProperty]
     private StageCoach myStageCoach;
+    [JsonProperty]
     private Marshal aMarshal;
+    [JsonProperty]
     private Shotgun aShotGun;
+    [JsonProperty]
     private List<Hostage> availableHostages;
+    [JsonProperty]
     private Boolean endHorseAttack;
+    [JsonProperty]
     private List<AttackPosition> attPos;
-    
+    [JsonProperty]
     private int horseAttackCounter;
+    [JsonProperty]
     private int horseAttackPlayerCounter;
+    [JsonProperty]
     private int horseAttackPlayersRemaining;
-
+    [JsonProperty]
     private int endOfRoundBonusPlayerCounter;
-
+    [JsonProperty]
     private bool shotGunCheckResponse = false;
+    [JsonProperty]
     Player previousCurrentPlayerFromShotgun;
 
     private GameController(int numPlayers)
@@ -2860,6 +2884,69 @@ class GameController
     {
         int r = x % m;
         return r < 0 ? r + m : r;
+    }
+
+
+    public void serialiazation(string filePath)
+    {
+        JsonSerializer jsonSerializer = new JsonSerializer();
+        StreamWriter sw = new StreamWriter(filePath);
+        JsonWriter jsonWriter = new JsonTextWriter(sw);
+        var defination = new
+        {
+            // className = "GameController",
+            myGameController = myGameController,
+            totalPlayer = totalPlayer,
+            endOfGame = endOfGame,
+            aGameStatus = aGameStatus,
+            currentRound = currentRound,
+            currentTurn = currentTurn,
+            rounds = rounds,
+            players = players,
+            currentPlayer = currentPlayer,
+            playerPtrForStarting = playerPtrForStarting,
+            currentPlayerIndex = currentPlayerIndex,
+            firstPlayerIndex = firstPlayerIndex,
+            myTrain = myTrain,
+            myStageCoach = myStageCoach,
+            aMarshal = aMarshal,
+            aShotGun = aShotGun,
+            availableHostages = availableHostages,
+            endHorseAttack = endHorseAttack,
+            attPos = attPos,
+            horseAttackCounter = horseAttackCounter,
+            horseAttackPlayerCounter = horseAttackPlayerCounter,
+            horseAttackPlayersRemaining = horseAttackPlayersRemaining,
+            shotGunCheckResponse = shotGunCheckResponse,
+            previousCurrentPlayerFromShotgun = previousCurrentPlayerFromShotgun
+
+        };
+        var s = JsonConvert.SerializeObject(defination, new JsonSerializerSettings()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
+        JObject str = JObject.Parse(s);
+        jsonSerializer.Serialize(jsonWriter, str);
+        jsonWriter.Close();
+        sw.Close();
+    }
+
+
+    public Object deserialization<T>(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            string txt = File.ReadAllText(filePath);
+            //Console.WriteLine(txt);
+            var obj = JsonConvert.DeserializeObject<GameController>(txt);
+            return obj;
+        }
+        else
+        {
+            Console.WriteLine("Debug: file does not exist in deserialization");
+            return null;
+        }
+
     }
 }
 
