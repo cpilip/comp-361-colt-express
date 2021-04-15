@@ -18,7 +18,7 @@ public class StealinPhaseManager : MonoBehaviour
     private WhiskeyStatus whiskeyStatus;
     private WhiskeyKind whiskeyKind;
 
-    private bool notInPunch = true;
+    public bool notInPunch = true;
     private bool isLoot = false;
     public bool choseEscape = false;
     void Start()
@@ -283,7 +283,7 @@ public class StealinPhaseManager : MonoBehaviour
 
         if (GameUIManager.gameUIManagerInstance.getShotgunByShotgunButton(EventSystem.current.currentSelectedGameObject.transform.parent.gameObject))
         {
-
+            notInPunch = true;
             Debug.Log("[UpdatePossTargetsPunchListener] Player chose: Shotgun");
             //Shotgun punched
             var definition = new
