@@ -581,6 +581,7 @@ class GameController
                 p.getTrainCar().moveRoofCar(currentPlayer);
                 //TO ALL PLAYERS
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
+                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                 this.endOfCards();
             //If p is the stagecoach
             } else if (p.isInStageCoach(myStageCoach))
@@ -592,8 +593,14 @@ class GameController
                     CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateSelectHostage");
                 } else
                 {
+                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
                     this.endOfCards();
                 }
+            }
+            else
+            {
+                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                this.endOfCards();
             }
         } 
 
