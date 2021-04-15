@@ -1250,7 +1250,7 @@ class GameController
 
        
         // Check if all players have chosen a position where to stop
-        if (this.horseAttackPlayerCounter == this.totalPlayer)
+        if (this.horseAttackCounter == this.totalPlayer)
         {
             this.endHorseAttack = true;
 
