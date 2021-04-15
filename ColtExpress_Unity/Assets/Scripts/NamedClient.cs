@@ -133,7 +133,7 @@ public class NamedClient : MonoBehaviour
 
                 string goodMatch = match.ToString();
                 
-                saveEnd = restOfBuffer.Remove(goodMatch.Length);
+                saveEnd = restOfBuffer.Remove(goodMatch.Length - 1);
 
                 Debug.Log("[ServerToClient] RESTOFBUFFER: " + restOfBuffer);
 
