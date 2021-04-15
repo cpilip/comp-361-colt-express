@@ -129,7 +129,7 @@ class GameController
 
             this.currentRound = rounds[0];
             //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", currentRound);
+            CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", currentRound, this.rounds.IndexOf(this.currentRound) + 1);
 
             this.currentTurn = currentRound.getTurns()[0];
             //TO ALL PLAYERS
@@ -1511,7 +1511,7 @@ class GameController
                     //setting the next round, setting the first turn of the round 
                     this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                     //TO ALL PLAYERS
-                    CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", this.currentRound);
+                    CommunicationAPI.sendMessageToClient(null, "updateCurrentRound", this.currentRound, this.rounds.IndexOf(this.currentRound) + 1);
 
                     this.currentTurn = this.currentRound.getTurns()[0];
                     //TO ALL PLAYERS

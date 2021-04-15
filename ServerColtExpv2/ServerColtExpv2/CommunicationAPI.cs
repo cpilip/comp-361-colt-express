@@ -204,7 +204,8 @@ public class CommunicationAPI
                 eventName = action,
                 isLastRound = r.getIsLastRound(),
                 turns = l,
-                roundEvent = r.getEvent()
+                roundEvent = r.getEvent(),
+                roundIndex = (int)args[1]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);

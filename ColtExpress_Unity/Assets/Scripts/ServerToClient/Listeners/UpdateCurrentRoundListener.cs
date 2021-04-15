@@ -43,13 +43,16 @@ public class UpdateCurrentRoundListener : UIEventListenable
             };
         */
         //Visually update the current round to the next round
-        _currentRound++;
-        this.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "" + _currentRound;
+        
 
         //Initialize turns
         JObject o = JObject.Parse(data);
         List<TurnType> turns = o.SelectToken("turns").ToObject<List<TurnType>>();
         EndOfRoundEvent roundEvent = o.SelectToken("roundEvent").ToObject<EndOfRoundEvent>();
+        int roundIndex = o.SelectToken("roundIndex").ToObject<int>();
+
+        _currentRound = roundIndex;
+        this.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "" + _currentRound;
 
         //Destroy all previous turn prefabs
         int childCount = turnsLocation.transform.childCount;
@@ -134,4 +137,15 @@ public class UpdateCurrentRoundListener : UIEventListenable
 
 
     }
+
+    public int getCurrentRound()
+    {
+        return _currentRound;
+    }
+    public void setCurrentRound(int c)
+    {
+        _currentRound = c;
+    }
+
+
 }

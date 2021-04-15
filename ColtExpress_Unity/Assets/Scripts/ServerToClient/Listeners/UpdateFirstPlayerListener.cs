@@ -45,4 +45,14 @@ public class UpdateFirstPlayerListener : UIEventListenable
             previousPlayer = c;
         }
     }
+
+    public Character? getPreviousPlayer()
+    {
+        return previousPlayer;
+    }
+
+    public void setPreviousPlayer(Character? p)
+    {
+        previousPlayer = p;
+    }
 }

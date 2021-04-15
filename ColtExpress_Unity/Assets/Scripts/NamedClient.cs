@@ -45,6 +45,11 @@ public class NamedClient : MonoBehaviour
         getFromServer();
     }
 
+    public bool bufferIsEmpty()
+    {
+        return (buffer == "");
+    }
+
     public void sendToServer(string message)
     {
         Debug.Log("[ClientToServer] Data transmitted: " + message);

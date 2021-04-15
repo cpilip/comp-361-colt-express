@@ -71,4 +71,14 @@ public class UpdateCurrentTurnListener : UIEventListenable
         }
 
     }
+
+    public int getPreviousTurn()
+    {
+        return previousTurn.transform.GetSiblingIndex();
+    }
+
+    public void setPreviousTurn(int t)
+    {
+        previousTurn = this.transform.GetChild(t).gameObject;
+    }
 }
