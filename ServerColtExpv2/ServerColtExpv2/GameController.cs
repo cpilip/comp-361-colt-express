@@ -425,6 +425,20 @@ class GameController
 
     }
 
+    public void chosenPosition(bool canEscape)
+    {
+        //Card removed]
+        if (canEscape)
+        {
+            this.currentPlayer.setHasEscaped();
+            ActionCard topOfPile = this.currentRound.getTopOfPlayedCards();
+            CommunicationAPI.sendMessageToClient(null, "roundEventEscape", "Escape", this.currentPlayer.getBandit(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+            this.endOfCards();
+        }
+
+    }
+
     public void chosenPosition(Position p)
     {
         if (shotGunCheckResponse == true)
@@ -451,6 +465,12 @@ class GameController
             foreach (Player aPlayer in p.getPlayers())
             {
                 BulletCard b = new BulletCard(null, -1);
+
+                if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                {
+                    aPlayer.addMortalBullet();
+                }
+
                 aPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(aPlayer);
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
@@ -472,6 +492,12 @@ class GameController
             if (p.hasMarshal(aMarshal))
             {
                 BulletCard b = new BulletCard(null, -1);
+
+                if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                {
+                    this.currentPlayer.addMortalBullet();
+                }
+
                 currentPlayer.addToDiscardPile(b);
                 p.getTrainCar().moveRoofCar(currentPlayer);
 
@@ -514,6 +540,12 @@ class GameController
             if (p.hasMarshal(aMarshal))
             {
                 BulletCard b = new BulletCard(null, -1);
+
+                if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                {
+                    this.currentPlayer.addMortalBullet();
+                }
+
                 currentPlayer.addToDiscardPile(b);
 
                 p.getTrainCar().moveRoofCar(currentPlayer);
@@ -604,6 +636,12 @@ class GameController
         if (dest.hasMarshal(aMarshal))
         {
             BulletCard b = new BulletCard(null, -1);
+
+            if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+            {
+                victim.addMortalBullet();
+            }
+
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
             //TO ALL PLAYERS
@@ -663,6 +701,12 @@ class GameController
         this.currentRound.getTopOfPlayedCards();
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
         BulletCard aBullet = currentPlayer.getABullet();
+
+        if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+        {
+            target.addMortalBullet();
+        }
+
         target.addToDiscardPile(aBullet);
 
         this.currentPlayer.shootBullet();
@@ -711,13 +755,19 @@ class GameController
             }
 
             //If Django's target's new position ended up inside with the marshal, shoot'em
-            if (currentPlayer.getPosition().isInside())
+            if (target.getPosition().isInside())
             {
-                if (currentPlayer.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
+                if (target.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
                 {
-                    this.currentPlayer.addToDiscardPile(new BulletCard(null, -1));
-                    this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
+                    target.addToDiscardPile(new BulletCard(null, -1));
+
+                    if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                    {
+                        target.addMortalBullet();
+                    }
+
+                    target.getPosition().getTrainCar().moveRoofCar(target);
+                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, target.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(target.getPosition().getTrainCar()));
                 }
             }
         }
@@ -768,6 +818,11 @@ class GameController
         {
             BulletCard b = new BulletCard(null, -1);
             currentPlayer.addToDiscardPile(b);
+
+            if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+            {
+                currentPlayer.addMortalBullet();
+            }
 
             //if the shotgun is on the caboose, player sent to adjacent car
             if (p.getTrainCar().Equals(myTrain[myTrain.Count() - 1]))
@@ -832,6 +887,9 @@ class GameController
 
         //Figure out who is the current player
         this.currentPlayer = top.belongsTo();
+
+       
+
         CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
 
         Console.WriteLine("Resolving " + top.getKind() + " from " + top.belongsTo().getBandit());
@@ -845,7 +903,13 @@ class GameController
         //         waiting = false;
 
         // }
-
+        if (this.currentPlayer.getHasEscaped())
+        {
+            this.currentRound.getTopOfPlayedCards();
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+            this.endOfCards();
+            return;
+        }
         if (waiting)
         {
 
@@ -918,6 +982,12 @@ class GameController
                             if (currentPlayer.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
                             {
                                 this.currentPlayer.addToDiscardPile(new BulletCard(null, -1));
+
+                                if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                                {
+                                    this.currentPlayer.addMortalBullet();
+                                }
+
                                 this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
@@ -1063,9 +1133,9 @@ class GameController
                     }
                 case ActionKind.Ride:
                     {
-                       
                         if (currentPlayer.getPosition().getTrainCar().hasHorseAtCarLevel())
                         {
+
                             //set current player on a horse 
                             currentPlayer.setOnAHorse(true);
 
@@ -1078,7 +1148,7 @@ class GameController
 
                             this.aGameStatus = GameStatus.FinalizingCard;
 
-                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves, indices, this.currentPlayer.getBandit(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
+                            CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateRidePositions", moves, indices, this.currentPlayer.getBandit(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.Escape));
 
                             this.currentPlayer.setWaitingForInput(true);
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
@@ -1532,6 +1602,11 @@ class GameController
                     foreach (Player b in this.aMarshal.getPosition().getPlayers())
                     {
                         scores[b] = scores[b] - b.getLeastPurseValue();
+                        if (b.getLeastPurseValue() != 0)
+                        {
+                            CommunicationAPI.sendMessageToClient(null, "moveGameItem", b.getLeastPurse(), this.aMarshal.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(aMarshal.getPosition().getTrainCar()));
+                            CommunicationAPI.sendMessageToClient(null, "decrementLoot", b.getBandit(), b.getLeastPurse());
+                        }
                     }
 
                     break;
@@ -1544,6 +1619,15 @@ class GameController
                         if (b.getPosition().getPlayers().Count == 1)
                         {
                             scores[b] = scores[b] + b.getPosition().getRandomPurse();
+
+                            if (b.getPosition().getRandomPurse() != 0)
+                            {
+                                GameItem purse = b.getPosition().getRandomPurseItem();
+                                b.getPosition().getItems().Remove(purse);
+                                CommunicationAPI.sendMessageToClient(null, "updateLootAtLocation", b.getPosition(), getIndexByTrainCar(b.getPosition().getTrainCar()), b.getPosition().getItems(), true);
+                                CommunicationAPI.sendMessageToClient(null, "incrementLoot", b.getBandit(), purse);
+                            }
+                           
                         }
                     }
                     break;
@@ -1553,6 +1637,7 @@ class GameController
                 foreach (Player p in myTrain[0].getRoof().getPlayers())
                 {
                     scores[p] = scores[p] + 250;
+                    CommunicationAPI.sendMessageToClient(null, "incrementLoot", p.getBandit(), new GameItem(ItemType.Purse, 250));
                 }
                 break;
             }
@@ -1652,8 +1737,15 @@ class GameController
                     break;
             }
             case EndOfRoundEvent.MortalBullet: {
-                // Players loose 150 per bullet received during this round
-                break;
+                    // Players loose 150 per bullet received during this round
+
+                    foreach (Player b in this.players)
+                    {
+                        scores[b] = scores[b] - (b.getMortalBullets()*150);
+                        
+                    }
+
+                    break;
             }   
         }
         
@@ -2190,6 +2282,11 @@ class GameController
                 if (p.getHostage().getHostageChar().Equals(HostageChar.LadyPoodle))
                 {
                     p.addToDiscardPile(new BulletCard(null, -1));
+
+                    if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                    {
+                        p.addMortalBullet();
+                    }
                     break;
                 }
             }

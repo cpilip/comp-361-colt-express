@@ -226,11 +226,22 @@ class MyTcpListener
                 else if (eventName.Equals("MoveMessage"))
                 {
                     // Get position
-                    int index = Int32.Parse(o.SelectToken("index").ToString());
-                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
-                    Position pos = aController.getPositionByIndex(index, inside);
 
-                    aController.chosenPosition(pos);
+                    try
+                    {
+                        bool choseEscape = o.SelectToken("choseEscape").ToObject<bool>();
+                        if (choseEscape)
+                        {
+                            aController.chosenPosition(choseEscape);
+                        }
+                    } catch
+                    {
+                        int index = Int32.Parse(o.SelectToken("index").ToString());
+                        Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
+                        Position pos = aController.getPositionByIndex(index, inside);
+
+                        aController.chosenPosition(pos);
+                    }
                 }
                 else if (eventName.Equals("CardMessage"))
                 {

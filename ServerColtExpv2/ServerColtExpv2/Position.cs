@@ -132,5 +132,17 @@ namespace PositionSpace
             }
             return 0;
         }
+
+        public GameItem getRandomPurseItem()
+        {
+            foreach (GameItem it in this.getItems())
+            {
+                if (it.getType() == ItemType.Purse)
+                {
+                    return it;
+                }
+            }
+            return null;
+        }
     }
 }

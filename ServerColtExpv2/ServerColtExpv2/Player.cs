@@ -18,8 +18,8 @@ namespace GameUnitSpace {
         Django
     }
 
-    class Player : GameUnit{
-       [JsonProperty]
+    class Player : GameUnit {
+        [JsonProperty]
         private readonly Character bandit;
         [JsonIgnore]
         private bool waitingForInput;
@@ -28,11 +28,11 @@ namespace GameUnitSpace {
         [JsonIgnore]
         private int numOfBulletsShot;
         [JsonIgnore]
-        public List <Card> hand;
+        public List<Card> hand;
         [JsonIgnore]
-        public List <Card> discardPile;
+        public List<Card> discardPile;
         [JsonIgnore]
-        public List <BulletCard> bullets;
+        public List<BulletCard> bullets;
         [JsonIgnore]
         public List<GameItem> possessions;
         [JsonIgnore]
@@ -40,6 +40,8 @@ namespace GameUnitSpace {
         [JsonIgnore]
         private bool onAHorse;
         private bool hasSpecialAbility;
+        private bool escaped;
+        private int mortalBullets = 0;
 
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c) {
@@ -51,7 +53,7 @@ namespace GameUnitSpace {
             this.initializeCards();
 
             // Initialize the possessions
-            possessions = new List <GameItem>();
+            possessions = new List<GameItem>();
             numOfBulletsShot = 0;
 
             possessions.Add(new GameItem(ItemType.Purse, 250));
@@ -59,20 +61,21 @@ namespace GameUnitSpace {
             capturedHostage = null;
 
             //TODO may update this
-            onAHorse=true;
+            onAHorse = true;
 
-            hasSpecialAbility=true;
+            hasSpecialAbility = true;
         }
 
         /** 
         * Private helper method
         */
 
+
         private void initializeCards() {
             // Create and add 6 bullet cards
             bullets = new List<BulletCard>();
 
-            for (int i = 1 ; i <= 6 ;i++) {
+            for (int i = 1; i <= 6; i++) {
                 bullets.Add(new BulletCard(this, i));
             }
             discardPile = new List<Card>();
@@ -99,15 +102,34 @@ namespace GameUnitSpace {
         public Character getBandit() {
             return this.bandit;
         }
-        
-        public void setCapturedHostage(Hostage h){
+
+        public void setCapturedHostage(Hostage h) {
             capturedHostage = h;
         }
 
-        public Hostage getHostage(){
+        public Hostage getHostage() {
             return capturedHostage;
         }
-        
+
+        public void setHasEscaped()
+        {
+            escaped = true;
+        }
+
+        public bool getHasEscaped()
+        {
+            return escaped;
+        }
+
+        public int getMortalBullets()
+        {
+            return mortalBullets;
+        }
+
+        public void addMortalBullet()
+        {
+            mortalBullets++;
+        }
         /// Set the state of waiting for input flag.
         public void setWaitingForInput(bool waitingForInput) {
             this.waitingForInput = waitingForInput;
@@ -194,6 +216,22 @@ namespace GameUnitSpace {
             }
             if (min == 10000) return 0;
             else return min;
+        }
+
+        public GameItem getLeastPurse()
+        {
+            int min = 10000;
+            GameItem minItem = null;
+            foreach (GameItem i in this.possessions)
+            {
+                if (i.getType() == ItemType.Purse && i.getValue() < min)
+                {
+                    min = i.getValue();
+                    minItem = i;
+                }
+            }
+            if (min == 10000) return null;
+            else return minItem;
         }
 
         public int getHostageValue()

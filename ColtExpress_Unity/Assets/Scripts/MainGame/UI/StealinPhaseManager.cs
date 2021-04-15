@@ -20,7 +20,7 @@ public class StealinPhaseManager : MonoBehaviour
 
     private bool notInPunch = true;
     private bool isLoot = false;
-
+    public bool choseEscape = false;
     void Start()
     {
         
@@ -146,29 +146,51 @@ public class StealinPhaseManager : MonoBehaviour
         ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
     }
 
+    public void chooseEscape()
+    {
+        choseEscape = true;
+        playerChosePosition();
+    }
+
     public void playerChosePosition()
     {
         if (notInPunch)
         {
-
-            (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
-
-            //If this is the stagecoach roof, disable raycasting 
-            if (position.Item2 == -1 && position.Item1 == false)
+            if (choseEscape)
             {
-                EventSystem.current.currentSelectedGameObject.GetComponent<Image>().raycastTarget = false;
+                var definition = new
+                {
+                    eventName = "MoveMessage",
+                    index = -1,
+                    inside = true,
+                    choseEscape = true
+                };
+
+                GameUIManager.gameUIManagerInstance.lockBoard();
+                GameUIManager.gameUIManagerInstance.clearMovePositions();
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+            } else
+            {
+                (bool, int) position = GameUIManager.gameUIManagerInstance.getTrainCarIndexByPosition(EventSystem.current.currentSelectedGameObject);
+
+                //If this is the stagecoach roof, disable raycasting 
+                if (position.Item2 == -1 && position.Item1 == false)
+                {
+                    EventSystem.current.currentSelectedGameObject.GetComponent<Image>().raycastTarget = false;
+                }
+
+                var definition = new
+                {
+                    eventName = "MoveMessage",
+                    index = position.Item2,
+                    inside = position.Item1,
+                };
+
+                GameUIManager.gameUIManagerInstance.lockBoard();
+                GameUIManager.gameUIManagerInstance.clearMovePositions();
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
             }
-
-            var definition = new
-            {
-                eventName = "MoveMessage",
-                index = position.Item2,
-                inside = position.Item1
-            };
-
-            GameUIManager.gameUIManagerInstance.lockBoard();
-            GameUIManager.gameUIManagerInstance.clearMovePositions();
-            ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+            
 
         } else
         {

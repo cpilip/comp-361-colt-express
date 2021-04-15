@@ -15,6 +15,7 @@ public class UpdateRidePositionsListener : UIEventListenable
             indices = (List<int>)args[1]
         };
      */
+    public GameObject escapeButton;
     public override void updateElement(string data)
     {
         JObject o = JObject.Parse(data);
@@ -85,7 +86,12 @@ public class UpdateRidePositionsListener : UIEventListenable
 
         }
 
-        
+        bool canEscape = o.SelectToken("canEscape").ToObject<bool>();
+        if (canEscape)
+        {
+            escapeButton.SetActive(true);
+        }
+
         Debug.Log("[UpdateRidePositionsListener] Moves now visible and on a horse.");
     }
 }
