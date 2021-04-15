@@ -971,7 +971,7 @@ class GameController
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", moves, indices);
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", this.currentPlayer.getBandit(), true);
                         }
-                        else if (moves.Count == 0)
+                        else if (moves.Count == 1)
                         {
                             chosenPosition(moves[0]);
                         } else
