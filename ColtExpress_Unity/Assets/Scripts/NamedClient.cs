@@ -18,6 +18,7 @@ public class NamedClient : MonoBehaviour
     private static string buffer = "";
     private static string previousStateOfBuffer = "";
     private static bool previousStateOfBufferSaved = true;
+    Boolean connected;
 
     public void connectToServer()
     {
@@ -109,8 +110,6 @@ public class NamedClient : MonoBehaviour
         int i;
         string data = null;
         Byte[] bytes = new Byte[100000];
-
-        buffer += saveEnd;
 
         //While there is data on the stream, add it to the buffer
         while (stream.DataAvailable)
