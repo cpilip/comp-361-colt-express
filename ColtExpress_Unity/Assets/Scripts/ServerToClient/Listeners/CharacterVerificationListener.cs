@@ -24,6 +24,7 @@ public class CharacterVerificationListener : UIEventListenable
 
         if (characterAlreadyChosen)
         {
+            Debug.Log("[CharacterVerificationListener] Character selected.");
             characterChosenPopup.SetActive(true);
             StartCoroutine("displayingCharacterChosenPopup");
         }
