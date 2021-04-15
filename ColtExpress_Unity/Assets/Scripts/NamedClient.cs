@@ -102,7 +102,7 @@ public class NamedClient : MonoBehaviour
     {
         int i;
         string data = null;
-        Byte[] bytes = new Byte[256];
+        Byte[] bytes = new Byte[1024];
         
         //While there is data on the stream, add it to the buffer
         while (stream.DataAvailable)
