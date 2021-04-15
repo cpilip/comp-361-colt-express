@@ -16,6 +16,7 @@ public class NamedClient : MonoBehaviour
     private static NetworkStream stream;
     
     private static string buffer = "";
+    private static string saveEnd = "";
     private bool connected = false;
 
     public void connectToServer()
@@ -103,11 +104,14 @@ public class NamedClient : MonoBehaviour
         int i;
         string data = null;
         Byte[] bytes = new Byte[100000];
-        
+
+        buffer += saveEnd;
+
         //While there is data on the stream, add it to the buffer
         while (stream.DataAvailable)
         {
             i = stream.Read(bytes, 0, bytes.Length);
+            Debug.Log("i :" + i);
             // Translate data bytes to a ASCII string.
             string message = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
 
@@ -121,15 +125,20 @@ public class NamedClient : MonoBehaviour
         {
             Regex splitBuffer = new Regex("\\{\"eventName\".*?\\{\"eventName\"(.*)", RegexOptions.IgnoreCase);
 
-            if (splitBuffer.Match(buffer).Groups[0].Success)
-            {
-                string restOfBuffer = "{" + "\"eventName\"" + splitBuffer.Match(buffer).Groups[1].Value.ToString();
+            Match match = splitBuffer.Match(buffer);
 
-                Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
+            if (match.Groups[0].Success)
+            {
+                string restOfBuffer = "{" + "\"eventName\"" + match.Groups[1].Value.ToString();
+
+                string goodMatch = match.ToString();
+                
+                saveEnd = restOfBuffer.Remove(goodMatch.Length);
+
+                Debug.Log("[ServerToClient] RESTOFBUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
-                data = (index <= 0)
-                    ? buffer
+                data = (index < 0)? buffer
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
 
