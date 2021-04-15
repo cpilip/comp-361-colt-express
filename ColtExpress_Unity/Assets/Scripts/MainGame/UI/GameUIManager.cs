@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -896,6 +897,11 @@ public class GameUIManager : MonoBehaviour
         DontDestroyOnLoad(gameUIManager);
     }
 
+    public bool isTurnMenuEnabled()
+    {
+        return turnMenu.activeSelf;
+    }
+
     public void reset()
     {
 
@@ -922,4 +928,265 @@ public class GameUIManager : MonoBehaviour
         loadedSprites.Clear();
     
     }
+
+    public void deserializeGUIM(List<Serialized_Player_Profile_Object> pp, Serialized_GameUIManager guim, List<Serialized_Card_Object> h, List<Serialized_Card_Object> pc)
+    {
+        foreach (Serialized_Card_Object card in h)
+        {
+
+            GameObject c = createCardObject(card.s_CardID_c, card.s_CardID_kind, true);
+
+            c.GetComponent<CardID>().isBulletCard = card.s_CardID_isBulletCard;
+            c.GetComponent<CardID>().isHidden = card.s_CardID_isHidden;
+            c.GetComponent<CardID>().playedByGhost = card.s_CardID_playedByGhost;
+
+            if (card.hasDraggable)
+            {
+                c.GetComponent<Draggable>().originalIndex = card.s_originalIndex;
+                c.GetComponent<Draggable>().fromDeck = card.s_fromDeck;
+            }
+            else
+            {
+                Destroy(c.GetComponent<Draggable>());
+            }
+
+            loadedSprites.TryGetValue(card.g_Sprite, out Sprite newCardSprite);
+            c.GetComponent<Image>().sprite = newCardSprite;
+        }
+
+        foreach (Serialized_Card_Object card in pc)
+        {
+
+            GameObject c = createCardObject(card.s_CardID_c, card.s_CardID_kind, false);
+
+            c.GetComponent<CardID>().isBulletCard = card.s_CardID_isBulletCard;
+            c.GetComponent<CardID>().isHidden = card.s_CardID_isHidden;
+            c.GetComponent<CardID>().playedByGhost = card.s_CardID_playedByGhost;
+
+            if (card.hasDraggable)
+            {
+                c.GetComponent<Draggable>().originalIndex = card.s_originalIndex;
+                c.GetComponent<Draggable>().fromDeck = card.s_fromDeck;
+            }
+            else
+            {
+                Destroy(c.GetComponent<Draggable>());
+            }
+
+            loadedSprites.TryGetValue(card.g_Sprite, out Sprite newCardSprite);
+            c.GetComponent<Image>().sprite = newCardSprite;
+        }
+
+        GameUIManager.gameUIManagerInstance.gameStatus = guim.gameStatus;
+        GameUIManager.gameUIManagerInstance.isNormalTurn = guim.isNormalTurn;
+
+        GameUIManager.gameUIManagerInstance.isTunnelTurn = guim.isTunnelTurn;
+
+        GameUIManager.gameUIManagerInstance.isTurmoilTurn = guim.isTurmoilTurn;
+        GameUIManager.gameUIManagerInstance.whiskeyWasUsed = guim.whiskeyWasUsed;
+        GameUIManager.gameUIManagerInstance.abilityDisabled = guim.abilityDisabled;
+
+        GameUIManager.gameUIManagerInstance.photographerHideDisabled = guim.photographerHideDisabled;
+
+        GameUIManager.gameUIManagerInstance.actionBlocked = guim.actionBlocked;
+        GameUIManager.gameUIManagerInstance.currentTurnIndex = guim.currentTurnIndex;
+
+        foreach(Character c in guim.characters)
+        {
+            createCharacterObject(c);
+            createPlayerProfileObject(c);
+        }
+
+        foreach(Serialized_Player_Profile_Object ppo in pp)
+        {
+            GameObject profile = getPlayerProfileObject(ppo.p_Bandit);
+
+            profile.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>().text = ppo.p_Hostage;
+
+            string value = "x" + ppo.p_Unknown_Whiskey.ToString();
+            profile.transform.GetChild(3).GetChild(0).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+            value = "x" + ppo.p_Normal_Whiskey.ToString();
+            profile.transform.GetChild(3).GetChild(1).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+            value = "x" + ppo.p_Old_Whiskey.ToString();
+            profile.transform.GetChild(3).GetChild(2).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+            value = "x" + ppo.p_Bullets.ToString();
+            profile.transform.GetChild(2).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+            value = "x" + ppo.p_Strongboxes.ToString();
+            profile.transform.GetChild(2).GetChild(1).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+            
+
+            value = "x" + ppo.p_Rubies.ToString();
+            profile.transform.GetChild(2).GetChild(2).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+
+            value = "x" + ppo.p_Purses.ToString();
+            profile.transform.GetChild(2).GetChild(3).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = value;
+
+            profile.transform.GetChild(5).gameObject.SetActive(ppo.p_FirstPlayer);
+            profile.transform.GetChild(6).gameObject.SetActive(ppo.p_AbilityDisabled);
+            profile.transform.GetChild(7).gameObject.SetActive(ppo.p_HideDisabled);
+
+        }
+
+        GameUIManager.gameUIManagerInstance.numPlayers = guim.numPlayers;
+
+        int maxIndex = guim.indices.Count();
+        int currentIndex = 0;
+
+        while (currentIndex < maxIndex)
+        {
+            initializeTrainCar(currentIndex);
+            currentIndex++;
+        }
+
+        trainCars.TryGetValue(maxIndex - 1, out GameObject caboose);
+
+        Vector3 cabooseVector = new Vector3(guim.cabooseTransform.x, guim.cabooseTransform.y, guim.cabooseTransform.z);
+        caboose.transform.position = cabooseVector;
+
+        cabooseVector = new Vector3(guim.cabooseRoofLootTransform.x, guim.cabooseRoofLootTransform.y, guim.cabooseRoofLootTransform.z);
+        getTrainCarLoot(maxIndex - 1, true).transform.position = cabooseVector;
+
+        cabooseVector = new Vector3(guim.cabooseInteriorLootTransform.x, guim.cabooseInteriorLootTransform.y, guim.cabooseInteriorLootTransform.z);
+        getTrainCarLoot(maxIndex - 1, false).transform.position = cabooseVector;
+
+        Vector3 stageCoachVector = new Vector3(guim.stageCoachTransform.x, guim.stageCoachTransform.y, guim.stageCoachTransform.z);
+        stagecoach.transform.position = stageCoachVector;
+
+        stageCoachVector = new Vector3(guim.stageCoachRoofLootTransform.x, guim.stageCoachRoofLootTransform.y, guim.stageCoachRoofLootTransform.z);
+        getStageCoachLoot(true).transform.position = stageCoachVector;
+
+        stageCoachVector = new Vector3(guim.stageCoachInteriorLootTransform.x, guim.stageCoachInteriorLootTransform.y, guim.stageCoachInteriorLootTransform.z);
+        getStageCoachLoot(false).transform.position = stageCoachVector;
+
+        var flattenList = guim.horsesAtIndices.Values.ToList();
+
+        //Add number of horse sets from locomotive
+        for (int i = 0; i < guim.numPlayers; i++)
+        {
+            horseSets.Add(i, horseTrack.transform.GetChild(i).gameObject);
+        }
+        //Destroy the other horse sets and the extra horses
+        for (int i = guim.numPlayers; i < horseSetCaboose.transform.childCount - 1; i++)
+        {
+            Destroy(horseSetCaboose.transform.GetChild(i).gameObject);
+            horseTrack.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        //Add available horses
+        List<GameObject> availableHorses = new List<GameObject>();
+        for (int i = 0; i < horseSetCaboose.transform.childCount - 1; i++)
+        {
+            availableHorses.Add(horseSetCaboose.transform.GetChild(i).gameObject);
+        }
+
+        foreach(int index in guim.horsesAtIndices.Keys)
+        {
+            guim.horsesAtIndices.TryGetValue(index, out int numHorsesAtLocation);
+            
+            while (numHorsesAtLocation > 0)
+            {
+                GameObject horse = availableHorses[0];
+                horse.transform.parent = getHorseSet(index).transform;
+                availableHorses.Remove(horse);
+                numHorsesAtLocation--;
+            }
+        }
+    }
+
+    public void serializeGUIM(List<Serialized_Player_Profile_Object> pp, Serialized_GameUIManager guim)
+    {
+        foreach (Character c in playerProfiles.Keys)
+        {
+            GameObject profile = getPlayerProfileObject(c);
+            Serialized_Player_Profile_Object ppo = new Serialized_Player_Profile_Object();
+
+            ppo.p_Bandit = c;
+            ppo.p_Hostage = profile.transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>().text;
+
+            string value = profile.transform.GetChild(3).GetChild(0).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Unknown_Whiskey = Int32.Parse(value);
+
+            value = profile.transform.GetChild(3).GetChild(1).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Normal_Whiskey = Int32.Parse(value);
+
+            value = profile.transform.GetChild(3).GetChild(2).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Old_Whiskey = Int32.Parse(value);
+
+            value = profile.transform.GetChild(2).GetChild(0).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Bullets = Int32.Parse(value);
+
+            value = profile.transform.GetChild(2).GetChild(1).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Strongboxes = Int32.Parse(value);
+
+            value = profile.transform.GetChild(2).GetChild(2).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Rubies = Int32.Parse(value);
+
+            value = profile.transform.GetChild(2).GetChild(3).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text;
+            value = value.Substring(1);
+            ppo.p_Purses = Int32.Parse(value);
+
+            ppo.p_FirstPlayer = profile.transform.GetChild(5).gameObject.activeSelf;
+            ppo.p_AbilityDisabled = profile.transform.GetChild(6).gameObject.activeSelf;
+            ppo.p_HideDisabled = profile.transform.GetChild(7).gameObject.activeSelf;
+
+            pp.Add(ppo);
+        }
+
+        guim.numPlayers = numPlayers;
+
+        guim.characters = characters.Keys.ToList();
+
+        guim.indices = trainCars.Keys.ToList();
+
+        guim.cabooseTransform.x = getTrainCar(getNumTrainCars() - 1).transform.position.x;
+        guim.cabooseTransform.y = getTrainCar(getNumTrainCars() - 1).transform.position.y;
+        guim.cabooseTransform.z = getTrainCar(getNumTrainCars() - 1).transform.position.z;
+
+        guim.cabooseRoofLootTransform.x = getTrainCarLoot(getNumTrainCars() - 1, true).transform.position.x;
+        guim.cabooseRoofLootTransform.y = getTrainCarLoot(getNumTrainCars() - 1, true).transform.position.y;
+        guim.cabooseRoofLootTransform.z = getTrainCarLoot(getNumTrainCars() - 1, true).transform.position.z;
+
+        guim.cabooseInteriorLootTransform.x = getTrainCarLoot(getNumTrainCars() - 1, false).transform.position.x;
+        guim.cabooseInteriorLootTransform.y = getTrainCarLoot(getNumTrainCars() - 1, false).transform.position.y;
+        guim.cabooseInteriorLootTransform.z = getTrainCarLoot(getNumTrainCars() - 1, false).transform.position.z;
+
+        guim.stageCoachTransform.x = getStageCoach().transform.position.x;
+        guim.stageCoachTransform.y = getStageCoach().transform.position.y;
+        guim.stageCoachTransform.z = getStageCoach().transform.position.z;
+
+        guim.stageCoachRoofLootTransform.x = getStageCoachLoot(true).transform.position.x;
+        guim.stageCoachRoofLootTransform.y = getStageCoachLoot(true).transform.position.y;
+        guim.stageCoachRoofLootTransform.z = getStageCoachLoot(true).transform.position.z;
+
+        guim.stageCoachInteriorLootTransform.x = getStageCoachLoot(false).transform.position.x;
+        guim.stageCoachInteriorLootTransform.y = getStageCoachLoot(false).transform.position.y;
+        guim.stageCoachInteriorLootTransform.z = getStageCoachLoot(false).transform.position.z;
+        foreach (int i in horseSets.Keys)
+        {
+            horseSets.TryGetValue(i, out GameObject t);
+            int numHorses = t.transform.childCount - 1;
+            guim.horsesAtIndices.Add(i, numHorses);
+        }
+
+        guim.gameStatus = gameStatus;
+   
+        guim.isNormalTurn = isNormalTurn;
+        guim.isTunnelTurn = isTunnelTurn;
+        guim.isTurmoilTurn = isTurmoilTurn;
+        guim.whiskeyWasUsed = whiskeyWasUsed;
+        guim.abilityDisabled = abilityDisabled;
+        guim.photographerHideDisabled = photographerHideDisabled;
+        guim.actionBlocked = actionBlocked;
+        guim.currentTurnIndex = currentTurnIndex;
+}
 }

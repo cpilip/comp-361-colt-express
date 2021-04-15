@@ -178,6 +178,18 @@ public class CommunicationAPI
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
         }
+        else if (action == "roundEventEscape")
+        {
+            var definition = new
+            {
+                eventName = "roundEvent",
+                roundEvent = (string)args[0],
+                whoEscaped = (Character)args[1],
+                playerAtIndex = (int)args[2],
+            };
+
+            JSONmessage = JsonConvert.SerializeObject(definition, settings);
+        }
 
         else if (action == "updateCurrentRound")
         {
@@ -192,7 +204,8 @@ public class CommunicationAPI
                 eventName = action,
                 isLastRound = r.getIsLastRound(),
                 turns = l,
-                roundEvent = r.getEvent()
+                roundEvent = r.getEvent(),
+                roundIndex = (int)args[1]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
@@ -413,7 +426,8 @@ public class CommunicationAPI
                 positions = (List<Position>)args[0],
                 indices = (List<int>)args[1],
                 player = (Character)args[2],
-                playerAtIndex = (int)args[3]
+                playerAtIndex = (int)args[3],
+                canEscape = (bool)args[4]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
