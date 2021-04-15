@@ -996,7 +996,7 @@ public class GameUIManager : MonoBehaviour
         foreach(Character c in guim.characters)
         {
             createCharacterObject(c);
-            createPlayerProfileObject(c);
+            //createPlayerProfileObject(c);
         }
 
         foreach(Serialized_Player_Profile_Object ppo in pp)

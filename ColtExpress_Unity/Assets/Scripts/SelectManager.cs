@@ -158,7 +158,6 @@ public class SelectManager : MonoBehaviour
                 NamedClient.c = Character.Tuco;
                 Debug.Log("[GetCharacter] You selected Tuco.");
                 ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco, GameObject.Find("ID").GetComponent<Identification>().getUsername());
-);
                 break;
             case 2:
                 NamedClient.c = Character.Django;
