@@ -443,12 +443,15 @@ class GameController
     {
         if (shotGunCheckResponse == true)
         {
-            //Must have been a shotgun resolution from Punch
+            //Must have been a shotgun resolution 
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, getIndexByTrainCar(p.getTrainCar()));
             shotGunCheckResponse = false;
 
+            currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+            this.endOfCards();
             throw new InvalidOperationException();
         }
 
@@ -504,13 +507,24 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
             }
 
-            flag = shotgunCheck(p);
-
-            if (flag)
+            try
             {
-                currentPlayer.setWaitingForInput(false);
-                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                this.endOfCards();
+                //Doing the check and throwing an exception upon resolution to return here (HOPEFULLY)
+                //Bad but ahhhhh.
+                previousCurrentPlayerFromShotgun = this.currentPlayer;
+                shotGunCheckResponse = true;
+
+                if (shotgunCheck(p))
+                {
+                    this.currentPlayer = previousCurrentPlayerFromShotgun;
+                    shotGunCheckResponse = false;
+                }
+
+            }
+            catch (Exception e) when (e is InvalidOperationException)
+            {
+                this.currentPlayer = previousCurrentPlayerFromShotgun;
+                shotGunCheckResponse = false;
             }
 
         }
@@ -960,13 +974,24 @@ class GameController
                             //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
-                            flag = shotgunCheck(pos);
-
-                            if (flag)
+                            try
                             {
-                                this.currentRound.getTopOfPlayedCards();
-                                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                                this.endOfCards();
+                                //Doing the check and throwing an exception upon resolution to return here (HOPEFULLY)
+                                //Bad but ahhhhh.
+                                previousCurrentPlayerFromShotgun = this.currentPlayer;
+                                shotGunCheckResponse = true;
+
+                                if (shotgunCheck(pos))
+                                {
+                                    this.currentPlayer = previousCurrentPlayerFromShotgun;
+                                    shotGunCheckResponse = false;
+                                }
+
+                            }
+                            catch (Exception e) when (e is InvalidOperationException)
+                            {
+                                this.currentPlayer = previousCurrentPlayerFromShotgun;
+                                shotGunCheckResponse = false;
                             }
 
 
