@@ -128,7 +128,7 @@ public class NamedClient : MonoBehaviour
                 Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
-                data = (index < 0)
+                data = (index <= 0)
                     ? buffer
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
