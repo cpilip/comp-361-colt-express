@@ -351,6 +351,9 @@ class MyTcpListener
         }
     }
 
+    public void verifyAllClientsAreSavedCharacters()
+    { }
+
     public static TcpClient getClientByPlayer(Player p)
     {
         return players[p];

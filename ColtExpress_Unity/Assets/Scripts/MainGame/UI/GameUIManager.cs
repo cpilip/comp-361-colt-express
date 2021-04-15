@@ -1026,7 +1026,7 @@ public class GameUIManager : MonoBehaviour
             value = "x" + ppo.p_Purses.ToString();
             profile.transform.GetChild(2).GetChild(3).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = value;
 
-            profile.transform.GetChild(5).gameObject.SetActive(ppo.p_FirstPlayer;
+            profile.transform.GetChild(5).gameObject.SetActive(ppo.p_FirstPlayer);
             profile.transform.GetChild(6).gameObject.SetActive(ppo.p_AbilityDisabled);
             profile.transform.GetChild(7).gameObject.SetActive(ppo.p_HideDisabled);
 

@@ -16,6 +16,8 @@ public class NamedClient : MonoBehaviour
     public int port;
 
     private static string buffer = "";
+    private static string previousStateOfBuffer = "";
+    private static bool previousStateOfBufferSaved = true;
 
     void Start()
     {
@@ -90,8 +92,9 @@ public class NamedClient : MonoBehaviour
 
             buffer += message;
 
-            //Debug.Log("[ServerToClient] Data buffered.");
+            
         }
+        Debug.Log("[ServerToClient] BUFFER: " + buffer);
 
         //If the buffer is not empty, continually extract the first event message and execute it
         while (!buffer.Equals("")) 
@@ -102,7 +105,7 @@ public class NamedClient : MonoBehaviour
             {
                 string restOfBuffer = "{" + "\"eventName\"" + splitBuffer.Match(buffer).Groups[1].Value.ToString();
 
-                //Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
+                Debug.Log("[ServerToClient] RESTOFBUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
                 data = (index < 0)
@@ -110,15 +113,49 @@ public class NamedClient : MonoBehaviour
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
 
-                //Debug.Log("[ServerToClient] CURRENT: " + data);
+                Debug.Log("[ServerToClient] CURRENTMSG: " + data);
+                ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
+                //If the buffer has only one occurence of {"eventName", stop in case the rest of the message is broken off
+                //On next getUpdate call, will be fine
+                if (buffer.LastIndexOf("{" + "\"eventName\"") == buffer.IndexOf("{" + "\"eventName\"") && buffer != data)
+                {
+                    break;
+                }
             }
             else
             {
-                data = buffer;
-                buffer = "";
-            }
+                //Only one instance of {"eventName"
+                //Save previous state of buffer
+                //break to let the buffer get more data if needed
+                if (previousStateOfBufferSaved)
+                {
+                    previousStateOfBuffer = buffer;
+                    previousStateOfBufferSaved = false;
+                    break;
+                }
+                else
+                {
 
-            ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
+                    Debug.Log("[ServerToClient] BUFFER HAS BRKNMSG OR 1MSG: " + buffer);
+                    //If the buffer on next call is eq to the previous state, it is one wellformed message
+                    if (previousStateOfBuffer == buffer)
+                    {
+                        Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
+                        data = buffer;
+                        buffer = "";
+                        ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
+                        previousStateOfBufferSaved = true;
+                        
+                    }
+                    else
+                    {
+                        previousStateOfBufferSaved = true;
+                    }
+
+                }
+                break;
+                
+            }
         }
 
         return data;

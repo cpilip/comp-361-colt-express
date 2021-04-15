@@ -80,7 +80,9 @@ public class SaveManager : MonoBehaviour
         Serialized_GameUIManager guim = o.SelectToken("guim").ToObject<Serialized_GameUIManager>();
 
         GameUIManager.gameUIManagerInstance.deserializeGUIM(pp, guim, h, pc);
-        
+
+        Debug.Log("Client inited successfully.");
+
     }
 
     public void createSaveGame()
