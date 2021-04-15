@@ -41,6 +41,7 @@ namespace GameUnitSpace {
         private bool onAHorse;
         private bool hasSpecialAbility;
 
+        private int bulletReceivedDuringLastRound;
         /// Constructor for the Player class, initializes a Player object.
         public Player(Character c) {
 
@@ -62,6 +63,8 @@ namespace GameUnitSpace {
             onAHorse=true;
 
             hasSpecialAbility=true;
+
+            bulletReceivedDuringLastRound =0;
         }
 
         /** 
@@ -103,6 +106,7 @@ namespace GameUnitSpace {
         public void setCapturedHostage(Hostage h){
             capturedHostage = h;
         }
+
 
         public Hostage getHostage(){
             return capturedHostage;
@@ -177,6 +181,14 @@ namespace GameUnitSpace {
             this.hand.Clear();
         }
 
+        public void incrementBulletShootInLastRound(){
+            this.bulletReceivedDuringLastRound++;
+        }
+
+        public int getBulletShootInLastRound(){
+            return bulletReceivedDuringLastRound;
+        }
+        
         public int getPossesionsValue() {
             int total = 0;
             foreach (GameItem it in this.possessions) {
