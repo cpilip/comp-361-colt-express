@@ -102,7 +102,7 @@ public class NamedClient : MonoBehaviour
     {
         int i;
         string data = null;
-        Byte[] bytes = new Byte[1024];
+        Byte[] bytes = new Byte[100000];
         
         //While there is data on the stream, add it to the buffer
         while (stream.DataAvailable)
@@ -125,7 +125,7 @@ public class NamedClient : MonoBehaviour
             {
                 string restOfBuffer = "{" + "\"eventName\"" + splitBuffer.Match(buffer).Groups[1].Value.ToString();
 
-                //Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
+                Debug.Log("[ServerToClient] BUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
                 data = (index < 0)
@@ -133,7 +133,7 @@ public class NamedClient : MonoBehaviour
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
 
-                //Debug.Log("[ServerToClient] CURRENT: " + data);
+                Debug.Log("[ServerToClient] CURRENT: " + data);
             }
             else
             {
