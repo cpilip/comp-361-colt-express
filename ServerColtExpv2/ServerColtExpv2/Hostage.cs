@@ -45,17 +45,13 @@ namespace HostageSpace
 
             List <Hostage> bList = new List<Hostage>();
             
-            //TESTING
-            bList.Add(new Hostage(HostageChar.Photographer));
-            bList.Add(new Hostage(HostageChar.PokerPlayer));
-            /*
             Random rnd = new Random ();
             int rand = rnd.Next(0,8);
             
             for (int i=0; i<nbOfPlayers-1; i++){
                 bList.Add(aList[(rand+i) % 8]);
             }
-            */
+            
             return bList;
         }
 
