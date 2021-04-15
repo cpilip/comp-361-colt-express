@@ -168,6 +168,17 @@ public class CommunicationAPI
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
         }
+        else if (action == "roundEvent")
+        {
+            var definition = new
+            {
+                eventName = action,
+                roundEvent = (string)args[0]
+            };
+
+            JSONmessage = JsonConvert.SerializeObject(definition, settings);
+        }
+
         else if (action == "updateCurrentRound")
         {
             //"updateCurrentRound" visually updates the current round

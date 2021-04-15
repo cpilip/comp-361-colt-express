@@ -4,6 +4,7 @@ using UnityEngine;
 using ClientCommunicationAPI;
 using UnityEngine.UI;
 using GameUnitSpace;
+using UnityEngine.EventSystems;
 
 /* Author: Christina Pilip
  * Usage: Defines behaviour of the Phase 1 Turn Menu. 
@@ -262,6 +263,58 @@ public class ScheminPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.toggleGhostMenu(false);
         GameUIManager.gameUIManagerInstance.unlockHand();
         StartCoroutine("playingCard");
+    }
+
+    public void KeepYes()
+    {
+        GameUIManager.gameUIManagerInstance.toggleKeepMenu(false);
+        GameUIManager.gameUIManagerInstance.unlockHand();
+        foreach (Transform t in GameUIManager.gameUIManagerInstance.deck.transform)
+        {
+            if (t.gameObject.GetComponent<Draggable>() != null)
+            {
+                t.gameObject.GetComponent<Button>().enabled = true;
+                t.gameObject.GetComponent<Button>().onClick.AddListener(cardKept);
+                t.gameObject.GetComponent<Draggable>().enabled = false;
+            }
+        }
+    }
+
+    public void cardKept()
+    {
+        GameObject caller = EventSystem.current.currentSelectedGameObject;
+
+        foreach (Transform t in GameUIManager.gameUIManagerInstance.deck.transform)
+        {
+            if (t.gameObject.GetComponent<Draggable>() != null)
+            {
+                t.gameObject.GetComponent<Button>().enabled = false;
+                t.gameObject.GetComponent<Button>().onClick.RemoveListener(cardKept);
+                t.gameObject.GetComponent<Draggable>().enabled = true;
+            }
+        }
+        var definition = new
+        {
+            eventName = "KeepMessage",
+            index = caller.transform.GetSiblingIndex()
+        };
+
+        GameUIManager.gameUIManagerInstance.lockHand();
+        ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
+    }
+
+    public void KeepNo()
+    {
+        GameUIManager.gameUIManagerInstance.toggleKeepMenu(false);
+        GameUIManager.gameUIManagerInstance.lockHand();
+
+        var definition = new
+        {
+            eventName = "KeepMessage",
+            index = -1
+        };
+
+        ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(definition);
     }
 
     private IEnumerator playingCard()

@@ -370,6 +370,15 @@ namespace GameUnitSpace {
             }
             return counter;
         }
+
+        public bool hasAStrongBox()
+        {
+            foreach (GameItem g in possessions)
+            {
+                if (g.getType() == ItemType.Strongbox) return true;
+            }
+            return false;
+        }
     }
 
 }

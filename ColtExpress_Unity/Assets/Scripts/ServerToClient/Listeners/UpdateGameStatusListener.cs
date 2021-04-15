@@ -23,16 +23,26 @@ public class UpdateGameStatusListener : UIEventListenable
             this.transform.GetChild(0).gameObject.SetActive(false);
             this.transform.GetChild(1).gameObject.SetActive(true);
             this.transform.GetChild(2).gameObject.SetActive(false);
+            this.transform.GetChild(3).gameObject.SetActive(false);
         } else if (status == GameStatus.Stealin)
         {
             this.transform.GetChild(0).gameObject.SetActive(false);
             this.transform.GetChild(1).gameObject.SetActive(false);
             this.transform.GetChild(2).gameObject.SetActive(true);
-        } else
+            this.transform.GetChild(3).gameObject.SetActive(false);
+        } else if (status == GameStatus.FinalizingCard)
+        {
+            this.transform.GetChild(0).gameObject.SetActive(false);
+            this.transform.GetChild(1).gameObject.SetActive(false);
+            this.transform.GetChild(2).gameObject.SetActive(false);
+            this.transform.GetChild(3).gameObject.SetActive(true);
+        }
+        else 
         {
             this.transform.GetChild(0).gameObject.SetActive(true);
             this.transform.GetChild(1).gameObject.SetActive(false);
             this.transform.GetChild(2).gameObject.SetActive(false);
+            this.transform.GetChild(3).gameObject.SetActive(false);
         }
         GameUIManager.gameUIManagerInstance.gameStatus = status;
 

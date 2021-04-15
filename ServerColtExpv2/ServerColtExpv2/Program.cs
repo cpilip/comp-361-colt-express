@@ -194,13 +194,15 @@ class MyTcpListener
                                 if (wK == WhiskeyKind.Unknown)
                                 {
                                     it = pl.getAWhiskey();
-                                } else
+                                }
+                                else
                                 {
                                     it = pl.getAWhiskey(wK);
                                 }
 
-                                
-                            } else
+
+                            }
+                            else
                             {
                                 it = aController.getItemfromTypePossession(type);
                             }
@@ -211,7 +213,7 @@ class MyTcpListener
                             //No item, but character was punched
                             it = null;
                         }
-                        
+
                         // Get position
                         int index = Int32.Parse(o.SelectToken("index").ToString());
                         Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
@@ -219,7 +221,7 @@ class MyTcpListener
 
                         aController.chosenPunchTarget(pl, it, pos);
                     }
-                    
+
                 }
                 else if (eventName.Equals("MoveMessage"))
                 {
@@ -259,10 +261,10 @@ class MyTcpListener
                         {
 
                         }
-                        
+
                         aController.playActionCard(crd, ghostChoseToHide, photographerHideDisabled);
 
-                    } 
+                    }
                     else
                     {
                         //Player timed out
@@ -282,6 +284,18 @@ class MyTcpListener
                     aController.getPossiblePunchMoves(pl);
 
                 }
+                else if (eventName.Equals("KeepMessage"))
+                {
+                    int index = Int32.Parse(o.SelectToken("index").ToString());
+                    if (index != -1)
+                    {
+                        ActionCard crd = aController.getCardByIndex(index);
+                        aController.endOfRoundBonus(crd);
+                    } else
+                    {
+                        aController.endOfRoundBonus(null);
+                    }
+                }
                 else if (eventName.Equals("WhiskeyMessage"))
                 {
                     // Get whiskey kind
@@ -289,7 +303,7 @@ class MyTcpListener
                     {
                         WhiskeyKind whiskey = o.SelectToken("usedWhiskey").ToObject<WhiskeyKind>();
                         aController.useWhiskey(whiskey);
-                    } 
+                    }
                     catch (Exception e)
                     {
                         //No usedWhiskey property, meaning player timed out on choosing a whiskey
@@ -297,7 +311,7 @@ class MyTcpListener
                         WhiskeyKind? whiskey = null;
                         aController.useWhiskey(whiskey);
                     }
-                } 
+                }
                 else if (eventName.Equals("HostageMessage"))
                 {
                     HostageChar hostage = o.SelectToken("chosenHostage").ToObject<HostageChar>();
