@@ -97,6 +97,7 @@ class GameController
             this.players.Add(tmp);
 
             MyTcpListener.addPlayerWithClient(tmp);
+            MyTcpListener.addPlayerWithUsername(tmp);
             MyTcpListener.informClient(false);
             Console.WriteLine("A player picked a character.");
         }
@@ -2477,6 +2478,23 @@ class GameController
                     Position pos = myTrain[marshalAt].getInside();
                     aMarshal.setPosition(pos);
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aMarshal, pos, getIndexByTrainCar(pos.getTrainCar()));
+
+                    foreach (Player aPlayer in pos.getPlayers())
+                    {
+                        BulletCard b = new BulletCard(null, -1);
+
+                        if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                        {
+                            aPlayer.addMortalBullet();
+                        }
+
+                        aPlayer.addToDiscardPile(b);
+
+                        pos.getTrainCar().moveRoofCar(aPlayer);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, pos.getTrainCar().getRoof(), getIndexByTrainCar(pos.getTrainCar()));
+                    }
+
+
                     break;
                 }
 

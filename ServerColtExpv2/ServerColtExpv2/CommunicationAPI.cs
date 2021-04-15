@@ -67,7 +67,8 @@ public class CommunicationAPI
                 {
                     eventName = "updatePlayer",
                     player = n.getBandit(),
-                    numOfBullets = 6 - n.getNumOfBulletsShot()
+                    numOfBullets = 6 - n.getNumOfBulletsShot(),
+                    username = MyTcpListener.getUsernameFromPlayer(n)
                 };
 
                 if (cli == null)

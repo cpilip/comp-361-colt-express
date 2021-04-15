@@ -375,7 +375,7 @@ public class GameUIManager : MonoBehaviour
     }
 
     //Create a new player profile
-    public GameObject createPlayerProfileObject(Character c)
+    public GameObject createPlayerProfileObject(Character c, string pUsername)
     {
         GameObject newPlayerProfile = Instantiate(playerProfilePrefab);
         Sprite newPlayerProfilePortrait = null;
@@ -383,6 +383,8 @@ public class GameUIManager : MonoBehaviour
         //Get the right portrait
         loadedSprites.TryGetValue(c.ToString().ToLower() + "_portrait", out newPlayerProfilePortrait);
         newPlayerProfile.transform.GetChild(0).GetComponent<Image>().sprite = newPlayerProfilePortrait;
+
+        newPlayerProfile.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = pUsername;
 
         //Making sure to parent the profile under the profile list and fixing the scale
         newPlayerProfile.transform.SetParent(playerProfileLocation.transform);

@@ -157,32 +157,33 @@ public class SelectManager : MonoBehaviour
             case 1:
                 NamedClient.c = Character.Tuco;
                 Debug.Log("[GetCharacter] You selected Tuco.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Tuco, GameObject.Find("ID").GetComponent<Identification>().getUsername());
+);
                 break;
             case 2:
                 NamedClient.c = Character.Django;
                 Debug.Log("[GetCharacter] You selected Django.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Django, GameObject.Find("ID").GetComponent<Identification>().getUsername());
                 break;
             case 3:
                 NamedClient.c = Character.Ghost;
                 Debug.Log("[GetCharacter] You selected Ghost.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Ghost, GameObject.Find("ID").GetComponent<Identification>().getUsername());
                 break;
             case 4:
                 NamedClient.c = Character.Doc;
                 Debug.Log("[GetCharacter] You selected Doc.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Doc);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Doc, GameObject.Find("ID").GetComponent<Identification>().getUsername());
                 break;
             case 5:
                 NamedClient.c = Character.Cheyenne;
                 Debug.Log("[GetCharacter] You selected Cheyenne.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Cheyenne, GameObject.Find("ID").GetComponent<Identification>().getUsername());
                 break;
             case 6:
                 NamedClient.c = Character.Belle;
                 Debug.Log("[GetCharacter] You selected Belle.");
-                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle);
+                ClientCommunicationAPI.CommunicationAPI.sendMessageToServer(Character.Belle, GameObject.Find("ID").GetComponent<Identification>().getUsername());
                 break;
             default:
                 Debug.LogError("[GetCharacter] No character selected. Something went wrong!");

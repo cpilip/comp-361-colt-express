@@ -60,8 +60,13 @@ namespace ClientCommunicationAPI
             EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }
 
-        public static void sendMessageToServer(Character c)
+        public static void sendMessageToServer(Character c, string username)
         {
+            var definition = new
+            {
+                c = c,
+                username = username
+            };
             string data = JsonConvert.SerializeObject(c, settings);
             EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }

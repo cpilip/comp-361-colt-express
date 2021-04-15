@@ -33,7 +33,7 @@ namespace WebApi.Controllers
             Console.WriteLine(json);
             LaunchGameJson o = JObject.Parse(json).ToObject<LaunchGameJson>();
             // _applicationLifetime.StopApplication();
-            MyTcpListener.playGame(o.savegame, o.players.Count);
+            MyTcpListener.playGame(o.savegame, o.players);
             return "startgame";
         }
 

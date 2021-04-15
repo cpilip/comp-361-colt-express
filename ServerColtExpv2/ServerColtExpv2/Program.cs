@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebApi;
+using WebApi.Controllers;
 
 
 // Enter the listening loop.
@@ -48,9 +49,11 @@ using WebApi;
 class MyTcpListener
 {
     public static TcpClient currentClient;
+    public static string currentClientUsername;
     public static Dictionary<TcpClient, string> clients = new Dictionary<TcpClient, string>();
     public static Dictionary<TcpClient, NetworkStream> clientStreams = new Dictionary<TcpClient, NetworkStream>();
     public static Dictionary<Player, TcpClient> players = new Dictionary<Player, TcpClient>();
+    public static Dictionary<Player, string> lobbyUsernames = new Dictionary<Player, string>();
     public static Byte[] bytes = new Byte[256];
 
     public static bool allPlayersInitialized = false;
@@ -68,9 +71,11 @@ class MyTcpListener
         // }
     }
 
-    public static void playGame(string saveGame, int numPlayers)
+    public static void playGame(string saveGame, List<UserObject> lobbyPlayers)
     {
-        Console.WriteLine("Called playGame for " + numPlayers + " players");
+        Console.WriteLine("Called playGame for " + lobbyPlayers.Count + " players");
+        int numPlayers = lobbyPlayers.Count;
+
         TcpListener server = null;
         try
         {
@@ -132,7 +137,9 @@ class MyTcpListener
                     string res = getCharacterFromCurrentClient();
                     if (res != null)
                     {
-                        Character c = JsonConvert.DeserializeObject<Character>(res);
+                        JObject o = JObject.Parse(res);
+                        Character c = o.SelectToken("c").ToObject<Character>();
+                        currentClientUsername = o.SelectToken("username").ToObject<string>(); 
                         aController.chosenCharacter(c);
                     }
                 }
@@ -385,6 +392,19 @@ class MyTcpListener
     {
         players.Add(p, currentClient);
     }
+
+
+    public static void addPlayerWithUsername(Player p)
+    {
+        lobbyUsernames.Add(p, currentClientUsername);
+    }
+
+    public static string getUsernameFromPlayer(Player p)
+    {
+        lobbyUsernames.TryGetValue(p, out string playerUsername);
+        return playerUsername;
+    }
+
 
     public static void informClient(bool alreadyChosen)
     {
