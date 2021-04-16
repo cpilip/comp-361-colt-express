@@ -32,6 +32,15 @@ public class RemoveTopCardListener : UIEventListenable
             }
         }
 
+        if (playedCards.transform.childCount < 7)
+        {
+            foreach (Transform t in playedCards.transform)
+            {
+                t.transform.gameObject.SetActive(true);
+                break;
+            }
+        }
+
 
         Debug.Log("[RemoveTopCardListener] Popped top card " + topCard.GetComponent<CardID>().kind);
         DestroyImmediate(topCard);

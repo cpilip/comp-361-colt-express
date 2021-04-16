@@ -86,21 +86,24 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
-                        this.anEvent = EndOfRoundEvent.HostageConductor;
+                        this.anEvent = EndOfRoundEvent.Escape;
+                        //this.anEvent = EndOfRoundEvent.HostageConductor;
                         break;
                     }   
                     case 1 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
-                        this.anEvent = EndOfRoundEvent.Pickpocketing;
-                        break;
+                            this.anEvent = EndOfRoundEvent.Escape;
+                            //this.anEvent = EndOfRoundEvent.Pickpocketing;
+                            break;
                     }
                     case 2 :{
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
-                        this.anEvent = EndOfRoundEvent.MarshalsRevenge;
+                            this.anEvent = EndOfRoundEvent.Escape;
+                            //this.anEvent = EndOfRoundEvent.MarshalsRevenge;
                         break;
                     }
                     case 3 :{
@@ -117,7 +120,8 @@ namespace RoundSpace {
                         this.turns.Add(new Turn (TurnType.Standard));
                         this.turns.Add(new Turn (TurnType.Tunnel));
                         this.turns.Add(new Turn (TurnType.Standard));
-                        this.anEvent = EndOfRoundEvent.SharingTheLoot;
+                            this.anEvent = EndOfRoundEvent.Escape;
+                            //this.anEvent = EndOfRoundEvent.SharingTheLoot;
                         break;
                     }
                     case 5 :{

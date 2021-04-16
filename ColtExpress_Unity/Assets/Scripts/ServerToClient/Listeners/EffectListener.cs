@@ -77,8 +77,8 @@ public class EffectListener : UIEventListenable
                 StartCoroutine("goDay");
                 break;
             case "speed":
-                midground.GetComponent<Parallax>().speed = new Vector2(4, 4);
-                foreground.GetComponent<Parallax>().speed = new Vector2(6, 6);
+                midground.GetComponent<Parallax>().speed = new Vector2(3, 3);
+                foreground.GetComponent<Parallax>().speed = new Vector2(5, 5);
                 break;
             case "slow":
                 midground.GetComponent<Parallax>().speed = new Vector2(1, 1);
@@ -91,8 +91,8 @@ public class EffectListener : UIEventListenable
 
     public IEnumerator flashRed(Character r)
     {
-        GameUIManager.gameUIManagerInstance.getCharacterObject(r).GetComponent<Image>().color = new Color(0.749f, 1f, 1f, 1f);
-        yield return new WaitForSeconds(0.3f);
+        GameUIManager.gameUIManagerInstance.getCharacterObject(r).GetComponent<Image>().color = new Color(0.482f, 0.043f, 0.043f, 1f);
+        yield return new WaitForSeconds(0.5f);
         GameUIManager.gameUIManagerInstance.getCharacterObject(r).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
         yield return new WaitForSeconds(0.3f);
 

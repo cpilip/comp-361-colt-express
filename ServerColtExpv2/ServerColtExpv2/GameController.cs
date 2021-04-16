@@ -740,65 +740,68 @@ class GameController
             TrainCar targetCar = target.getPosition().getTrainCar();
             TrainCar playerCar = currentPlayer.getPosition().getTrainCar();
 
-            //if the target is in front of django, and is not in the locomotive, move target one car to the front.
-            if (myTrain.IndexOf(targetCar) < myTrain.IndexOf(playerCar) && targetCar.Equals(myTrain[0]) == false)
+            if (targetCar.Equals(myStageCoach) == false)
             {
-
-                if (target.getPosition().isInside())
+                //if the target is in front of django, and is not in the locomotive, move target one car to the front.
+                if (myTrain.IndexOf(targetCar) < myTrain.IndexOf(playerCar) && targetCar.Equals(myTrain[0]) == false)
                 {
-                    Position pos = myTrain[myTrain.IndexOf(targetCar) - 1].getInside();
-                    target.setPosition(pos);
 
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
-                }
-                else
-                {
-                    Position pos = myTrain[myTrain.IndexOf(targetCar) - 1].getRoof();
-                    target.setPosition(pos);
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
-                }
-
-            }
-            //if the target is at the back of django and is not in the cabosse, moved one car at the back.
-            else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && targetCar.Equals(myTrain[myTrain.Count - 1]) == false)
-            {
-
-                if (target.getPosition().isInside())
-                {
-                    Position pos = myTrain[myTrain.IndexOf(targetCar) + 1].getInside();
-                    target.setPosition(pos);
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
-                }
-                else
-                {
-                    Position pos = myTrain[myTrain.IndexOf(targetCar) + 1].getRoof();
-                    target.setPosition(pos);
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
-                }
-            }
-
-            //If Django's target's new position ended up inside with the marshal, shoot'em
-            if (target.getPosition().isInside())
-            {
-                if (target.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
-                {
-                    target.addToDiscardPile(new BulletCard(null, -1));
-
-                    if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                    if (target.getPosition().isInside())
                     {
-                        target.addMortalBullet();
+                        Position pos = myTrain[myTrain.IndexOf(targetCar) - 1].getInside();
+                        target.setPosition(pos);
+
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
+                    }
+                    else
+                    {
+                        Position pos = myTrain[myTrain.IndexOf(targetCar) - 1].getRoof();
+                        target.setPosition(pos);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
                     }
 
-                    target.getPosition().getTrainCar().moveRoofCar(target);
-
-                    CommunicationAPI.sendMessageToClient(null, "doEffect", "shoot", target.getBandit());
-                    CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, target.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(target.getPosition().getTrainCar()));
                 }
-            }
+                //if the target is at the back of django and is not in the cabosse, moved one car at the back.
+                else if (myTrain.IndexOf(targetCar) > myTrain.IndexOf(playerCar) && targetCar.Equals(myTrain[myTrain.Count - 1]) == false)
+                {
+
+                    if (target.getPosition().isInside())
+                    {
+                        Position pos = myTrain[myTrain.IndexOf(targetCar) + 1].getInside();
+                        target.setPosition(pos);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
+                    }
+                    else
+                    {
+                        Position pos = myTrain[myTrain.IndexOf(targetCar) + 1].getRoof();
+                        target.setPosition(pos);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, pos, myTrain.IndexOf(pos.getTrainCar()));
+                    }
+                }
+
+                //If Django's target's new position ended up inside with the marshal, shoot'em
+                if (target.getPosition().isInside())
+                {
+                    if (target.getPosition().getTrainCar().getInside().hasMarshal(aMarshal))
+                    {
+                        target.addToDiscardPile(new BulletCard(null, -1));
+
+                        if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
+                        {
+                            target.addMortalBullet();
+                        }
+
+                        target.getPosition().getTrainCar().moveRoofCar(target);
+
+                        CommunicationAPI.sendMessageToClient(null, "doEffect", "shoot", target.getBandit());
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, target.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(target.getPosition().getTrainCar()));
+                    }
+                }
 
 
-            //If they end up on the same position as the shotgun
-            shotgunCheck(target);
+                //If they end up on the same position as the shotgun
+                shotgunCheck(target);
+            } 
         }
 
         CommunicationAPI.sendMessageToClient(null, "doEffect", "shoot", target.getBandit());
@@ -1440,7 +1443,7 @@ class GameController
             }
 
             Console.WriteLine(this.currentTurn.getType());
-            Console.WriteLine(this.currentPlayer.getBandit() + "is now the current player.");
+            Console.WriteLine(this.currentPlayer.getBandit() + " is now the current player.");
 
         }
     }
@@ -1497,6 +1500,12 @@ class GameController
     {
         try
         {
+            foreach (TrainCar t in myTrain)
+            {
+                Console.Write("{" + t.getNumOfHorses() + " at " + myTrain.IndexOf(t) + "] ");
+            }
+            Console.WriteLine();
+
             Card c = this.currentRound.seeTopOfPlayedCards();
             CommunicationAPI.sendMessageToClient(null, "highlightTopCard");
 
