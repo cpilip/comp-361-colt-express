@@ -492,7 +492,8 @@ public class CommunicationAPI
             var definition = new
             {
                 eventName = action,
-                player = (Character)args[0]
+                effect = (string)args[0],
+                player = (Character)args[1]
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
