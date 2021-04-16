@@ -1074,8 +1074,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -134.4, y: 73}
-  m_SizeDelta: {x: 218.69434, y: 30}
+  m_AnchoredPosition: {x: -130.09, y: 73}
+  m_SizeDelta: {x: 260.18912, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &719124631
 MonoBehaviour:
@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Name of Save Game: '
+  m_text: 'Cheat Code (optional): '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
