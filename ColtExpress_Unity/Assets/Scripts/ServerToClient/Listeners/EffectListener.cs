@@ -33,8 +33,7 @@ public class EffectListener : UIEventListenable
             case "shoot":
                 Character c = o.SelectToken("player").ToObject<Character>();
 
-                GameUIManager.gameUIManagerInstance.getCharacterObject(c).GetComponent<Image>().color = new Color(0.749f, 1f, 1f, 1f);
-                GameUIManager.gameUIManagerInstance.getCharacterObject(c).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+                StartCoroutine(flashRed(c));
 
                 audioPlayerEffect.clip = shoot;
                 audioPlayerEffect.PlayOneShot(shoot);
@@ -42,9 +41,7 @@ public class EffectListener : UIEventListenable
             case "punch":
                 Character d = o.SelectToken("player").ToObject<Character>();
 
-                GameUIManager.gameUIManagerInstance.getCharacterObject(d).GetComponent<Image>().color = new Color(0.749f, 1f, 1f, 1f);
-
-                GameUIManager.gameUIManagerInstance.getCharacterObject(d).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+                StartCoroutine(flashRed(d));
 
                 audioPlayerEffect.clip = punch;
                 audioPlayerEffect.PlayOneShot(punch);
@@ -92,6 +89,15 @@ public class EffectListener : UIEventListenable
 
     }
 
+    public IEnumerator flashRed(Character r)
+    {
+        GameUIManager.gameUIManagerInstance.getCharacterObject(r).GetComponent<Image>().color = new Color(0.749f, 1f, 1f, 1f);
+        yield return new WaitForSeconds(0.3f);
+        GameUIManager.gameUIManagerInstance.getCharacterObject(r).GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        yield return new WaitForSeconds(0.3f);
+
+    }
+
     public IEnumerator goNight()
     {
         var tempColor = nightTime.GetComponent<SpriteRenderer>().color;
@@ -102,7 +108,7 @@ public class EffectListener : UIEventListenable
             nightTime.GetComponent<SpriteRenderer>().color = tempColor;
             yield return null;
         }
-       
+
     }
 
     public IEnumerator goDay()
