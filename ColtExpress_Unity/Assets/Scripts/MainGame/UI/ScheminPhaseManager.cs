@@ -5,6 +5,7 @@ using ClientCommunicationAPI;
 using UnityEngine.UI;
 using GameUnitSpace;
 using UnityEngine.EventSystems;
+using Coffee.UIEffects;
 
 /* Author: Christina Pilip
  * Usage: Defines behaviour of the Phase 1 Turn Menu. 
@@ -119,6 +120,12 @@ public class ScheminPhaseManager : MonoBehaviour
         GameUIManager.gameUIManagerInstance.unlockSidebar();
         GameUIManager.gameUIManagerInstance.toggleTurnMenu(false);
 
+        Transform usables = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c).transform.GetChild(3);
+
+        usables.GetChild(0).GetChild(1).GetComponent<UIShiny>().enabled = true;
+        usables.GetChild(1).GetChild(1).GetComponent<UIShiny>().enabled = true;
+        usables.GetChild(2).GetChild(1).GetComponent<UIShiny>().enabled = true;
+
         StartCoroutine("usingWhiskey");
     }
     private IEnumerator usingWhiskey()
@@ -174,6 +181,12 @@ public class ScheminPhaseManager : MonoBehaviour
                     Debug.Log("[ScheminPhaseManager - UseWhiskey] You used a whiskey [" + w + "].");
                     GameUIManager.gameUIManagerInstance.whiskeyWasUsed = true;
 
+                    Transform u = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c).transform.GetChild(3);
+
+                    u.GetChild(0).GetChild(1).GetComponent<UIShiny>().enabled = false;
+                    u.GetChild(1).GetChild(1).GetComponent<UIShiny>().enabled = false;
+                    u.GetChild(2).GetChild(1).GetComponent<UIShiny>().enabled = false;
+
                     var definition = new
                     {
                         eventName = "WhiskeyMessage",
@@ -186,6 +199,12 @@ public class ScheminPhaseManager : MonoBehaviour
                 if (timedOut)
                 {
                     Debug.Log("[ScheminPhaseManager - UseWhiskey] You timed out.");
+
+                    Transform u = GameUIManager.gameUIManagerInstance.getPlayerProfileObject(NamedClient.c).transform.GetChild(3);
+
+                    u.GetChild(0).GetChild(1).GetComponent<UIShiny>().enabled = false;
+                    u.GetChild(1).GetChild(1).GetComponent<UIShiny>().enabled = false;
+                    u.GetChild(2).GetChild(1).GetComponent<UIShiny>().enabled = false;
 
                     var definition = new
                     {

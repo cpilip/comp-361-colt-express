@@ -732,6 +732,7 @@ class GameController
     {
         this.currentRound.getTopOfPlayedCards();
         //A BulletCard is transfered from bullets of currentPlayer to target's discardPile
+
         BulletCard aBullet = currentPlayer.getABullet();
 
         if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
@@ -1066,11 +1067,11 @@ class GameController
                 case ActionKind.Shoot:
                     {
                         List<Player> possTargets = this.getPossibleShootTarget(this.currentPlayer);
-                        if (possTargets.Count == 1)
+                        if (possTargets.Count == 1 && this.currentPlayer.getNumOfBulletsShot() <= 6)
                         {
                             this.chosenShootTarget(possTargets[0]);
                         }
-                        else if (possTargets.Count > 1)
+                        else if (possTargets.Count > 1 && this.currentPlayer.getNumOfBulletsShot() <= 6)
                         {
                             this.aGameStatus = GameStatus.FinalizingCard;
                             
@@ -2044,30 +2045,49 @@ class GameController
         //if the player is on a horse 
         if (p.isPlayerOnAHorse())
         {
-            for (int i = 1; i < 4; i++)
+            if (p.getPosition().getTrainCar().Equals(myStageCoach) == false)
             {
-                try
+                for (int i = 1; i < 4; i++)
                 {
-                    TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar) - i];
-
-                    // Add adjacent possible positions at the back of current position
-                    possPos.Add(tmp.getInside());
-                    //if there is the stage coach et the desired level, stagecoach is counted. 
-                    if (myStageCoach.getAdjacentCar().Equals(tmp))
+                    try
                     {
-                        possPos.Add(myStageCoach.getInside());
+                        TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar) - i];
+
+                        // Add adjacent possible positions at the back of current position
+                        possPos.Add(tmp.getInside());
+                        //if there is the stage coach et the desired level, stagecoach is counted. 
+                        if (myStageCoach.getAdjacentCar().Equals(tmp))
+                        {
+                            possPos.Add(myStageCoach.getInside());
+                        }
+                    }
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                        continue;
                     }
                 }
-                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                for (int i = 1; i < 4; i++)
                 {
-                    continue;
+                    try
+                    {
+                        TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar) + i];
+                        // Add adjacent possible positions at the front of current position
+                        possPos.Add(tmp.getInside());
+                        if (myStageCoach.getAdjacentCar().Equals(tmp))
+                        {
+                            possPos.Add(myStageCoach.getInside());
+                        }
+                    }
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                        continue;
+                    }
                 }
-            }
-            for (int i = 1; i < 4; i++)
-            {
+
+                //Fails if in stagecoach
                 try
                 {
-                    TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar) + i];
+                    TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar)];
                     // Add adjacent possible positions at the front of current position
                     possPos.Add(tmp.getInside());
                     if (myStageCoach.getAdjacentCar().Equals(tmp))
@@ -2077,26 +2097,57 @@ class GameController
                 }
                 catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
                 {
-                    continue;
+
                 }
             }
-
-
-            try
+            else
             {
-                TrainCar tmp = this.myTrain[this.myTrain.IndexOf(playerCar)];
-                // Add adjacent possible positions at the front of current position
-                possPos.Add(tmp.getInside());
-                if (myStageCoach.getAdjacentCar().Equals(tmp))
+                for (int i = 1; i < 4; i++)
                 {
-                    possPos.Add(myStageCoach.getInside());
-                }
-            }
-            catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
-            {
-                
-            }
+                    try
+                    {
+                        TrainCar tmp = this.myTrain[myTrain.IndexOf(myStageCoach.getAdjacentCar()) - i];
 
+                        // Add adjacent possible positions at the back of current position
+                        possPos.Add(tmp.getInside());
+                        //if there is the stage coach et the desired level, stagecoach is counted. 
+                        
+                    }
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                        continue;
+                    }
+                }
+                for (int i = 1; i < 4; i++)
+                {
+                    try
+                    {
+                        TrainCar tmp = this.myTrain[myTrain.IndexOf(myStageCoach.getAdjacentCar()) + i];
+                        // Add adjacent possible positions at the front of current position
+                        possPos.Add(tmp.getInside());
+                        
+                    }
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                        continue;
+                    }
+                }
+
+                try
+                {
+                    TrainCar tmp = this.myTrain[myTrain.IndexOf(myStageCoach.getAdjacentCar())];
+                    // Add adjacent possible positions at the front of current position
+                    possPos.Add(tmp.getInside());
+                    
+                }
+                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                {
+
+                }
+
+                possPos.Add(myStageCoach.getInside());
+            }
+           
         }
         //if the player is inside or on the roof of the stagecoach
         else if (p.getPosition().isInStageCoach(myStageCoach))
