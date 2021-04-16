@@ -169,13 +169,14 @@ class GameController
             {
                 List<Card> cardsToAdd = new List<Card>();
                 int index = this.players.IndexOf(p);
+                
+                Random rnd = new Random();
 
                 if (extraMode) {
                     Card aCard = p.getRideCard();
                     p.hand.Add(aCard);
                     cardsToAdd.Add(aCard);
                     p.discardPile.Remove(aCard);
-                    Random rnd = new Random();
                     for (int i = 0; i < 5; i++)
                     {
                         int rand = rnd.Next(0, p.discardPile.Count);
@@ -185,7 +186,6 @@ class GameController
                         p.discardPile.Remove(aCard);
                     }
                 } else {
-                    Random rnd = new Random();
                     for (int i = 0; i < 6; i++)
                     {
                         int rand = rnd.Next(0, p.discardPile.Count);
@@ -195,8 +195,6 @@ class GameController
                         p.discardPile.Remove(aCard);
                     }
                 }
-
-                
 
                 if (p.getBandit().Equals(Character.Doc))
                 {
@@ -2494,7 +2492,7 @@ class GameController
 
                         aPlayer.addToDiscardPile(b);
 
-                        CommunicationAPI.sendMessageToClient(null, "doEffect", "shoot", p.getBandit());
+                        CommunicationAPI.sendMessageToClient(null, "doEffect", "shoot", aPlayer.getBandit());
                         pos.getTrainCar().moveRoofCar(aPlayer);
                         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, pos.getTrainCar().getRoof(), getIndexByTrainCar(pos.getTrainCar()));
                     }
