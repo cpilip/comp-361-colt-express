@@ -138,9 +138,9 @@ class MyTcpListener
                     if (res != null)
                     {
                         JObject o = JObject.Parse(res);
-                        Character c = o.SelectToken("c").ToObject<Character>();
-                        currentClientUsername = o.SelectToken("username").ToObject<string>(); 
-                        aController.chosenCharacter(c);
+                        (Character, string) c = o.ToObject<(Character, string)>();
+                        currentClientUsername = c.Item2;
+                        aController.chosenCharacter(c.Item1);
                     }
                 }
             }

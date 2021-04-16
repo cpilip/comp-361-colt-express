@@ -62,12 +62,9 @@ namespace ClientCommunicationAPI
 
         public static void sendMessageToServer(Character c, string username)
         {
-            var definition = new
-            {
-                c = c,
-                username = username
-            };
-            string data = JsonConvert.SerializeObject(c, settings);
+            (Character, string) request = (c, username);
+            string data = JsonConvert.SerializeObject(request, settings);
+
             EventManager.EventManagerInstance.GetComponent<NamedClient>().sendToServer(data);
         }
 
