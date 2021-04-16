@@ -66,8 +66,9 @@ public class FinalGameScoresListener : UIEventListenable
         // Start loading the scene
         AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync("FinalScores");
         // Wait until the level finish loading
-        while (!asyncLoadLevel.isDone)
+        while (asyncLoadLevel.isDone == false)
         {
+            Debug.Log("Scene not loaded yet.");
             yield return null;
         }
         // Wait a frame so every Awake and Start method is called
