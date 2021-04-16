@@ -1,0 +1,54 @@
+
+	Normal Rounds
+
+Angry Marshal:
+The Marshal will shoot any players on the roof of his car at the end of this round, beware!
+
+Swivel Arm:
+Each bandit located on a roof will be sent to the roof of the caboose at the end of this round!
+
+Braking:
+Each bandit located on a roof will move on car towards the locomotive at the end of this round!
+
+Take It All:
+A second Strongbox will appear in the Marshal's car at the end of this round, try to get to it first at the next round! 
+
+Passengers' Rebellion:
+At the end of the round, each bandit located inside a TrainCar will receive a neutral bullet, beware!
+
+Panting Horse:
+Depending on the number of bandits robbing the train, one or two horses will leave the train at the end of this round. If you want to go on a ride, do it now!
+
+Whiskey for Marshal:
+The Marshal is getting a bit thirsty... At the end of this round, if there is a whiskey in his space, he will drink it and you better not be in his way... 
+
+Higher Speed:
+At the end of this round, the train will speed up. All bandits, all horses and the Stagecoach will move by one car towards the cabosse. 
+
+Shotgun Rage:
+The Shotgun is getting pretty upset... At the end of this round, he may shoot every bandits that are on and inside the Stagecoach, as well as bandits located on and inside the adjacent car of the Stagecoach, beware!
+
+
+	Arrival Rounds
+
+Marshal' Revenge:
+At the end of this last round, each bandit on the roof of the Marshal's car looses his least valuable purse.
+
+Pickpocketing:
+Each bandit that is alone in his space may take 1 purse from his space at the end of this final round. 
+
+Hostage Conductor:
+Each bandit inside or on the roof of the locomotive receives one $250 purse at the end of this final round. 
+
+Sharing the loot:
+At the end of this last round, if several bandits end up at the same location and some of them have strongboxes, they will share them together.
+
+Escape:
+At the end of this final round, each bandit located on the train will get caught and sent to prison for several years... You might want to get off the train before the end of the round! 
+
+Mortal Bullet:
+During this final round, each bullet that you received will give you a $150 penalty. Try not to get shot!
+
+
+
+
