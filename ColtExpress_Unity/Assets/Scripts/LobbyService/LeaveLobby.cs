@@ -47,8 +47,9 @@ public class LeaveLobby : MonoBehaviour
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator(false);
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
-        SceneManager.LoadScene ("Play");
-
+        if (!delay) {
+            SceneManager.LoadScene ("Play");
+        }
     }
 
     private IEnumerator waitLeave(float time, bool delay) {
@@ -78,7 +79,9 @@ public class LeaveLobby : MonoBehaviour
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setCreator(false);
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
-        SceneManager.LoadScene ("Play");
+        if (!delay) {
+            SceneManager.LoadScene ("Play");
+        }
 
     }
 }
