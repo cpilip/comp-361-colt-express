@@ -170,11 +170,14 @@ public class NamedClient : MonoBehaviour
                     //If the buffer on next call is eq to the previous state, it is one wellformed message
                     if (previousStateOfBuffer == buffer)
                     {
-                        Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
-                        data = buffer;
-                        buffer = "";
-                        ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
-                        previousStateOfBufferSaved = true;
+                        if (buffer[buffer.Length - 1] == '}')
+                        {
+                            Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
+                            data = buffer;
+                            buffer = "";
+                            ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
+                            previousStateOfBufferSaved = true;
+                        }
                         
                     }
                     else
