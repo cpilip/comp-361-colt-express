@@ -228,7 +228,7 @@ class GameController
             if (extraMode) {
                 foreach (Player p in this.players) {
                     p.addExtraOldWhiskey();
-                    CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", p.getBandit(), WhiskeyKind.Old);
+                    CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", p.getBandit(), WhiskeyKind.Unknown);
                 }
             }
 
@@ -309,6 +309,7 @@ class GameController
             return;
         }
         CommunicationAPI.sendMessageToClient(null, "doEffect", "drink", currentPlayer.getBandit());
+        
         //If the kind is normal/old, such a whiskey of this kind must already exist in the player's possessions and is half
         if (aKind.Equals(WhiskeyKind.Normal)){
 

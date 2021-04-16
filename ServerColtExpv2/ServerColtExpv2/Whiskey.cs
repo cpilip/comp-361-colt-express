@@ -14,6 +14,7 @@ namespace GameUnitSpace {
         Half,
         Empty
     }
+    
     class Whiskey : GameItem {
         [JsonProperty]
         private readonly WhiskeyKind aKind;
