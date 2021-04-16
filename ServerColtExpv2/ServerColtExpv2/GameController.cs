@@ -175,6 +175,7 @@ class GameController
                     p.hand.Add(aCard);
                     cardsToAdd.Add(aCard);
                     p.discardPile.Remove(aCard);
+                    Random rnd = new Random();
                     for (int i = 0; i < 5; i++)
                     {
                         int rand = rnd.Next(0, p.discardPile.Count);

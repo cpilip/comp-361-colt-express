@@ -487,6 +487,16 @@ public class CommunicationAPI
             };
 
             JSONmessage = JsonConvert.SerializeObject(definition, settings);
+        } else if (action == "doEffect")
+        {
+            var definition = new
+            {
+                eventName = action,
+                player = (Character)args[0]
+            };
+
+            JSONmessage = JsonConvert.SerializeObject(definition, settings);
+
         }
         else
         {
