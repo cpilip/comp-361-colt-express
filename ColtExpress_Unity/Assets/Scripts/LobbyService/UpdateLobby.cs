@@ -135,7 +135,7 @@ public class UpdateLobby : MonoBehaviour
                 Debug.Log("LAUNCH GAME!!!!!!!!!!!!!!!!!");
                 GameObject.Find("EventManager").GetComponent<NamedClient>().connectToServer();
                 SceneManager.LoadScene("ChooseCharacter");
-                sessionID.GetComponent<LeaveLobby>().leaveLobby(true);
+                GameObject.Find("sessionId").GetComponent<LeaveLobby>().leaveLobby(true);
             }
             else
             {
