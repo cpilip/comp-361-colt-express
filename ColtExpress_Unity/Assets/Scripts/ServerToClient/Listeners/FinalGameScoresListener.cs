@@ -14,15 +14,12 @@ public class FinalGameScoresListener : UIEventListenable
     public GameObject scoreParent;
     private string dataForParse;
 
-    void Start()
-    {
-        
-    }
-
     public override void updateElement(string data)
     {
         dataForParse = data;
 
+        Debug.Log("Coroutine not started.");
+        SceneManager.LoadScene("FinalScores");
         StartCoroutine("LoadScene");
 
         Debug.Log("Coroutine started.");
@@ -65,17 +62,8 @@ public class FinalGameScoresListener : UIEventListenable
 
     private IEnumerator LoadScene()
     {
-        // Start loading the scene
-        AsyncOperation asyncLoadLevel = SceneManager.LoadSceneAsync("FinalScores");
-        // Wait until the level finish loading
-        while (asyncLoadLevel.isDone == false)
-        {
-            Debug.Log("Scene not loaded yet.");
-            yield return null;
-        }
-        // Wait a frame so every Awake and Start method is called
-        yield return new WaitForEndOfFrame();
-
+        yield return new WaitForSeconds(3);
+        
         continueWithScores();
     }
 }
