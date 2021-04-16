@@ -1225,7 +1225,6 @@ class GameController
         {
             this.endHorseAttack = true;
 
-
             // Set all the players' positions in the train
             foreach (Player p in this.players)
             {
@@ -1273,7 +1272,7 @@ class GameController
                 int playersThatEntered = 0;
                 foreach (AttackPosition p in attPos)
                 {
-                    if (p.hasStopped() == true)
+                    if (!p.hasStopped())
                     {
                         playersThatEntered++;
                     }
@@ -1293,7 +1292,7 @@ class GameController
             if (this.getHAFromCharacter(this.currentPlayer.getBandit()).getPosition() == myTrain.Count - 2)
             {
                 this.getHAFromCharacter(this.currentPlayer.getBandit()).getOffHorse();
-                CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
+                // CommunicationAPI.sendMessageToClient(null, "updateHorseAttack", this.attPos);
 
                 chosenHorseAttackAction("enter");
             }
