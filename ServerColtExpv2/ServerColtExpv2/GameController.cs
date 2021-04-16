@@ -1962,22 +1962,22 @@ class GameController
         Random r = new Random();
         int rand;
 
-        // Initialize random unique layouts for 4 normal rounds
-        for (int i = 0; i < 4; i++)
-        {
-            // Look for a random integer between 0 and 6 which has not been used before
-            rand = r.Next(0, 12);
-            while (true) {
-                if (!usedRounds.Contains(rand)) {
-                    break;
-                } 
-                rand = r.Next(0, 12);
-            }
-            usedRounds.Add(rand);
-            Round aRound = new Round(false, totalPlayer);
-            aRound.intializeTurn(this.totalPlayer, rand);
-            this.rounds.Add(aRound);
-        }
+        //// Initialize random unique layouts for 4 normal rounds
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    // Look for a random integer between 0 and 6 which has not been used before
+        //    rand = r.Next(0, 12);
+        //    while (true) {
+        //        if (!usedRounds.Contains(rand)) {
+        //            break;
+        //        } 
+        //        rand = r.Next(0, 12);
+        //    }
+        //    usedRounds.Add(rand);
+        //    Round aRound = new Round(false, totalPlayer);
+        //    aRound.intializeTurn(this.totalPlayer, rand);
+        //    this.rounds.Add(aRound);
+        //} 
 
         // Initialize random layout for final round
         rand = r.Next(0, 6);
