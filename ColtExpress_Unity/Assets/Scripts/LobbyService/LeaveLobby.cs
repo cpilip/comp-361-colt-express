@@ -48,7 +48,7 @@ public class LeaveLobby : MonoBehaviour
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
         if (!delay) {
-            SceneManager.LoadScene ("Play");
+            SceneManager.LoadScene("Play");
         }
     }
 
@@ -80,7 +80,7 @@ public class LeaveLobby : MonoBehaviour
         GameObject.Find("sessionId").GetComponent<SessionPrefabScript>().setSessionId("");
 
         if (!delay) {
-            SceneManager.LoadScene ("Play");
+            SceneManager.LoadScene("Play");
         }
 
     }
