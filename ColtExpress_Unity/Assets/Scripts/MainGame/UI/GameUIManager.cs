@@ -1099,7 +1099,7 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    public void getTotalNumOfHorses()
+    public int getTotalNumOfHorses()
     {
         var flattenList = trainCars.Keys;
 
