@@ -142,6 +142,10 @@ class GameController
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "updateCurrentTurn", this.currentRound.getTurns().IndexOf(currentTurn));
 
+            players[0].setWaitingForInput(true);
+
+            this.currentPlayer = players[0];
+
             if (this.currentTurn.getType() == TurnType.Tunnel)
             {
                 CommunicationAPI.sendMessageToClient(null, "doEffect", "night", currentPlayer.getBandit());
@@ -155,10 +159,6 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "doEffect", "day", currentPlayer.getBandit());
                 CommunicationAPI.sendMessageToClient(null, "doEffect", "slow", currentPlayer.getBandit());
             }
-
-            players[0].setWaitingForInput(true);
-
-            this.currentPlayer = players[0];
 
             //TO ALL PLAYERS
             //Send the current player to all clients 
