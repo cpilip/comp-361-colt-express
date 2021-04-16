@@ -123,7 +123,7 @@ public class NamedClient : MonoBehaviour
 
             
         }
-       // Debug.Log("[ServerToClient] BUFFER: " + buffer);
+        Debug.Log("[ServerToClient] BUFFER: " + buffer);
 
         //If the buffer is not empty, continually extract the first event message and execute it
         while (!buffer.Equals("")) 
@@ -136,14 +136,14 @@ public class NamedClient : MonoBehaviour
             {
                 string restOfBuffer = "{" + "\"eventName\"" + match.Groups[1].Value.ToString();
 
-              //  Debug.Log("[ServerToClient] RESTOFBUFFER: " + restOfBuffer);
+                Debug.Log("[ServerToClient] RESTOFBUFFER: " + restOfBuffer);
 
                 int index = buffer.IndexOf(restOfBuffer);
                 data = (index < 0)? buffer
                     : buffer.Remove(index, restOfBuffer.Length);
                 buffer = restOfBuffer;
 
-               // Debug.Log("[ServerToClient] CURRENTMSG: " + data);
+                Debug.Log("[ServerToClient] CURRENTMSG: " + data);
                 ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
                 //If the buffer has only one occurence of {"eventName", stop in case the rest of the message is broken off
                 //On next getUpdate call, will be fine
@@ -166,11 +166,11 @@ public class NamedClient : MonoBehaviour
                 else
                 {
 
-                  //  Debug.Log("[ServerToClient] BUFFER HAS BRKNMSG OR 1MSG: " + buffer);
+                    Debug.Log("[ServerToClient] BUFFER HAS BRKNMSG OR 1MSG: " + buffer);
                     //If the buffer on next call is eq to the previous state, it is one wellformed message
                     if (previousStateOfBuffer == buffer)
                     {
-                     //   Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
+                        Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
                         data = buffer;
                         buffer = "";
                         ClientCommunicationAPIHandler.CommunicationAPIHandler.getMessageFromServer(data);
