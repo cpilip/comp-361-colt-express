@@ -377,6 +377,8 @@ class MyTcpListener
 
             Console.WriteLine("\nHit enter to continue...");
             Console.Read();
+
+            clear();
         }
     }
 
@@ -529,5 +531,16 @@ class MyTcpListener
         
     }
 
-
+    public static void clear()
+    {
+        currentClient = null;
+        currentClientUsername = "";
+        clients = new Dictionary<TcpClient, string>();
+        clientStreams = new Dictionary<TcpClient, NetworkStream>();
+        players = new Dictionary<Player, TcpClient>();
+        lobbyUsernames = new Dictionary<Player, string>();
+        bytes = new Byte[256];
+        allPlayersInitialized = false;
+    }
 }
+
