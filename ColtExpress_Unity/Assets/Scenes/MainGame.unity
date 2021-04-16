@@ -8040,7 +8040,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: doEffect
-  audioPlayerEffect: {fileID: 0}
+  audioPlayerEffect: {fileID: 1703935458}
   shoot: {fileID: 8300000, guid: ef01b43b366a06c418a4e3764b35b8b3, type: 3}
   punch: {fileID: 8300000, guid: 318c53cf18c54114db96495135ed23dd, type: 3}
   draw: {fileID: 8300000, guid: a235fdfb4d1e7554bba749df4ffdb5dc, type: 3}
