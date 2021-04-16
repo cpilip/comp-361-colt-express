@@ -390,7 +390,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 172616188}
         m_MethodName: leaveLobby
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1694,6 +1694,7 @@ MonoBehaviour:
   SaveGameText: {fileID: 1587179445}
   PingText: {fileID: 1276705045}
   StartButton: {fileID: 1239961894}
+  interpolationPeriod: 2
 --- !u!1 &1247650728
 GameObject:
   m_ObjectHideFlags: 0
