@@ -17503,7 +17503,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 644892955}
-        m_MethodName: quitMainGame
+        m_MethodName: exitGameApplication
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
