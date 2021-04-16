@@ -7756,6 +7756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: {fileID: 963653845}
   hostageList: {fileID: 2075026930}
+  notInPunch: 1
   choseEscape: 0
 --- !u!114 &718402318
 MonoBehaviour:

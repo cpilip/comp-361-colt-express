@@ -493,6 +493,9 @@ class GameController
 
             shotgunCheck(this.currentPlayer);
 
+            currentPlayer.setWaitingForInput(false);
+            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+            this.endOfCards();
         }
 
         else if (topOfPile.getKind().Equals(ActionKind.Ride))
@@ -1223,10 +1226,7 @@ class GameController
                 }
 
                 //Decrement remaining players on horses only if players that entered is != remaining
-                if (playersThatEntered != horseAttackPlayersRemaining)
-                {
-                    horseAttackPlayersRemaining = players.Count - playersThatEntered;
-                }
+                horseAttackPlayersRemaining = players.Count - playersThatEntered;
             }
 
             //Calculate next player; if the next player has already entered the train, calculate until the next player has not

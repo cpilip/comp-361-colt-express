@@ -11,8 +11,4 @@ public class SoundEffect : MonoBehaviour
         soundEffect.PlayOneShot(clickEffect);
     }
 
-    public void PlaySound()
-    {
-        soundEffect.PlayOneShot(clickEffect);
-    }
 }
