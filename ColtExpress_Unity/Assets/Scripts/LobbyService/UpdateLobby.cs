@@ -83,7 +83,7 @@ public class UpdateLobby : MonoBehaviour
 
         Text tmp = SaveGameText.GetComponent<Text>();
         tmp.text = "Using savegame: " + sessInfo.savegameid;
-        StartCoroutine(StartPing("google.com"));
+        StartCoroutine(StartPing("52.152.132.200"));
         updateNames(sessInfo.players);
     }
 
