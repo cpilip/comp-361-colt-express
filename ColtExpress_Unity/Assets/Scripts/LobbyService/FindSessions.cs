@@ -75,7 +75,7 @@ public class FindSessions : MonoBehaviour
             int numPlayers = data[val].players.Count;
             cText.text = "" + numPlayers + "/6";
             // update player ping
-            StartCoroutine(StartPing("74.125.224.72"));
+            StartCoroutine(StartPing("google.com"));
         }
     }
 
