@@ -1099,6 +1099,18 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void getTotalNumOfHorses()
+    {
+        var flattenList = trainCars.Keys;
+
+        int numHorses = 0;
+        foreach (int i in flattenList)
+        {
+            numHorses += (getHorseSet(i).transform.childCount - 1);
+        }
+        return numHorses;
+    }
+
     public void serializeGUIM(List<Serialized_Player_Profile_Object> pp, Serialized_GameUIManager guim)
     {
         foreach (Character c in playerProfiles.Keys)

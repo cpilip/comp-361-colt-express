@@ -36,11 +36,11 @@ public class RoundEventListener : UIEventListenable
 
                 //Get numHorses (remember button)
                 int numHorses = beforeHorseSet.transform.childCount - 1;
-
                 while (numHorses > 0)
                 {
                     GameObject firstHorse = beforeHorseSet.transform.GetChild(0).gameObject;
                     firstHorse.transform.parent = currentHorseSet.transform;
+                    numHorses--;
                 }
             }
         }
@@ -97,6 +97,8 @@ public class RoundEventListener : UIEventListenable
             
             int horsesRemoved = 0;
 
+            int remainingHorseCount = GameUIManager.gameUIManagerInstance.getTotalNumOfHorses();
+
             while (carIndex > 0)
             {
                 int numHorses = currentHorseSet.transform.childCount - 1;
@@ -106,7 +108,7 @@ public class RoundEventListener : UIEventListenable
                     horses.Add(currentHorseSet.transform.GetChild(0).gameObject);
                     horsesRemoved++;
 
-                    if (horsesRemoved == 2)
+                    if (horsesRemoved == 2 || horsesRemoved == remainingHorseCount)
                     {
                         break;
                     }
@@ -116,7 +118,7 @@ public class RoundEventListener : UIEventListenable
                     horses.Add(currentHorseSet.transform.GetChild(0).gameObject);
                     horsesRemoved++;
 
-                    if (horsesRemoved == 2)
+                    if (horsesRemoved == 2 || horsesRemoved == remainingHorseCount)
                     {
                         break;
                     }
@@ -125,7 +127,7 @@ public class RoundEventListener : UIEventListenable
                         horses.Add(currentHorseSet.transform.GetChild(0).gameObject);
                         horsesRemoved++;
 
-                        if (horsesRemoved == 2)
+                        if (horsesRemoved == 2 || horsesRemoved == remainingHorseCount)
                         {
                             break;
                         }

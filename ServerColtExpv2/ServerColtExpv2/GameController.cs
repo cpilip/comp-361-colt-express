@@ -51,9 +51,6 @@ class GameController
 
     private int endOfRoundBonusPlayerCounter;
 
-    private bool shotGunCheckResponse = false;
-    Player previousCurrentPlayerFromShotgun;
-
     private GameController(int numPlayers)
     {
         this.players = new List<Player>();
@@ -378,16 +375,6 @@ class GameController
         return this.endHorseAttack;
     }
 
-    /*public void chosenStartinPostion(Position p)
-    {
-        playerPtrForStarting.setPosition(p);
-        //TO ALL PLAYERS
-        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", playerPtrForStarting, p, getIndexByTrainCar(p.getTrainCar()));
-        p.getTrainCar().setHasAHorse(true);
-        playerPtrForStarting.setWaitingForInput(false);
-
-    }*/
-
     public void chosenHostage(HostageChar aHostage)
     {
         //TODO send messages 
@@ -433,7 +420,7 @@ class GameController
 
     public void chosenPosition(bool canEscape)
     {
-        //Card removed]
+        //Card removed
         if (canEscape)
         {
             this.currentPlayer.setHasEscaped();
@@ -447,20 +434,7 @@ class GameController
 
     public void chosenPosition(Position p)
     {
-        if (shotGunCheckResponse == true)
-        {
-            //Must have been a shotgun resolution 
-            currentPlayer.setPosition(p);
-            //TO ALL PLAYERS
-            CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, getIndexByTrainCar(p.getTrainCar()));
-            shotGunCheckResponse = false;
-
-            currentPlayer.setWaitingForInput(false);
-            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-            this.endOfCards();
-            throw new InvalidOperationException();
-        }
-
+        
         //Card removed
         ActionCard topOfPile = this.currentRound.getTopOfPlayedCards();
 
@@ -498,8 +472,7 @@ class GameController
             currentPlayer.setPosition(p);
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, getIndexByTrainCar(p.getTrainCar()));
-            bool flag = true;
-
+            
             //if the marshal is at position p, bullet card in deck + sent to the roof 
             if (p.hasMarshal(aMarshal))
             {
@@ -518,29 +491,7 @@ class GameController
                 CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p.getTrainCar().getRoof(), getIndexByTrainCar(p.getTrainCar()));
             }
 
-            try
-            {
-                //Doing the check and throwing an exception upon resolution to return here (HOPEFULLY)
-                //Bad but ahhhhh.
-                previousCurrentPlayerFromShotgun = this.currentPlayer;
-                shotGunCheckResponse = true;
-
-                if (shotgunCheck(p))
-                {
-                    this.currentPlayer = previousCurrentPlayerFromShotgun;
-                    shotGunCheckResponse = false;
-                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                    this.endOfCards();
-                }
-
-            }
-            catch (Exception e) when (e is InvalidOperationException)
-            {
-                this.currentPlayer = previousCurrentPlayerFromShotgun;
-                shotGunCheckResponse = false;
-                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                this.endOfCards();
-            }
+            shotgunCheck(this.currentPlayer);
 
         }
 
@@ -609,17 +560,6 @@ class GameController
 
     public void chosenPunchTarget(Player victim, GameItem loot, Position dest)
     {
-        
-        //Account for Cheyenne
-        if (loot != null)
-        {
-            if (currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse))
-            {
-                loot.setPosition(null);
-                currentPlayer.addToPossessions(loot);
-            }
-        }
-       
         //loot is removed from victime possessions
         if (loot != null)
         {
@@ -647,6 +587,8 @@ class GameController
             //TO ALL PLAYERS
             if ((currentPlayer.getBandit().Equals(Character.Cheyenne) && currentPlayer.getHasSpecialAbility() && loot.getType().Equals(ItemType.Purse)) == true)
             {
+                loot.setPosition(null);
+                currentPlayer.addToPossessions(loot);
                 CommunicationAPI.sendMessageToClient(null, "incrementLoot", this.currentPlayer.getBandit(), loot);
             } 
             else
@@ -686,32 +628,12 @@ class GameController
 
             victim.addToDiscardPile(b);
             dest.getTrainCar().moveRoofCar(victim);
-            if(this.currentRound.getIsLastRound()) victim.incrementBulletShootInLastRound();
 
             //TO ALL PLAYERS
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", victim, dest.getTrainCar().getRoof(), getIndexByTrainCar(dest.getTrainCar()));
         }
 
-        try
-        {
-            //Doing the check and throwing an exception upon resolution to return here (HOPEFULLY)
-            //Bad but ahhhhh.
-            previousCurrentPlayerFromShotgun = this.currentPlayer;
-            this.currentPlayer = victim;
-            shotGunCheckResponse = true;
-
-            if (shotgunCheck(dest))
-            {
-                this.currentPlayer = previousCurrentPlayerFromShotgun;
-                shotGunCheckResponse = false;
-            }
-            
-        }
-        catch (Exception e) when (e is InvalidOperationException)
-        {
-            this.currentPlayer = previousCurrentPlayerFromShotgun;
-            shotGunCheckResponse = false;
-        }
+        shotgunCheck(victim);
 
         currentPlayer.setWaitingForInput(false);
         this.currentRound.getTopOfPlayedCards();
@@ -735,6 +657,12 @@ class GameController
 
         currentPlayer.setWaitingForInput(false);
 
+        List<Player> atShotgunsNewLocation = myStageCoach.getAdjacentCar().getRoof().getPlayers();
+        foreach (Player p in atShotgunsNewLocation)
+        {
+            shotgunCheck(p);
+        }
+
         this.currentRound.getTopOfPlayedCards();
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
@@ -752,7 +680,6 @@ class GameController
         }
 
         target.addToDiscardPile(aBullet);
-        if(this.currentRound.getIsLastRound()) target.incrementBulletShootInLastRound();
 
         this.currentPlayer.shootBullet();
 
@@ -815,6 +742,9 @@ class GameController
                     CommunicationAPI.sendMessageToClient(null, "moveGameUnit", target, target.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(target.getPosition().getTrainCar()));
                 }
             }
+
+            //If they end up on the same position as the shotgun
+            shotgunCheck(target);
         }
 
         //TO ALL PLAYERS
@@ -828,7 +758,6 @@ class GameController
     {
         this.currentRound.getTopOfPlayedCards();
         //the loot is transfered from the position to the currentPlayer possensions
-        //TODO check with Christina, because we remove the loot from the deck
         loot.setPosition(null);
 
         if (loot is Whiskey)
@@ -836,7 +765,6 @@ class GameController
             currentPlayer.addToPossessions(loot);
             if (((Whiskey)loot).getWhiskeyStatus() == WhiskeyStatus.Full)
             {
-
                 CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", currentPlayer.getBandit(), WhiskeyKind.Unknown);
             } else
             {
@@ -848,78 +776,81 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "incrementLoot", currentPlayer.getBandit(), loot);
         }
         
-        
         CommunicationAPI.sendMessageToClient(null, "updateLootAtLocation", this.currentPlayer.getPosition(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()), this.currentPlayer.getPosition().getItems(), true);
         currentPlayer.setWaitingForInput(false);
         CommunicationAPI.sendMessageToClient(null, "removeTopCard");
         this.endOfCards();
     }
 
-    private bool shotgunCheck(Position p)
+    private bool shotgunCheck(Player pl)
     {
-        //Current player must be the target for resolution
         //if the shotgun is at position p, bullet card in deck + sent to adjacent car (if 2 adjacent, send current player request)
+        Position p = pl.getPosition();
         if (p.hasShotgun(aShotGun))
         {
             BulletCard b = new BulletCard(null, -1);
-            currentPlayer.addToDiscardPile(b);
+            pl.addToDiscardPile(b);
 
             if (this.currentRound.getIsLastRound() && this.currentRound.getEvent() == EndOfRoundEvent.MortalBullet)
             {
-                currentPlayer.addMortalBullet();
+                pl.addMortalBullet();
             }
 
             //if the shotgun is on the caboose, player sent to adjacent car
             if (p.getTrainCar().Equals(myTrain[myTrain.Count() - 1]))
             {
                 Position pos = myTrain[myTrain.Count() - 2].getRoof();
-                currentPlayer.setPosition(pos);
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos, myTrain.IndexOf(pos.getTrainCar()));
+                pl.setPosition(pos);
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", pl, pos, myTrain.IndexOf(pos.getTrainCar()));
                 return true;
             } 
             //If the shotgun is on the locomotive
             else if (p.getTrainCar().Equals(myTrain[0]))
             {
                 Position pos = myTrain[1].getRoof();
-                currentPlayer.setPosition(pos);
-                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, pos, myTrain.IndexOf(pos.getTrainCar()));
+                pl.setPosition(pos);
+                CommunicationAPI.sendMessageToClient(null, "moveGameUnit", pl, pos, myTrain.IndexOf(pos.getTrainCar()));
                 return true;
             }
             //if not, the player must choose between the 2 positions 
             else
             {
-                List<Position> aL = new List<Position>();
                 TrainCar currentTraincar = p.getTrainCar();
 
-                try
-                {
+                Random r = new Random();
+                int rand = r.Next(0, 2);
 
-                    Position p1 = myTrain[myTrain.IndexOf(currentTraincar) - 1].getRoof();
-                    aL.Add(p1);
-                } catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                if (rand == 0)
                 {
+                    try
+                    {
+                        Position pos = myTrain[myTrain.IndexOf(currentTraincar) - 1].getRoof();
+                        pl.setPosition(pos);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", pl, pos, myTrain.IndexOf(pos.getTrainCar()));
+                        return true;
+                    } 
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                    }
 
                 }
-
-                try
+                else
                 {
-                    Position p2 = myTrain[myTrain.IndexOf(currentTraincar) + 1].getRoof();
-                    aL.Add(p2);
+                    try
+                    {
+                        Position pos = myTrain[myTrain.IndexOf(currentTraincar) + 1].getRoof();
+                        pl.setPosition(pos);
+                        CommunicationAPI.sendMessageToClient(null, "moveGameUnit", pl, pos, myTrain.IndexOf(pos.getTrainCar()));
+                        return true;
+                    }
+                    catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
+                    {
+                    }
                 }
-                catch (Exception e) when (e is System.IndexOutOfRangeException || e is System.ArgumentOutOfRangeException)
-                {
 
-                }
-
-
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateMovePositions", aL);
-                currentPlayer.setWaitingForInput(true);
-                CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
-                
-                return false;
             }
         }
-        return true;
+        return false;
     }
 
 
@@ -934,7 +865,6 @@ class GameController
         this.currentPlayer = top.belongsTo();
 
        
-
         CommunicationAPI.sendMessageToClient(null, "updateCurrentPlayer", this.currentPlayer.getBandit());
 
         Console.WriteLine("Resolving " + top.getKind() + " from " + top.belongsTo().getBandit());
@@ -942,12 +872,6 @@ class GameController
         this.currentPlayer.setWaitingForInput(false);
         Boolean waiting = true;
 
-        // foreach (Player p in this.players)
-        // {
-        //     if (p.getWaitingForInput())
-        //         waiting = false;
-
-        // }
         if (this.currentPlayer.getHasEscaped())
         {
             this.currentRound.getTopOfPlayedCards();
@@ -999,41 +923,18 @@ class GameController
                         //If the player is inside a car, goes on the roof
                         if (this.currentPlayer.getPosition().isInside())
                         {
-                            bool flag = true;
+                            //Get position and move to the roof
                             Position pos = this.currentPlayer.getPosition().getTrainCar().getRoof();
                             this.currentPlayer.getPosition().getTrainCar().moveRoofCar(this.currentPlayer);
                             //TO ALL PLAYERS
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, this.currentPlayer.getPosition().getTrainCar().getRoof(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
 
-                            try
-                            {
-                                //Doing the check and throwing an exception upon resolution to return here (HOPEFULLY)
-                                //Bad but ahhhhh.
-                                previousCurrentPlayerFromShotgun = this.currentPlayer;
-                                shotGunCheckResponse = true;
+                            //Check if this roof has the shotgun
+                            shotgunCheck(this.currentPlayer);
 
-                                if (shotgunCheck(pos))
-                                {
-                                    this.currentPlayer = previousCurrentPlayerFromShotgun;
-                                    shotGunCheckResponse = false;
-
-                                    this.currentRound.getTopOfPlayedCards();
-                                    CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                                    this.endOfCards();
-                                }
-
-                            }
-                            catch (Exception e) when (e is InvalidOperationException)
-                            {
-                                this.currentPlayer = previousCurrentPlayerFromShotgun;
-                                shotGunCheckResponse = false;
-
-                                this.currentRound.getTopOfPlayedCards();
-                                CommunicationAPI.sendMessageToClient(null, "removeTopCard");
-                                this.endOfCards();
-                            }
-
-
+                            this.currentRound.getTopOfPlayedCards();
+                            CommunicationAPI.sendMessageToClient(null, "removeTopCard");
+                            this.endOfCards();
                         }
                         //If the player is on the roof of a car, goes inside the car
                         else
@@ -1222,8 +1123,9 @@ class GameController
 
 
                             //setting the on a horse action to false.
-                            currentPlayer.getPosition().getTrainCar().setHasAHorse(false);
+                            currentPlayer.getPosition().getTrainCar().setHasAHorse(currentPlayer.getPosition().getTrainCar().hasHorseAtCarLevel());
                             currentPlayer.getPosition().getTrainCar().removeAHorse();
+
                         } else
                         {
                             // Empty
@@ -1251,7 +1153,6 @@ class GameController
             {
                 this.horseAttackCounter++;
             } 
-            //this.horseAttackCounter++;
         }
         else if (haAction.Equals("enter"))
         {
@@ -1324,7 +1225,7 @@ class GameController
                 //Decrement remaining players on horses only if players that entered is != remaining
                 if (playersThatEntered != horseAttackPlayersRemaining)
                 {
-                    horseAttackPlayersRemaining--;
+                    horseAttackPlayersRemaining = players.Count - playersThatEntered;
                 }
             }
 
@@ -1350,7 +1251,6 @@ class GameController
                 CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(this.currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), currentPlayer.getWaitingForInput());
             }
 
-            
         }
     }
 
@@ -1419,6 +1319,7 @@ class GameController
 
                     } else
                     {
+                        Console.WriteLine("STEALIN!");
                         //prepare for Stealing phase 
                         foreach (Player p in this.players)
                         {
@@ -1472,7 +1373,7 @@ class GameController
             }
 
             Console.WriteLine(this.currentTurn.getType());
-            Console.WriteLine(this.currentPlayerIndex);
+            Console.WriteLine(this.currentPlayer.getBandit() + "is now the current player.");
 
         }
     }
@@ -1551,6 +1452,7 @@ class GameController
                 {
                     resolveEndOfRoundEvent();
 
+                    Console.WriteLine("SCHEMIN!");
                     //setting the next round, setting the first turn of the round 
                     this.currentRound = this.rounds[this.rounds.IndexOf(this.currentRound) + 1];
                     //TO ALL PLAYERS
@@ -1588,6 +1490,7 @@ class GameController
                         int cardsToAddCount = 6;
                         if (p.hand.Count == 1)
                         {
+                            cardsToAdd.AddRange(p.hand);
                             cardsToAddCount = 5;
                         }
 
@@ -1633,9 +1536,13 @@ class GameController
                         {
                             aShotGun.setPosition(newAdjacent.getRoof());
                             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aShotGun, newAdjacent.getRoof(), myTrain.IndexOf(newAdjacent));
+
+                            List<Player> atShotgunsNewLocation = newAdjacent.getRoof().getPlayers();
+                            foreach (Player p in atShotgunsNewLocation)
+                            {
+                                shotgunCheck(p);
+                            }
                         }
-
-
 
                     }
                 }
@@ -1962,24 +1869,27 @@ class GameController
         Random r = new Random();
         int rand;
 
-        //// Initialize random unique layouts for 4 normal rounds
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    // Look for a random integer between 0 and 6 which has not been used before
-        //    rand = r.Next(0, 12);
-        //    while (true) {
-        //        if (!usedRounds.Contains(rand)) {
-        //            break;
-        //        } 
-        //        rand = r.Next(0, 12);
-        //    }
-        //    usedRounds.Add(rand);
-        //    Round aRound = new Round(false, totalPlayer);
-        //    aRound.intializeTurn(this.totalPlayer, rand);
-        //    this.rounds.Add(aRound);
-        //} 
+        // Initialize random unique layouts for 4 normal rounds
+        for (int i = 0; i < 4; i++)
+        {
+            // Look for a random integer between 0 and 6 which has not been used before
+            rand = r.Next(0, 12);
+            while (true)
+            {
+                if (!usedRounds.Contains(rand))
+                {
+                    break;
+                }
+                rand = r.Next(0, 12);
+            }
+            usedRounds.Add(rand);
+            Round aRound = new Round(false, totalPlayer);
+            aRound.intializeTurn(this.totalPlayer, rand);
+            this.rounds.Add(aRound);
+        }
 
-        // Initialize random layout for final round
+       // Initialize random layout for final round
+
         rand = r.Next(0, 6);
         Round aFinalRound = new Round(true, totalPlayer);
         aFinalRound.intializeTurn(this.totalPlayer, rand);
@@ -2650,7 +2560,6 @@ class GameController
                                 t.setHasAHorse(t.hasHorseAtCarLevel());
                                 if (horsesRemoved == 2)
                                 {
-
                                     break;
                                 }
                             }
@@ -2687,6 +2596,7 @@ class GameController
                 {
                     //remove whiskey at marshal position
                     Position pos = aMarshal.getPosition();
+                    GameItem gotWhiskey = null;
                     foreach (GameItem g in pos.getItems())
                     {
                         if (g is Whiskey)
@@ -2737,17 +2647,16 @@ class GameController
                                         CommunicationAPI.sendMessageToClient(null, "moveGameUnit", aPlayer, pos.getTrainCar().getRoof(), getIndexByTrainCar(pos.getTrainCar()));
                                     }
                                 }
+                                                            }
 
-                            }
-
-
-                            pos.getItems().Remove(w);
-                            CommunicationAPI.sendMessageToClient(null, "updateLootAtLocation", pos, getIndexByTrainCar(pos.getTrainCar()), pos.getItems(), true);
-
+                            gotWhiskey = g;
+                            
                             break;
                         }
                     }
 
+                    pos.getItems().Remove(gotWhiskey);
+                    CommunicationAPI.sendMessageToClient(null, "updateLootAtLocation", pos, getIndexByTrainCar(pos.getTrainCar()), pos.getItems(), true);
 
                     break;
                 }
@@ -2986,18 +2895,6 @@ class GameController
         return null;
     }
 
-    public GameItem getItemfromTypePossession(ItemType aType)
-    {
-        List<GameItem> al = this.currentPlayer.possessions;
-        foreach (GameItem anItem in al)
-        {
-            if (anItem.getType().Equals(aType))
-            {
-                return anItem;
-            }
-        }
-        return null;
-    }
 
     public GameItem getItemfromTypePossession(Player pl, ItemType aType)
     {
