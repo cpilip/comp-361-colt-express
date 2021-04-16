@@ -56,10 +56,6 @@ namespace PositionSpace
             }
         }
 
-        public void setHasAHorse(bool b){
-            hasAHorse = b;
-        }
-
         public void addAHorse()
         {
             this.numHorses++;
@@ -75,7 +71,8 @@ namespace PositionSpace
             return this.numHorses;
         }
 
-        public bool hasHorseAtCarLevel(){
+        public bool hasHorseAtCarLevel()
+        {
             return (numHorses == 0) ? false : true;
         }
     }

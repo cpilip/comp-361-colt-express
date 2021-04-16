@@ -549,7 +549,6 @@ class GameController
         {
             
             currentPlayer.setPosition(p);
-            currentPlayer.getPosition().getTrainCar().setHasAHorse(true);
             currentPlayer.getPosition().getTrainCar().addAHorse();
             
             int index = getIndexByTrainCar(p.getTrainCar());
@@ -1183,8 +1182,6 @@ class GameController
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
 
-                            //setting the on a horse action to false.
-                            currentPlayer.getPosition().getTrainCar().setHasAHorse(currentPlayer.getPosition().getTrainCar().hasHorseAtCarLevel());
                             currentPlayer.getPosition().getTrainCar().removeAHorse();
 
                         } else
@@ -1240,7 +1237,6 @@ class GameController
                 p.setPosition(this.myTrain[pos].getInside());
                 p.setOnAHorse(false);
 
-                this.myTrain[pos].setHasAHorse(true);
                 this.myTrain[pos].addAHorse();
             }
 
@@ -2581,15 +2577,11 @@ class GameController
                         if (t.Equals(myTrain[myTrain.Count() - 1]) == false && t.hasHorseAtCarLevel())
                         {
                             t.removeAHorse();
-                            t.setHasAHorse(t.hasHorseAtCarLevel());
 
                             int newIndexHorse = getIndexByTrainCar(t);
                             newIndexHorse++;
                             
-                            myTrain[newIndexHorse].setHasAHorse(true);
                             myTrain[newIndexHorse].addAHorse();
-                            //TODO HEC add new message to specify clients ?
-
                             
                         }
                     }
@@ -2657,7 +2649,6 @@ class GameController
                                 t.removeAHorse();
                                 horsesRemoved++;
 
-                                t.setHasAHorse(t.hasHorseAtCarLevel());
                                 if (horsesRemoved == 2)
                                 {
                                     break;
@@ -2668,8 +2659,6 @@ class GameController
                                 t.removeAHorse();
                                 horsesRemoved++;
                                 
-                                t.setHasAHorse(t.hasHorseAtCarLevel());
-
                                 if (horsesRemoved == 2)
                                 {
                                     break;
@@ -2678,7 +2667,6 @@ class GameController
                                 {
                                     t.removeAHorse();
                                     horsesRemoved++;
-                                    t.setHasAHorse(t.hasHorseAtCarLevel());
                                     if (horsesRemoved == 2)
                                     {
                                         break;
