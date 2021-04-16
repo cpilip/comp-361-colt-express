@@ -264,20 +264,25 @@ class MyTcpListener
                 else if (eventName.Equals("MoveMessage"))
                 {
                     // Get position
-
+                    bool choseEscape = false;
                     try
                     {
-                        bool choseEscape = o.SelectToken("choseEscape").ToObject<bool>();
-                        if (choseEscape)
-                        {
-                            aController.chosenPosition(choseEscape);
-                        }
+                        choseEscape = o.SelectToken("choseEscape").ToObject<bool>();
                     } catch
                     {
-                        int index = Int32.Parse(o.SelectToken("index").ToString());
-                        Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
-                        Position pos = aController.getPositionByIndex(index, inside);
+                        
+                    }
 
+                    int index = Int32.Parse(o.SelectToken("index").ToString());
+                    Boolean inside = o.SelectToken("inside").ToObject<Boolean>();// ???????????
+                    Position pos = aController.getPositionByIndex(index, inside);
+
+                    if (choseEscape)
+                    {
+                        aController.chosenPosition(choseEscape);
+                    }
+                    else
+                    {
                         aController.chosenPosition(pos);
                     }
                 }
