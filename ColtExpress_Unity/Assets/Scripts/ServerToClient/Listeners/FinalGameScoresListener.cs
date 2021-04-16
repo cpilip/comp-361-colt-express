@@ -24,6 +24,8 @@ public class FinalGameScoresListener : UIEventListenable
         dataForParse = data;
 
         StartCoroutine("LoadScene");
+
+        Debug.Log("Coroutine started.");
     }
 
     private void continueWithScores()
