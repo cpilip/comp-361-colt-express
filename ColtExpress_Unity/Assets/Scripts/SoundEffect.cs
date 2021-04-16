@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class SoundEffect : MonoBehaviour
 {
-  public AudioSource soundEffect;
-  public AudioClip clickEffect;
+    public AudioSource soundEffect;
+    public AudioClip clickEffect;
 
-  public void ClickSound(){
-    soundEffect.PlayOneShot(clickEffect);
-  }
+    public void ClickSound() {
+        soundEffect.PlayOneShot(clickEffect);
+    }
+
+    public void PlaySound()
+    {
+        soundEffect.PlayOneShot(clickEffect);
+    }
 }
