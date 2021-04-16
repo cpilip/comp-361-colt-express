@@ -108,7 +108,7 @@ public class UpdateLobby : MonoBehaviour
 
     private void PingFinished(Ping p)
     {
-        PingText.GetComponent<Text>().text = "Ping: " + p.time;
+        PingText.GetComponent<Text>().text = "Ping: " + p.time + " ms";
     }
 
     private IEnumerator updatePlayersWait(float time)
