@@ -11,20 +11,26 @@ public class LeaveLobby : MonoBehaviour
     private LobbyCommandsClient LobbyCommands = new LobbyCommandsClient();
 
 
-    public void leaveLobby() {
+    public void leaveLobby(bool delay) {
         GameObject sessionId = GameObject.Find("sessionId");
         bool creator = sessionId.GetComponent<SessionPrefabScript>().getCreator();
         if (creator) {
-            StartCoroutine(waitDelete(1));
+            StartCoroutine(waitDelete(1, delay));
         } else {
-            StartCoroutine(waitLeave(1));
+            StartCoroutine(waitLeave(1, delay));
         }
     }
 
-    private IEnumerator waitDelete(float time) {
+    private IEnumerator waitDelete(float time, bool delay) {
         
         if (GameObject.Find("sessionId") == null) {
             Debug.Log("we have a problem");
+        }
+
+        // If we need to wait a delay, wait 15 seconds
+        if (delay) {
+            Debug.Log("Waiting before deletion");
+            yield return new WaitForSeconds(15);
         }
 
         GameObject sessionId = GameObject.Find("sessionId");
@@ -45,10 +51,16 @@ public class LeaveLobby : MonoBehaviour
 
     }
 
-    private IEnumerator waitLeave(float time) {
+    private IEnumerator waitLeave(float time, bool delay) {
         
         if (GameObject.Find("sessionId") == null) {
             Debug.Log("we have a problem");
+        }
+
+        // If we need to wait a delay, wait 5 seconds
+        if (delay) {
+            Debug.Log("Waiting before leaving session");
+            yield return new WaitForSeconds(5);
         }
 
         GameObject sessionId = GameObject.Find("sessionId");

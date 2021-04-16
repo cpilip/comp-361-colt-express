@@ -165,7 +165,6 @@ public class NamedClient : MonoBehaviour
                 }
                 else
                 {
-
                     Debug.Log("[ServerToClient] BUFFER HAS BRKNMSG OR 1MSG: " + buffer);
                     //If the buffer on next call is eq to the previous state, it is one wellformed message
                     if (previousStateOfBuffer == buffer)
