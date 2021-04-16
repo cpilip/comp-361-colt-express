@@ -170,7 +170,7 @@ public class NamedClient : MonoBehaviour
                     //If the buffer on next call is eq to the previous state, it is one wellformed message
                     if (previousStateOfBuffer == buffer)
                     {
-                        if (buffer[buffer.Length - 1] == '}')
+                        if (bracketsBalanced(buffer))
                         {
                             Debug.Log("[ServerToClient] HANDLER CALLED: " + buffer);
                             data = buffer;
@@ -193,5 +193,38 @@ public class NamedClient : MonoBehaviour
 
         return data;
 
+    }
+
+    private static bool bracketsBalanced(string text)
+    {
+        Stack<char> s = new Stack<char>();
+
+        foreach (char x in text)
+        {
+            if (x == '{')
+            {
+                s.Push(x);
+            }
+            else if (x == '}')
+            {
+                if (s.Count == 0)
+                {
+                    return false;
+                }
+
+                s.Pop();
+            }
+        }
+
+        if (s.Count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+        
     }
 }
