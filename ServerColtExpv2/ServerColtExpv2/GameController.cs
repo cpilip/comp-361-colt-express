@@ -469,6 +469,8 @@ class GameController
         if (canEscape)
         {
             this.currentPlayer.setHasEscaped();
+            this.currentPlayer.setPosition(null);
+
             ActionCard topOfPile = this.currentRound.getTopOfPlayedCards();
             CommunicationAPI.sendMessageToClient(null, "roundEventEscape", "Escape", this.currentPlayer.getBandit(), getIndexByTrainCar(this.currentPlayer.getPosition().getTrainCar()));
             CommunicationAPI.sendMessageToClient(null, "removeTopCard");
@@ -549,7 +551,16 @@ class GameController
         {
             
             currentPlayer.setPosition(p);
-            currentPlayer.getPosition().getTrainCar().addAHorse();
+
+            if (currentPlayer.getPosition().getTrainCar().Equals(myStageCoach))
+            {
+                myStageCoach.getAdjacentCar().addAHorse();
+            }
+            else
+            {
+                currentPlayer.getPosition().getTrainCar().addAHorse();
+            }
+
             
             int index = getIndexByTrainCar(p.getTrainCar());
             //Player must have ended up in the stagecoach
@@ -561,7 +572,6 @@ class GameController
             CommunicationAPI.sendMessageToClient(null, "updateCarHasAHorse", index, currentPlayer.getBandit());
             currentPlayer.setOnAHorse(false);
 
-            bool flag = true;
 
             CommunicationAPI.sendMessageToClient(null, "moveGameUnit", currentPlayer, p, myTrain.IndexOf(p.getTrainCar()));
 
@@ -1185,7 +1195,14 @@ class GameController
                             CommunicationAPI.sendMessageToClient(MyTcpListener.getClientByPlayer(currentPlayer), "updateWaitingForInput", currentPlayer.getBandit(), true);
 
 
-                            currentPlayer.getPosition().getTrainCar().removeAHorse();
+                            if (currentPlayer.getPosition().getTrainCar().Equals(myStageCoach))
+                            {
+                                myStageCoach.getAdjacentCar().removeAHorse();
+                            }
+                            else
+                            {
+                                currentPlayer.getPosition().getTrainCar().removeAHorse();
+                            }
 
                         } else
                         {

@@ -13,6 +13,8 @@ public class StealinPhaseManager : MonoBehaviour
     public GameObject timer;
     public GameObject hostageList;
 
+    public GameObject escapeButton;  
+
     private Character punchTarget;
     private ItemType punchLoot;
     private WhiskeyStatus whiskeyStatus;
@@ -21,6 +23,7 @@ public class StealinPhaseManager : MonoBehaviour
     public bool notInPunch = true;
     private bool isLoot = false;
     public bool choseEscape = false;
+
     void Start()
     {
         
@@ -149,6 +152,7 @@ public class StealinPhaseManager : MonoBehaviour
     public void chooseEscape()
     {
         choseEscape = true;
+        escapeButton.SetActive(false);
         playerChosePosition();
     }
 
