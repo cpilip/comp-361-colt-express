@@ -71,7 +71,6 @@ namespace GameUnitSpace {
         * Private helper method
         */
 
-
         private void initializeCards() {
             // Create and add 6 bullet cards
             bullets = new List<BulletCard>();
@@ -102,6 +101,10 @@ namespace GameUnitSpace {
         /// Returns the type of the selected bandit
         public Character getBandit() {
             return this.bandit;
+        }
+
+        public void addExtraOldWhiskey() {
+            this.possessions.Add(new Whiskey(WhiskeyKind.Old));
         }
 
         public void setCapturedHostage(Hostage h) {
@@ -372,6 +375,15 @@ namespace GameUnitSpace {
                     }
                 }
             }
+        }
+
+        public Card getRideCard() {
+            foreach (Card c in this.discardPile) {
+                if ((ActionCard)c.getKind() == Ride) {
+                    return c;
+                }
+            } 
+            return null;
         }
 
         public void actionCantBePlayed(ActionKind aKind){

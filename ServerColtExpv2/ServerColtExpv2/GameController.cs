@@ -44,6 +44,9 @@ class GameController
     private List<Hostage> availableHostages;
     private Boolean endHorseAttack;
     private List<AttackPosition> attPos;
+
+    public Boolean extraMode = false;
+    public Boolean shortGameMode = false;
     
     private int horseAttackCounter;
     private int horseAttackPlayerCounter;
@@ -91,6 +94,7 @@ class GameController
         else
         {
             Player tmp = new Player(aChar);
+            
             this.players.Add(tmp);
 
             MyTcpListener.addPlayerWithClient(tmp);
@@ -166,15 +170,32 @@ class GameController
                 List<Card> cardsToAdd = new List<Card>();
                 int index = this.players.IndexOf(p);
 
-                Random rnd = new Random();
-                for (int i = 0; i < 6; i++)
-                {
-                    int rand = rnd.Next(0, p.discardPile.Count);
-                    Card aCard = p.discardPile[rand];
+                if (extraMode) {
+                    Card aCard = p.getRideCard();
                     p.hand.Add(aCard);
                     cardsToAdd.Add(aCard);
                     p.discardPile.Remove(aCard);
+                    for (int i = 0; i < 5; i++)
+                    {
+                        int rand = rnd.Next(0, p.discardPile.Count);
+                        aCard = p.discardPile[rand];
+                        p.hand.Add(aCard);
+                        cardsToAdd.Add(aCard);
+                        p.discardPile.Remove(aCard);
+                    }
+                } else {
+                    Random rnd = new Random();
+                    for (int i = 0; i < 6; i++)
+                    {
+                        int rand = rnd.Next(0, p.discardPile.Count);
+                        Card aCard = p.discardPile[rand];
+                        p.hand.Add(aCard);
+                        cardsToAdd.Add(aCard);
+                        p.discardPile.Remove(aCard);
+                    }
                 }
+
+                
 
                 if (p.getBandit().Equals(Character.Doc))
                 {
@@ -203,6 +224,14 @@ class GameController
             this.currentPlayer = players[0];
             this.currentPlayerIndex = 0;
             this.firstPlayerIndex = 0;
+
+            // Extra cheat code for demo
+            if (extraMode) {
+                foreach (Player p in this.players) {
+                    p.addExtraOldWhiskey();
+                    CommunicationAPI.sendMessageToClient(null, "incrementWhiskey", p.getBandit(), WhiskeyKind.Old);
+                }
+            }
 
             CommunicationAPI.sendMessageToClient(null, "updateFirstPlayer", this.currentPlayer.getBandit());
 
@@ -1927,24 +1956,27 @@ class GameController
         Random r = new Random();
         int rand;
 
-        // Initialize random unique layouts for 4 normal rounds
-        for (int i = 0; i < 4; i++)
-        {
-            // Look for a random integer between 0 and 6 which has not been used before
-            rand = r.Next(0, 12);
-            while (true)
+        if (!shortGameMode) {
+            // Initialize random unique layouts for 4 normal rounds
+            for (int i = 0; i < 4; i++)
             {
-                if (!usedRounds.Contains(rand))
-                {
-                    break;
-                }
+                // Look for a random integer between 0 and 6 which has not been used before
                 rand = r.Next(0, 12);
+                while (true)
+                {
+                    if (!usedRounds.Contains(rand))
+                    {
+                        break;
+                    }
+                    rand = r.Next(0, 12);
+                }
+                usedRounds.Add(rand);
+                Round aRound = new Round(false, totalPlayer);
+                aRound.intializeTurn(this.totalPlayer, rand);
+                this.rounds.Add(aRound);
             }
-            usedRounds.Add(rand);
-            Round aRound = new Round(false, totalPlayer);
-            aRound.intializeTurn(this.totalPlayer, rand);
-            this.rounds.Add(aRound);
         }
+        
 
        // Initialize random layout for final round
 

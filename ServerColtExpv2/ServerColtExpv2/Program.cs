@@ -129,6 +129,15 @@ class MyTcpListener
             // get permanent instance of GameController
             GameController aController = GameController.getInstance();
 
+            if (saveGame.Equals("extraMode")) {
+                aController.extraMode = true;
+            } else if (saveGame.Equals("shortGameMode")) { 
+                aController.shortGameMode = true;
+            } else if (saveGame.Equals("godMode")) { 
+                aController.extraMode = true;
+                aController.shortGameMode = true;
+            }
+
             while (allPlayersInitialized == false)
             {
                 foreach (TcpClient cli in clientStreams.Keys)
