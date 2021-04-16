@@ -379,7 +379,7 @@ namespace GameUnitSpace {
 
         public Card getRideCard() {
             foreach (Card c in this.discardPile) {
-                if (((ActionCard)c).getKind() == Ride) {
+                if (((ActionCard)c).getKind() == ActionKind.Ride) {
                     return c;
                 }
             } 
